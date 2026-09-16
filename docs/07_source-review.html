@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参考資料の検証レポート — 勉強会記事5本 × 公開情報</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› 参考資料の検証レポート（内部用）</span></div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">内部検討用 — 配布資料ではありません</span>
+  <h1>参考資料の検証 — 勉強会記事5本を公開情報と突き合わせる</h1>
+  <p class="lead">個人実践者(まさお氏 note)のハーネス/ループ/エージェント本質論5本を精読し、主張を論文・公式ドキュメント・公開ベンチマークで検証した。結論: 一次情報として質は高いが、「裏付けあり」「方向は正しいが数字未確認」「著者の仮説」を区別して採用する。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 検証対象と総評</h2>
+  <table>
+    <thead><tr><th style="width:34%;">資料（note記事のPDF）</th><th style="width:12%;">日付</th><th>中核主張</th></tr></thead>
+    <tbody>
+      <tr><td class="em">ハーネスエンジニアリングの実践知を共有</td><td>2026-03-04</td><td>Agent Teams運用・スキル4分類・コンテキストフレッシュ評価・ディレクトリ状態管理</td></tr>
+      <tr><td class="em">次世代ハーネス設計</td><td>2026-03-08</td><td>マクロハーネス／ミクロハーネス／Project OS（状態基盤）の3要素論。「会話中心から状態中心へ」</td></tr>
+      <tr><td class="em">ハーネス&AIエージェントの本質勉強会</td><td>2026-04-04</td><td>本質ドキュメント（不変原則の明文化）＋レビュアーの分離、決定論的/確率的制御の線引き</td></tr>
+      <tr><td class="em">AIエージェントの本質論</td><td>2026-04-05</td><td>LLMの7つの構造的制約（C-1〜C-7）と対処パターン（T/K/V/S/E）</td></tr>
+      <tr><td class="em">ループエンジニアリングの本質論</td><td>2026-06-21</td><td>品質ループ(eval-loop)の実装: 採点設計・Stop hookによる続行判定・state.jsonの状態外部化</td></tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">総評</span>
+    5本を貫く主張 — <strong>①検証をAI任せ・人力任せにせず機械化する ②状態を会話でなくファイルに置く ③生成と評価を分離する</strong> — は、
+    論文・公式機能・公開ベンチマークで裏付けが取れた。本企画のL2基盤（特に②ハーネスとループ設計）と方向が一致しており、詳細ページの実装粒度を上げる材料として有用。
+    ただし著者自身が「これは正解ではなく検証中の仮説」と明言している点、個人〜小規模開発での実践知であり100人組織への適用には翻訳が要る点は割り引いて読む。
+  </div>
+</section>
+
+<section>
+  <h2>2. 主張別の検証結果</h2>
+  <h3>✅ 公開情報で裏付けが取れた主張</h3>
+  <table>
+    <thead><tr><th style="width:38%;">記事の主張</th><th>裏付け（一次情報）</th></tr></thead>
+    <tbody>
+      <tr><td>メタハーネス論文が公開され、ハーネス自体の自動最適化が研究段階に入った</td><td><a href="https://arxiv.org/abs/2603.28052">Meta-Harness (arXiv 2603.28052, Stanford)</a> — ハーネスコードを外側ループで探索・最適化。TerminalBench-2で手設計ハーネスを上回る。実在確認 ✅</td></tr>
+      <tr><td>Claude CodeのAgent Teams（リーダー＋チームメイト、SendMessage/共有タスクリストで協調）</td><td><a href="https://code.claude.com/docs/en/agent-teams">公式Docs: Orchestrate teams of Claude Code sessions</a> — Opus 4.6と同時に2026年2月リリースの実験的機能。2〜16エージェント、メールボックス＋共有タスクリスト ✅（「Opus 4.6」という記事中のモデル名も実在確認）</td></tr>
+      <tr><td>会話が長いほど判断が鈍る（コンテキスト劣化）。Chromaが18モデルで実測</td><td><a href="https://www.trychroma.com/research/context-rot">Chroma: Context Rot</a> — 18モデル全てで入力長の増加とともに性能劣化。上限のはるか手前で非線形に悪化 ✅</td></tr>
+      <tr><td>入力のヒントに引きずられ、思考過程はそれを言わない（バイアスは非自覚）</td><td><a href="https://www.anthropic.com/research/reasoning-models-dont-say-think">Anthropic: Reasoning Models Don't Always Say What They Think</a> — 論文実在。ヒント利用の言語化率が低い方向性は一致 ✅（記事中の「99%超/2%未満」という個別数値は本文未確認 ⚠️）</td></tr>
+      <tr><td>RALPHループ（無限リトライ）は粘るが採点者不在が欠陥</td><td><a href="https://ghuntley.com/ralph/">Geoffrey Huntley: Ralph</a> — 原型実在。「採点設計＋機械的続行判定を足す」という記事の拡張は妥当 ✅</td></tr>
+      <tr><td>スキルの <code class="inline">context: fork</code>（まっさらな別コンテキストで実行）と <code class="inline">disable-model-invocation</code></td><td><a href="https://code.claude.com/docs/en/skills">公式Docs: Skills</a> — 両フィールドとも実在。fork＝独立サブエージェント実行 ✅</td></tr>
+      <tr><td>指示を増やすほど個々の遵守率が下がる（CLAUDE.md肥大の逆説）</td><td><a href="https://arxiv.org/abs/2507.11538">IFScale (arXiv 2507.11538)</a> — 指示密度の上昇で遵守率が減衰（最高モデルでも500指示で68%）。方向は一致 ✅（記事中の「10個→90%/30個→70%」という具体数値はこの論文にはない ⚠️）</td></tr>
+      <tr><td>MCPよりCLIが帯域面で有利（ツール定義がコンテキストを常時占有）</td><td><a href="https://mariozechner.at/posts/2025-08-15-mcp-vs-cli/">Mario Zechner: MCP vs CLI</a> — ベンチマーク実在。MCPツール定義でコンテキスト7〜9%消費の実測あり。<strong>ただし彼自身の結論は「プロトコルよりツール設計の質が支配的」＋CLIは毎回セキュリティチェックのトークンコストがある</strong>。記事の「CLIファースト」は一面の簡略化 ⚠️</td></tr>
+      <tr><td>自己申告は完了の証拠にならない（長時間エージェントで顕著）</td><td>Anthropicの長時間稼働エージェントに関するエンジニアリング発信・<a href="https://www.swebench.com/">SWE-bench</a>の設計思想（自己申告を排しテストで判定）と整合 ✅</td></tr>
+      <tr><td>報酬ハッキング（テスト改変・リンター無効化で「点だけ取る」）</td><td>OpenAIのRL研究（specification gaming）・DORAのガードレール議論と整合。評価基準ファイルをdenyで保護する対策は<a href="https://code.claude.com/docs/en/settings">公式のPermissions機構</a>で実装可能 ✅</td></tr>
+    </tbody>
+  </table>
+
+  <h3>💡 著者の実践知・仮説（裏付けは自身の運用のみ — 有用だが検証して使う）</h3>
+  <table>
+    <tbody>
+      <tr><td class="em">マクロ／ミクロ／Project OSの3要素論</td><td>著者自身が「検証中の仮説」と明言。ただし内容は本企画の整理と同型（マクロ≈狭義ループの制御層、ミクロ≈②ハーネス、Project OS≈状態基盤/チケット）。<strong>相互裏付けとして心強いが、用語は当社では公開標準（ハーネス/ループ/AGENTS.md）に寄せる</strong></td></tr>
+      <tr><td class="em">スキルの4分類（辞書型/手順型/生成手順型/アイデンティティ型）</td><td>公式は2分類相当。4分類は著者の拡張。設計指針としては実用的 — スキルテンプレの「型」の参考に</td></tr>
+      <tr><td class="em">同一レビュアーの再利用で採点が甘くなる（3.7→3.9→4.1）→ kill&spawn（コンテキストフレッシュ）</td><td>LLM-as-a-judgeのバイアス研究（自己強化・スコアドリフト）と整合する観察。fork起動の運用で対処可能</td></tr>
+      <tr><td class="em">採点者の4契約（fork起動・基準書換禁止・絶対評価・実物確認）、採点JSONのスキーマ固定</td><td>報酬ハッキング対策として理にかなう。当社ループテンプレに採用価値が高い</td></tr>
+      <tr><td class="em">依頼文=採点表（あいまい形容詞を数えられる事実に翻訳）</td><td>評価設計の実務知。SWE-bench等の「テストで完了を定義する」思想の一般化として妥当</td></tr>
+      <tr><td class="em">本質ドキュメント（不変原則の明文化＋PR駆動更新＋HITL）</td><td>実質は「レビュー基準のコード化」。当社では②の評価エージェント基準書として採用可能</td></tr>
+    </tbody>
+  </table>
+
+  <h3>❓ 未確認・注意が必要な記述</h3>
+  <table>
+    <tbody>
+      <tr><td class="em">製品名・モデル名の一部</td><td>「OpenCrew」「Symphony（監督レール）」「GPT-5.4/5.5」「GLM-5」は今回の検索では確認できず。<strong>企画資料には転記しない</strong></td></tr>
+      <tr><td class="em">具体的な数値の一部</td><td>「指示10個→遵守90%」「ヒント使用99%/言及2%」等は出典の数値と一致確認できず（方向は正しい）。<strong>数字は必ず一次情報の値に差し替えて使う</strong></td></tr>
+      <tr><td class="em">トークン消費5〜30倍</td><td>ループ化のコスト増は確実だが、倍率は著者の体感値。当社では⑤で実測して自前の係数を持つ</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>3. 冷静な判断 — 採用にあたっての注意5点</h2>
+  <table>
+    <tbody>
+      <tr><td class="em" style="width:24%;">① 単一著者・Claude Code特化</td><td>実践知はほぼClaude Codeエコシステム前提。当社はCopilot/Gemini/Databricksを併用するため、<strong>可搬な原理（生成と評価の分離、状態外部化、機械的続行判定）だけを抽出</strong>し、ツール固有の手筋はテンプレ実装の参考に留める</td></tr>
+      <tr><td class="em">② 個人規模→組織規模の翻訳</td><td>著者の運用は1人〜数人。100人組織では「採点軸を誰がレビューするか」「ループの承認・監査」など統治の層（本企画のL1/④/⑤）を足す必要がある — ここは記事に無い、当社企画の付加価値</td></tr>
+      <tr><td class="em">③ 著作権・利用条件</td><td><strong>記事は購入者限定・転載/共有禁止と明記</strong>。部門配布資料への原文・図の転載、独自用語体系の丸写しは行わない。本シリーズの詳細ページは、同じ主張を公開一次情報（論文・公式Docs）で裏取りし、自分たちの言葉で記述する方針を維持する</td></tr>
+      <tr><td class="em">④ 陳腐化の速さ</td><td>Agent Teams（実験的機能）、Stop hookの仕様等は数ヶ月で変わり得る。<strong>⑦フロンティアウォッチの監視対象に「Claude Code changelog」を既に含めており、これで追従する</strong></td></tr>
+      <tr><td class="em">⑤ 著者自身の留保</td><td>「正解ではなく検証しやすい形の仮説」「うまく回らないときは責務か状態を疑う」— この態度ごと採用する。当社でも各テンプレは灯台チームの実測で検証してから展開（既定のプロセスと一致）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>4. 企画ドキュメントへの反映</h2>
+  <table>
+    <thead><tr><th style="width:30%;">反映先</th><th>反映内容（公開ソースで裏取り済みのもののみ）</th></tr></thead>
+    <tbody>
+      <tr><td class="em"><a href="04_2_harness.html">② ハーネス詳細</a></td><td>「なぜハーネスが効くのか」に<strong>LLMの構造的制約の根拠表</strong>（Chroma・IFScale・Anthropic研究）を追加。<strong>失敗の昇格ラダー</strong>（口頭→CLAUDE.md→スクリプト→Hook/CIの段階的強制）を追加</td></tr>
+      <tr><td class="em"><a href="05_loop-engineering.html">ループ詳説</a></td><td>新章<strong>「採点設計」</strong>を追加: あいまい形容詞→数えられる事実への翻訳3手順、評価者の独立4原則、続行判定の機械化（Stop hook＋状態ファイル）、2つのダイヤル。<strong>Agent Teams（公式）とMeta-Harness（論文）</strong>への参照を追加</td></tr>
+      <tr><td class="em">今後の改善候補（未反映）</td><td>スキルへのGotcha（失敗パターン）節の標準化 → ①マーケットプレイスのスキルテンプレv2で検討 ／ 本質ドキュメント方式のレビュー基準書 → ②の評価エージェント整備時に検討 ／ 採点JSONスキーマ固定 → Phase 3ループテンプレ実装時に組み込み</td></tr>
+      <tr><td class="em">反映しないもの</td><td>未確認の製品名・数値（§2参照）／著者固有の用語体系（マクロ/ミクロ/Project OS等 — 概念は既に当社整理でカバー）／記事原文・図版（利用条件により）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="refs">
+  <h2>検証に使用した一次情報</h2>
+  <div class="card refs"><ol>
+    <li><a href="https://arxiv.org/abs/2603.28052">Meta-Harness: End-to-End Optimization of Model Harnesses (arXiv)</a></li>
+    <li><a href="https://code.claude.com/docs/en/agent-teams">Claude Code Docs: Agent teams</a> ／ <a href="https://code.claude.com/docs/en/skills">Skills（context: fork 等）</a></li>
+    <li><a href="https://www.trychroma.com/research/context-rot">Chroma Research: Context Rot（18モデル実測）</a></li>
+    <li><a href="https://www.anthropic.com/research/reasoning-models-dont-say-think">Anthropic: Reasoning Models Don't Always Say What They Think</a></li>
+    <li><a href="https://arxiv.org/abs/2507.11538">IFScale: How Many Instructions Can LLMs Follow at Once?（最高モデルでも500指示で68%）</a></li>
+    <li><a href="https://mariozechner.at/posts/2025-08-15-mcp-vs-cli/">Mario Zechner: MCP vs CLI Benchmark</a></li>
+    <li><a href="https://ghuntley.com/ralph/">Geoffrey Huntley: Ralph（無限ループの原型）</a></li>
+    <li><a href="https://www.swebench.com/">SWE-bench（自己申告を排した評価設計）</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="03_proposal.html"><span class="dir">← 戻る</span><div class="t">企画書本体</div></a>
+  <a class="next" href="05_loop-engineering.html"><span class="dir">反映先 →</span><div class="t">ループエンジニアリング詳説</div></a>
+</div>
+</main>
+<footer>参考資料検証レポート ／ 内部検討用 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

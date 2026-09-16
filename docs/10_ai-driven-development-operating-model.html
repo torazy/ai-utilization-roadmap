@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="個人ごとのAI利用から、組織で再利用・統制・改善できるAI駆動開発へ。現在地、目指す現場、共通基盤、組織と役割、90日の実行計画をまとめた構想書。">
+<title>AI駆動開発・AI活用を組織の標準へ — 全体構想と実行計画</title>
+<style>
+:root{--paper:#fffefa;--bg:#f3f2ed;--ink:#22343c;--navy:#183a47;--teal:#087b72;--mint:#e8f4ef;--blue:#205d83;--ice:#eaf1f7;--amber:#9b571c;--sand:#fbf0df;--red:#9b4141;--rose:#faece9;--line:#d4dedb;--muted:#566972;--white:#fff;--radius:13px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Yu Gothic Medium","Yu Gothic","Meiryo",sans-serif;font-size:15px;line-height:1.85}a{color:var(--blue);text-underline-offset:3px}a:hover{color:var(--teal)}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #e29237;outline-offset:4px}button{font:inherit;cursor:pointer}.skip{position:fixed;top:-100px;left:12px;background:#fff;padding:10px;z-index:99}.skip:focus{top:12px}
+.cover{background:var(--navy);color:#fff;padding:62px 34px 52px;border-bottom:6px solid #8bcabb}.cover-inner{max-width:1260px;margin:auto}.eyebrow{font-family:Arial,sans-serif;font-size:12px;letter-spacing:.17em;font-weight:700;color:#c1e0d7}.cover h1{font-size:clamp(29px,3.6vw,47px);letter-spacing:.01em;line-height:1.5;margin:20px 0 18px;max-width:1100px}.cover p{max-width:860px;color:#e0ecef;font-size:17px;line-height:1.9}.cover .subtitle{font-size:20px;color:#b9e3d6;margin:0 0 20px}.cover .meta{font-size:12px;color:#d2e1e4;display:flex;gap:12px 28px;flex-wrap:wrap;margin-top:30px;border-top:1px solid #517079;padding-top:18px}.cover strong{color:#fff}.shell{display:grid;grid-template-columns:215px minmax(0,1fr);gap:36px;max-width:1420px;margin:0 auto;padding:0 30px}.sidebar{position:sticky;top:20px;height:calc(100vh - 40px);overflow-y:auto;padding:30px 12px 30px 0;font-size:12px;scrollbar-width:thin}.nav-title{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.1em;margin:18px 0 8px}.sidebar a{display:block;text-decoration:none;color:var(--muted);padding:7px 8px;border-left:3px solid transparent;line-height:1.5}.sidebar a:hover,.sidebar a.active{background:#e1ede7;border-left-color:var(--teal);color:var(--navy)}.sidebar .nav-tools{margin-top:22px}.print-button{font-size:12px;color:var(--navy);background:var(--paper);border:1px solid #b9c9c3;border-radius:6px;padding:6px 12px}.mobile-nav{display:none}
+main{min-width:0;padding:32px 0 90px}.intro{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;margin-bottom:20px}.intro h2{font-size:19px;margin:0 0 10px}.intro p{font-size:14px}.reading{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:15px;font-size:12px;color:var(--muted)}.legend{font-size:12px;color:var(--muted);margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;letter-spacing:.03em;vertical-align:middle;margin-right:4px;background:var(--ice);color:var(--blue)}.tag.fact{background:var(--ice);color:var(--blue)}.tag.plan{background:var(--mint);color:#096159}.tag.check{background:var(--sand);color:var(--amber)}.tag.research{background:#eeeae0;color:#625942}
+section{margin-top:62px;scroll-margin-top:25px}.section-head{border-top:2px solid var(--navy);padding-top:20px;margin-bottom:24px}.section-kicker{font-family:Arial,sans-serif;color:var(--teal);font-size:11px;font-weight:800;letter-spacing:.12em}.section-head h2{font-size:clamp(24px,2.1vw,30px);line-height:1.5;margin:8px 0 8px;color:var(--navy)}.section-head p{color:var(--muted);font-size:14px;margin:0;max-width:890px}h3{font-size:19px;line-height:1.6;color:var(--navy);margin:30px 0 12px}h4{font-size:15px;color:var(--navy);margin:0 0 8px}p{margin:8px 0 12px}strong{color:var(--navy)}ul,ol{padding-left:1.4em;margin:10px 0}li{margin:4px 0}.grid2,.grid3{display:grid;gap:16px;align-items:stretch}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:21px 23px;min-width:0}.card h3{margin:0 0 10px;font-size:18px}.card p,.card li{font-size:13px}.card .micro{font-size:11px;color:var(--muted)}.card.strong{background:var(--navy);color:#e6eff0;border-color:var(--navy)}.card.strong h3,.card.strong h4,.card.strong strong{color:#fff}.tint{background:var(--mint)}.note{border-left:4px solid var(--teal);background:var(--mint);padding:15px 19px;margin:20px 0;font-size:13px}.note.amber{border-left-color:var(--amber);background:var(--sand)}.note.red{border-left-color:var(--red);background:var(--rose)}.note p:last-child{margin-bottom:0}.small{font-size:12px;color:var(--muted)}.cite{font-size:11px;font-weight:700;white-space:nowrap}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--paper);margin:16px 0}table{border-collapse:collapse;width:100%;font-size:12.5px;line-height:1.8;min-width:630px}caption{text-align:left;padding:14px 16px;font-weight:800;color:var(--navy);background:#f8faf7}th,td{text-align:left;vertical-align:top;padding:14px 14px;border-bottom:1px solid var(--line)}th{background:#e7eeeb;color:var(--navy);font-size:12px;font-weight:800}tr:last-child td{border-bottom:0}td:first-child{font-weight:700;color:var(--navy)}td p{margin:0 0 6px}.nowrap{white-space:nowrap}.evidence{font-size:12px;color:var(--muted);line-height:1.8;border-top:1px solid var(--line);margin-top:15px;padding-top:12px}.evidence b{color:var(--ink)}
+figure{margin:20px 0 24px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px}figcaption{font-size:12px;color:var(--muted);margin-top:18px}.figtitle{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:20px}.flow{display:flex;gap:10px;align-items:stretch}.node{flex:1;min-width:0;background:var(--ice);padding:18px 16px;border-radius:9px;border:1px solid #c9dbe4}.node b{display:block;color:var(--navy);font-size:16px;margin-bottom:8px}.node span{display:block;font-size:12px;color:var(--muted)}.node.green{background:var(--mint);border-color:#a8d3c6}.flow-arrow{display:flex;align-items:center;color:var(--teal);font-size:23px;flex:none}.step-num{font-family:Arial,sans-serif;font-size:24px;font-weight:bold;color:var(--teal);margin-bottom:9px}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.step{border:1px solid var(--line);border-top:4px solid var(--teal);padding:18px;border-radius:9px;background:#fff}.step h4{font-size:16px}.step p{font-size:12px}.step .output{border-top:1px dashed #b2c9c1;padding-top:10px;margin-top:12px;color:var(--navy);font-size:11px}.band{padding:13px 16px;border-radius:7px;text-align:center;background:var(--navy);color:#fff;font-size:13px;font-weight:700;margin:12px 0}.band.light{background:var(--mint);color:var(--navy)}
+.architecture{display:grid;grid-template-columns:126px 1fr;gap:12px}.layer-label{display:flex;flex-direction:column;justify-content:center;color:var(--navy);font-size:13px;font-weight:800}.layer-label small{font-size:10px;color:var(--muted);font-weight:normal}.layer{border:1px solid var(--line);border-radius:9px;padding:16px;background:#f8faf8}.layer.business{background:var(--mint);border-color:#b7d6c9}.layer.platform{background:var(--ice);border-color:#bdcedd}.layer ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:8px 0}.layer li{background:#fff;border:1px solid #cbd8d3;border-radius:5px;font-size:12px;padding:7px 11px;margin:0}.layer b{font-size:14px;color:var(--navy)}.layer p{font-size:12px;margin:8px 0 0}.role-strip{border:1px dashed #94b4a9;border-radius:8px;font-size:12px;padding:12px 16px;margin-top:15px;background:#f2f8f4}.tree{white-space:pre-wrap;overflow-wrap:anywhere;background:#172f3b;color:#e5ecee;border-radius:10px;padding:22px;font-family:Consolas,"Meiryo",monospace;font-size:12px;line-height:1.95;margin:0;height:100%}.tree .comment{color:#a6ccc1}.lifecycle{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.life{border:1px solid var(--line);background:#f3f7f4;padding:14px;border-radius:8px}.life .index{font-size:11px;color:var(--teal);font-weight:800}.life b{display:block;margin:6px 0;font-size:14px;color:var(--navy)}.life p{font-size:11px;margin:0}.org-top{max-width:550px;margin:0 auto;background:var(--navy);color:#fff;padding:16px 20px;border-radius:9px;text-align:center;font-size:14px}.org-top strong{color:#fff}.org-link{text-align:center;color:var(--teal);font-size:21px;padding:7px}.org-bottom{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:14px}.org-box{border:1px solid #c2d6cd;border-top:4px solid var(--teal);padding:18px;border-radius:9px;background:#f1f8f4}.org-box h4{font-size:14px}.org-box p{font-size:12px}.loop-row{display:grid;grid-template-columns:115px 1fr 30px 1fr 30px 1fr;gap:10px;align-items:stretch;margin:12px 0}.loop-label{display:flex;flex-direction:column;justify-content:center;font-size:13px;font-weight:800;color:var(--teal)}.loop-label span{font-size:10px;color:var(--muted);font-weight:normal}.loop-cell{padding:14px;border:1px solid var(--line);border-radius:7px;background:#f4f8f5;font-size:12px}.loop-cell b{display:block;color:var(--navy);margin-bottom:5px}.loop-return{margin:14px 0 0;padding:10px 14px;border:1px dashed #80b6a5;color:#186953;background:#eef7f2;font-size:12px;text-align:center}.timeline{display:grid;grid-template-columns:130px 1fr;gap:0 24px}.time{padding:21px 16px 21px 0;color:var(--teal);font-weight:800;font-size:17px;border-right:3px solid #a2cabe}.time small{display:block;font-size:11px;color:var(--muted);font-weight:normal}.phase{position:relative;padding:20px 0 23px;border-bottom:1px solid var(--line)}.phase::before{content:"";position:absolute;width:13px;height:13px;left:-32px;top:27px;border-radius:50%;background:var(--teal);border:3px solid var(--paper)}.phase h4{font-size:16px}.phase p{font-size:13px}.gate{border-left:3px solid var(--teal);padding-left:12px;font-size:12px;color:var(--navy)}.case{border-top:4px solid var(--teal)}.case.fail{border-top-color:var(--amber)}.case .date{font-size:11px;color:var(--muted)}.case .stat{font-family:Arial,"Meiryo",sans-serif;font-size:28px;color:var(--navy);font-weight:800;line-height:1.4;margin:14px 0}.case .stat small{font-size:12px;font-weight:normal}.case .take{border-top:1px solid var(--line);padding-top:12px;margin-top:14px}.cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.source{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:15px 17px;font-size:12px;overflow-wrap:anywhere}.source a{font-weight:800}.source p{font-size:11px;color:var(--muted);margin:5px 0 0}.source .refnum{font-family:Arial,sans-serif;color:var(--teal);font-weight:800;margin-right:5px}details{border:1px solid var(--line);border-radius:10px;background:var(--paper);margin:12px 0}summary{padding:16px 20px;color:var(--navy);font-weight:800;font-size:14px;cursor:pointer}details .detail-body{padding:0 21px 20px}.template{background:#f3f6f2;border:1px solid var(--line);border-radius:8px;padding:20px;font-size:12px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;font-family:Consolas,"Meiryo",monospace}.footer{border-top:2px solid var(--navy);padding-top:23px;margin-top:50px;font-size:12px;color:var(--muted)}.toplink{display:inline-block;margin-top:12px}.js-only{display:none}.js .js-only{display:inline-block}
+@media(min-width:1500px){body{font-size:15.5px}.shell{gap:44px}.card p,.card li{font-size:13.5px}table{font-size:13px}}
+@media(max-width:1080px){.shell{grid-template-columns:180px 1fr;gap:24px;padding:0 22px}.sidebar{font-size:11px}.grid3{grid-template-columns:1fr}.lifecycle{grid-template-columns:repeat(3,minmax(0,1fr))}.loop-row{grid-template-columns:90px 1fr 20px 1fr 20px 1fr;gap:6px}.loop-cell{padding:10px;font-size:11px}.org-bottom{grid-template-columns:1fr}.architecture{grid-template-columns:110px 1fr}.flow .node{padding:15px 12px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.cover{padding:35px 22px 32px}.cover h1{font-size:30px}.cover p{font-size:14px}.cover .subtitle{font-size:17px}.shell{display:block;padding:0 18px}.sidebar{display:none}.mobile-nav{display:block;max-width:100%;margin:18px 0 0;background:var(--paper)}.mobile-nav .mobile-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px 20px}.mobile-nav a{font-size:12px}main{padding-top:20px}section{margin-top:44px}.section-head h2{font-size:25px}.intro{padding:20px}.grid2,.cases,.source-grid{grid-template-columns:1fr}.card{padding:20px}figure{padding:18px}.flow{flex-direction:column}.flow-arrow{justify-content:center;transform:rotate(90deg);height:22px}.flow .node{padding:18px}.architecture{grid-template-columns:1fr;gap:8px}.layer-label{margin-top:8px}.layer-label small{display:inline;margin-left:8px}.loop-row{grid-template-columns:1fr;gap:8px;border-bottom:1px solid var(--line);padding:10px 0 20px}.loop-row .flow-arrow{height:16px}.loop-label{font-size:15px;margin-bottom:4px}.loop-cell{font-size:12px;padding:14px}.lifecycle{grid-template-columns:1fr}.life{padding:16px}.life b{display:inline-block;margin:0 0 0 10px}.life p{font-size:12px;margin-top:8px}.time{font-size:15px}.timeline{grid-template-columns:92px 1fr;gap:0 20px}.phase::before{left:-28px}.tree{font-size:11px;padding:18px}.cover .meta{font-size:11px;gap:7px 17px}table{min-width:680px}.legend .tag{margin-top:5px}.reading{gap:5px 20px}}
+@media(max-width:450px){.steps{grid-template-columns:1fr}.cover h1{font-size:27px}.section-head h2{font-size:23px}.mobile-nav .mobile-links{grid-template-columns:1fr}.timeline{grid-template-columns:76px 1fr;gap:0 15px}.phase::before{left:-23px}.time{font-size:13px}.source{padding:14px}.intro{padding:18px}.shell{padding:0 14px}}
+@media screen and (max-width:800px){.table-wrap::before{content:"表は横にスクロールできます →";display:block;position:sticky;left:0;padding:8px 12px;font-size:10px;color:var(--muted);background:#f0f5f1;border-bottom:1px solid var(--line)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@page{size:A4;margin:16mm 13mm}
+@media print{html{scroll-behavior:auto}body{background:#fff;font-size:10pt;line-height:1.65;color:#152b35;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cover{padding:26px 25px 24px}.cover h1{font-size:27pt}.cover p{font-size:11pt}.cover .meta{font-size:9pt}.sidebar,.mobile-nav,.print-button,.toplink,.skip{display:none!important}.shell{display:block;max-width:none;padding:0}main{padding:20px 0 0}section{margin-top:32px;break-before:page}.section-head{break-after:avoid;margin-bottom:17px}.section-head h2{font-size:20pt}.section-head p{font-size:10pt}h3,h4{break-after:avoid}.card,figure,.source,details,.note,.phase{break-inside:avoid;box-shadow:none}.card p,.card li,.phase p{font-size:9pt}.table-wrap{overflow:visible;border-radius:0}table{min-width:0!important;font-size:8pt;line-height:1.6}th,td{padding:9px}thead{display:table-header-group}tr{break-inside:avoid}a{color:#205d83;text-decoration:none}.source-grid{display:block}.source{margin:9px 0}.source a::after{content:"\A" attr(href);white-space:pre-wrap;font-size:7pt;font-weight:normal;color:#50616a}.loop-cell,.tree{font-size:8pt}.steps{grid-template-columns:repeat(3,minmax(0,1fr))}.lifecycle{grid-template-columns:repeat(5,minmax(0,1fr))}.life{padding:10px}.life p{font-size:8pt}.org-bottom{grid-template-columns:repeat(3,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid2,.cases{grid-template-columns:repeat(2,minmax(0,1fr))}.architecture{grid-template-columns:100px 1fr}.flow{flex-direction:row}.flow-arrow{transform:none}.intro{break-inside:avoid}.footer{margin-top:25px}}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">本文へ移動</a>
+<header class="cover">
+ <div class="cover-inner">
+  <div class="eyebrow">ORGANIZATIONAL AI ADOPTION · CONCEPT &amp; EXECUTION</div>
+  <h1>AI駆動開発・AI活用を<br>組織の標準へ</h1>
+  <p class="subtitle">現場で使える共通基盤と、学び続ける推進体制</p>
+  <p>会社契約のAIツールを使う取り組みは、すでに始まっています。<br>次に考えるのは、個人や一部門で生まれた実践を、チームの仕事の進め方、<br>再利用できる資産、組織の継続的な改善へ、どうつないでいくかです。</p>
+  <div class="meta"><span>構想・実行計画 / 第1版</span><span>調査基準日：<strong>2026年9月8日</strong></span><span>対象：開発を主軸とした組織的AI活用</span></div>
+ </div>
+</header>
+<div class="shell">
+ <aside class="sidebar" aria-label="目次">
+  <div class="nav-title">I. 背景と全体構想</div>
+  <a href="#context">01 現在地と取り組む理由</a><a href="#vision">02 目指す現場の姿</a><a href="#blueprint">03 全体構想</a>
+  <div class="nav-title">II. 現場で使える仕組み</div>
+  <a href="#workflow">04 仕事の進め方</a><a href="#capabilities">05 整備するものの全体像</a><a href="#repository">06 開発の標準セット</a><a href="#skills">07 スキルの組織資産化</a><a href="#access">08 ツール・情報・接続</a>
+  <div class="nav-title">III. 組織として動かす</div>
+  <a href="#organization">09 組織と役割</a><a href="#enablement">10 現場への定着と育成</a><a href="#improvement">11 改善のループ</a><a href="#roadmap">12 展開ロードマップ</a><a href="#measurement">13 成果と投資の測り方</a><a href="#start">14 着手時の決定事項</a>
+  <div class="nav-title">IV. 根拠と実務ひな形</div>
+  <a href="#cases">15 他社事例と研究</a><a href="#templates">16 実務ひな形・用語</a><a href="#sources">17 参照情報</a>
+  <div class="nav-tools"><button class="print-button js-only" type="button" id="print-button">印刷 / PDF保存</button><p class="small">本文・図はオフラインでも<br>閲覧できます。</p></div>
+ </aside>
+ <div>
+ <details class="mobile-nav"><summary>目次を開く</summary><div class="mobile-links">
+ <a href="#context">01 現在地</a><a href="#vision">02 目指す姿</a><a href="#blueprint">03 全体構想</a><a href="#workflow">04 仕事の進め方</a><a href="#capabilities">05 整備項目</a><a href="#repository">06 開発標準</a><a href="#skills">07 スキル</a><a href="#access">08 ツール・情報・接続</a><a href="#organization">09 組織・役割</a><a href="#enablement">10 定着・育成</a><a href="#improvement">11 改善ループ</a><a href="#roadmap">12 ロードマップ</a><a href="#measurement">13 測定・投資</a><a href="#start">14 着手事項</a><a href="#cases">15 事例・研究</a><a href="#templates">16 ひな形</a><a href="#sources">17 出典</a>
+ </div></details>
+ <main id="main">
+ <div class="intro">
+  <h2>この資料で扱うこと</h2>
+  <p>AIを使える環境から、<strong>AIを使って仕事を完了でき、その経験で次の仕事が改善される組織</strong>へ進むための構想書です。開発プロセス、共通基盤、人材・役割、統制、展開・改善を一続きで設計します。開発以外の業務も同じ考え方で扱い、まず既存のGemini利用から広げます。</p>
+  <p>開発者、チーム責任者、基盤・推進担当、IT・セキュリティ担当、投資判断者が、共通の全体像を持ち、着手する仕事を決めることを目的としています。</p>
+  <div class="reading"><span>全体像を把握：01–03、09、12</span><span>実装・運営を設計：04–14</span><span>根拠を確認：15、17</span></div>
+  <div class="legend"><span class="tag fact">確認済みの現状</span>今回共有された事実　 <span class="tag research">外部の事実</span>一次資料の記載・研究結果　 <span class="tag plan">本資料の提案</span>自社向けの設計案　 <span class="tag check">要確認</span>未確認の契約・環境・計画前提<br>特記のない体制、整備内容、日程、数値目標は提案です。効果を保証するものではなく、現場で検証して更新します。</div>
+ </div>
+
+ <section id="context">
+  <div class="section-head"><div class="section-kicker">01 / CONTEXT</div><h2>現在地と、組織で取り組む理由</h2><p>出発点は「未導入」ではありません。すでにある契約・実践・知識を、組織で使える状態へつなぎます。</p></div>
+  <div class="table-wrap"><table><thead><tr><th style="width:22%">領域</th><th style="width:38%">確認できていること</th><th>次に整えること</th></tr></thead><tbody>
+  <tr><td>開発ツール</td><td><span class="tag fact">現状</span>会社契約のGitHub Copilotを各個人が利用。一部でClaude Codeも利用。</td><td>利用モード・端末・認証・権限の把握。チームで再現できる設定と仕事の手順。</td></tr>
+  <tr><td>開発以外のAI活用</td><td><span class="tag fact">現状</span>Google Workspaceの契約があり、Geminiを利用。</td><td>契約内で使える機能を確認し、会議後の整理、調査、文書作成などの業務手順へ組み込む。</td></tr>
+  <tr><td>エージェント</td><td><span class="tag fact">現状</span>現在使っているエージェントは、GitHub CopilotとClaude Code。</td><td>両者を共通の課題・テストで評価し、得意な作業と許可する実行範囲を決める。</td></tr>
+  <tr><td>設計情報</td><td><span class="tag fact">現状</span>設計書のMarkdown化を進めている部門がある。</td><td>書式だけでなく、正本、更新責任、コードとの対応、AIが必要部分を探せる導線を整える。</td></tr>
+  <tr><td>スキル・ノウハウ</td><td><span class="tag fact">現状</span>スキルをそれぞれで作っている。全体統制はできていない。</td><td>個人の実験を生かしながら、共有候補の評価、配布、バージョン管理、保守担当を設ける。</td></tr>
+  </tbody></table></div>
+  <div class="grid2">
+   <div class="card"><h3>すでにある強み</h3><p>利用を始める入口があり、先行実践者もいます。新規製品の調達や全社の情報移行を待たずに、<strong>実際の仕事を通じた標準づくり</strong>を始められます。</p></div>
+   <div class="card"><h3>個人利用のままでは残る課題</h3><p>設定・知識・使い方を各自が組み立て、失敗の対策も分散します。作成者の異動でスキルが止まる、実装は速くてもレビューが詰まる、といった問題は、<strong>チームと組織の設計課題</strong>です。</p></div>
+  </div>
+  <figure aria-label="個人の実践からチームの標準、組織の改善につながる構想">
+   <div class="figtitle">図1　今ある取り組みを、次の単位へつなぐ</div>
+   <div class="flow"><div class="node"><b>個人・部門の実践</b><span>Copilot / Claude Code<br>Markdown化 / 個人スキル<br>うまくいく使い方を発見</span></div><div class="flow-arrow" aria-hidden="true">→</div><div class="node green"><b>チームの仕事の標準</b><span>共通の実行環境・手順<br>テスト・レビュー・知識更新<br>他のメンバーも再現</span></div><div class="flow-arrow" aria-hidden="true">→</div><div class="node"><b>組織の共通基盤</b><span>利用範囲・配布・支援<br>成果と失敗の評価<br>検証済みの改善を展開</span></div></div>
+   <figcaption>中央がすべての業務を実装するのではなく、現場の実践を再利用可能にし、組織から現場へ改善を返す関係をつくります。</figcaption>
+  </figure>
+  <div class="evidence"><b>外部知見：</b>DORAは、AI利用の成果を支える基盤を「開発者向けの社内プロダクト」と捉え、代表的な仕事を改善する最小構成から育てることを推奨しています。<a class="cite" href="https://dora.dev/capabilities/platform-engineering/">[2] DORA</a></div>
+  <div class="note amber"><span class="tag check">計画前提</span>従来資料の「約100名・10チーム・50システム」を、展開規模の仮置きに使います。現在の人数・システム一覧、各ツールの契約プラン、Claude Codeの認証・課金方法、既存CI・テスト・端末管理の実態は着手時に確認します。未確認の構成を「整備済み」とは扱いません。</div>
+ </section>
+
+ <section id="vision">
+  <div class="section-head"><div class="section-kicker">02 / TARGET EXPERIENCE</div><h2>目指すのは、現場の仕事が変わること</h2><p>現時点の目標は、AIを特別な試行ではなく、品質と責任を伴う日常の仕事の進め方にすることです。</p></div>
+  <div class="card strong"><h3>目指す姿</h3><p style="font-size:17px">各チームが、必要な知識と検証手段を備えた環境でAIに仕事を任せ、人が目的・重要な判断・成果の受入れに責任を持つ。そこで得た改善が、次の仕事と他チームの標準に継続的に反映される。</p></div>
+  <h3>例えば、担当者が小さな仕様変更に取り組む一日</h3>
+  <div class="steps">
+   <div class="step"><div class="step-num">01</div><h4>迷わず始められる</h4><p>承認済みアカウントで利用し、対象リポジトリの開始手順を実行。担当システムの注意点と、使えるスキルが分かる。</p><div class="output">現場の変化：環境設定と使い方の探索を毎回繰り返さない</div></div>
+   <div class="step"><div class="step-num">02</div><h4>意図を共有して任せる</h4><p>変更目的、受入条件、触れてはいけない範囲を示す。AIが関連コード・設計を調べ、根拠付きの変更案を出す。</p><div class="output">現場の変化：単発の質問から、成果を求める依頼へ</div></div>
+   <div class="step"><div class="step-num">03</div><h4>実装と検証がつながる</h4><p>AIが実装・テストを反復。実際の検証結果と未確認点を残し、失敗時は決めた条件で人へ戻す。</p><div class="output">現場の変化：「できました」の返答だけで完了しない</div></div>
+   <div class="step"><div class="step-num">04</div><h4>レビューで判断できる</h4><p>差分、判断理由、テスト結果、残るリスクがPRにそろう。人は要求と設計・影響を確認し、責任を持って受け入れる。</p><div class="output">現場の変化：確認材料を探す時間を減らす</div></div>
+   <div class="step"><div class="step-num">05</div><h4>仕事の完了が知識になる</h4><p>関連する設計・手順・運用情報も更新。重要な判断を、次の担当者とAIが参照できる場所に残す。</p><div class="output">現場の変化：コードだけ進み、説明が古くなる状態を減らす</div></div>
+   <div class="step"><div class="step-num">06</div><h4>次の仕事が少し良くなる</h4><p>詰まった理由を記録。チームがテストやスキルを改善し、有効な変更は共通版として他チームにも届く。</p><div class="output">現場の変化：同じ失敗の再発を、個人の注意力に頼らない</div></div>
+  </div>
+  <h3>到達したかは、行動と成果で確かめる</h3>
+  <div class="table-wrap"><table><thead><tr><th>観点</th><th>到達状態</th><th>確認方法</th></tr></thead><tbody>
+  <tr><td>使える</td><td>先行実践者以外の担当者も、標準手順で対象業務を完了できる。</td><td>新規参加者による実作業、初回完了までの障害・支援時間</td></tr>
+  <tr><td>役立つ</td><td>確認・手戻りを含めた仕事全体が改善し、空いた力を顧客価値や負債解消に回せる。</td><td>総作業時間、待ち時間、受入品質、再投資した成果</td></tr>
+  <tr><td>任せられる</td><td>利用データ・実行権限・人の確認点・停止方法が明確で、実際に機能する。</td><td>権限逸脱テスト、PR・実行記録、停止・復旧訓練</td></tr>
+  <tr><td>育つ</td><td>現場で見つかった改善が、評価を経て標準に反映され、再発が減る。</td><td>改善記録とリリースの対応、同種失敗率、別チームでの再現</td></tr>
+  </tbody></table></div>
+  <div class="note"><strong>変えない軸と、変える実装を分ける。</strong>「業務価値・品質・人の責任・学習する仕組み」は維持します。モデル、製品、スキル形式、接続方式、任せる仕事の範囲は、評価結果に応じて変更します。全システムを同じ日程で完全自律化することを、達成条件にはしません。</div>
+ </section>
+
+ <section id="blueprint">
+  <div class="section-head"><div class="section-kicker">03 / BLUEPRINT</div><h2>全体構想：現場・共通基盤・組織運営を一体にする</h2><p>「基盤」はサーバーやAI製品だけではありません。仕事の手順、再利用資産、相談できる人、改善の運営までを含みます。</p></div>
+  <figure>
+   <div class="figtitle">図2　既存ツールを生かす、組織のAI活用基盤</div>
+   <div class="architecture">
+    <div class="layer-label">現場の仕事<small>チーム・業務責任者が所有</small></div><div class="layer business"><b>開発の一連の仕事 ＋ 日常業務</b><ul><li>要件・設計</li><li>実装・テスト・レビュー</li><li>リリース・保守</li><li>調査・会議・文書作成</li></ul><p>業務の目的・受入条件・ドメイン知識を持ち、成果を受け入れる。業務固有のスキル・手順を育てる。</p></div>
+    <div class="layer-label">共通の使い方<small>中央と現場が共同で整備</small></div><div class="layer platform"><b>現場へ提供する「標準セット」と支援サービス</b><ul><li>リポジトリひな形</li><li>スキル・作業レシピ</li><li>実行環境とCI</li><li>接続のカタログ</li><li>実務研修・伴走・相談</li></ul><p>始めやすく、検証でき、困ったときに戻れる経路を用意。更新とサポートも提供する。</p></div>
+    <div class="layer-label">ツール・情報<small>IT・基盤・データ所有者が管理</small></div><div class="layer"><b>現在の資産を優先して利用</b><ul><li>GitHub Copilot</li><li>Claude Code</li><li>Gemini / Workspace</li><li>コード・設計・チケット</li><li>テスト・運用情報</li></ul><p>利用者の認証、実行環境、接続先の権限をそれぞれ管理。情報は正本と参照権限を保って接続する。</p></div>
+    <div class="layer-label">運営と改善<small>組織として責任を持つ</small></div><div class="layer platform"><b>価値・品質・安全・費用を見て、標準を更新</b><ul><li>業務別の効果測定</li><li>失敗例からの評価</li><li>資産の版管理と配布</li><li>利用・例外方針</li><li>新技術の検証と採否</li></ul><p>現場の実行結果 → 改善バックログ → 検証 → 段階配布 → 現場で効果確認、を繰り返す。</p></div>
+   </div>
+   <div class="role-strip"><strong>責任の境界：</strong>中央は「共通の道具と使える道筋」、チームは「業務成果と固有知識」、IT・セキュリティは「管理・保護の実装」。経営・部門責任者が優先順位と必要な時間・投資を決めます。</div>
+   <figcaption>概念図です。すべての通信を一つのゲートウェイへ集める構成や、情報を単一のデータベースへ移すことを前提にしていません。</figcaption>
+  </figure>
+  <div class="grid3">
+   <div class="card"><h3>共通化するもの</h3><p>利用の基本ルール、設定の配布方法、開始手順、検証・記録の形式、標準スキル、問い合わせ窓口。</p></div>
+   <div class="card"><h3>現場で変えるもの</h3><p>業務の受入条件、設計・品質基準、ドメイン知識、個別のテスト、担当システムに合う作業手順。</p></div>
+   <div class="card"><h3>評価して選び直すもの</h3><p>モデルとエージェント、共通基盤の実装方式、接続製品、任せる作業の範囲、投資する対象業務。</p></div>
+  </div>
+ </section>
+
+ <section id="workflow">
+  <div class="section-head"><div class="section-kicker">04 / WORKFLOW</div><h2>AI駆動開発を、コード生成の外まで広げる</h2><p>AI駆動開発を「目的に沿ってAIが調査・実装・検証を反復し、人が適切な判断と受入れを担う開発」と定義します。</p></div>
+  <div class="table-wrap"><table><thead><tr><th style="width:15%">仕事の段階</th><th style="width:28%">AIに担わせること</th><th style="width:28%">人が担うこと</th><th>残す成果物・根拠</th></tr></thead><tbody>
+  <tr><td>1. 課題・要求</td><td>問い合わせや仕様の整理、論点・不足情報・影響範囲の候補出し。</td><td>なぜ行うか、何を変えないか、顧客価値、受入条件を決める。</td><td>チケット／作業カード。目的、対象外、具体的な受入例。</td></tr>
+  <tr><td>2. 調査・設計</td><td>コード・仕様・過去判断の検索、変更案とテスト観点の作成。</td><td>業務ルール、非機能、権限、互換性、設計上のトレードオフを判断。</td><td>根拠リンク付き変更計画。大きな判断は設計・ADRに残す。</td></tr>
+  <tr><td>3. 実装・テスト</td><td>小さな単位で修正し、ビルド・テストを実行。失敗に基づいて修正。</td><td>曖昧な仕様、作業範囲の拡大、予想外の失敗に対応する。</td><td>差分、実行コマンドと結果、失敗・未確認事項。</td></tr>
+  <tr><td>4. レビュー</td><td>自己チェック、変更説明、レビュー観点とリスクの提示。</td><td>要求充足、設計、重要コード、テストの妥当性を確認し、受け入れる。</td><td>PR、CI結果、レビュー記録。AIレビューだけを承認としない。</td></tr>
+  <tr><td>5. リリース</td><td>リリースノート、確認手順、ロールバック案の作成。</td><td>適用判断、段階リリース、必要な承認。本番操作は別の実行権限で管理。</td><td>変更記録、適用結果、ロールバック手順。</td></tr>
+  <tr><td>6. 保守・学習</td><td>ログの整理、障害の一次調査、手順・テスト・設計の更新案。</td><td>事実と仮説を分け、根本原因、恒久対応、次の改善を決める。</td><td>障害記録、評価ケース、修正された標準資産。</td></tr>
+  </tbody></table></div>
+  <div class="note"><strong>作業の大きさに合わせて軽くする。</strong>小さな修正は、チケットに目的・受入条件・検証方法があれば開始できます。影響の大きい変更だけ設計資料やADRを追加します。全工程を毎回やり直す直線的な手順ではなく、調査・実装・テストを往復します。</div>
+  <div class="evidence"><b>公式の実践知：</b>Anthropicの2026年8月のSDLCガイドは、実装が速くなると計画・テスト・レビューなどへ制約が移ること、各段階の成果物で文脈を引き継ぐことを扱っています。本資料では、作業規模に応じた軽量化と、人による受入れを組み合わせます。<a class="cite" href="https://claude.com/blog/the-ai-native-sdlc-playbook">[3] Anthropic</a></div>
+  <h3>開発以外も、同じ「目的 → 根拠 → 作成 → 確認 → 更新」で進める</h3>
+  <div class="grid2">
+   <div class="card tint"><h3>最初の業務例：会議から実行へ</h3><p><strong>Geminiで試す：</strong>利用可能な議事情報・関連文書から、決定事項、未決事項、担当・期限の候補を整理。担当者が出典と意味を確認し、既存のタスク管理へ登録します。</p><p><strong>用意するもの：</strong>入力してよい情報の例、出力ひな形、原文リンクの付け方、確認担当、測定する「会議後の整理＋確認」時間。録音・外部共有のルールも確認します。</p><p class="micro">チケットへの自動登録や外部送信は、接続・権限を別途整えてから。まず既存機能内で手動確認します。</p></div>
+   <div class="card"><h3>段階を分ける業務</h3><p><strong>障害対応：</strong>読み取り中心の証拠収集・時系列整理から開始。復旧判断と本番変更は運用責任者が担当します。</p><p><strong>データ分析：</strong>承認済みデータとクエリ範囲で集計・説明を支援。数値・母集団・意味は業務側が検証します。</p><p><strong>顧客向け機能：</strong>AIを製品に組み込む場合は別のプロダクト開発として扱い、顧客影響、品質評価、利用規約、稼働監視を追加します。</p></div>
+  </div>
+ </section>
+
+ <section id="capabilities">
+  <div class="section-head"><div class="section-kicker">05 / CAPABILITY BACKLOG</div><h2>何を整備するか：9つの能力と具体的な成果物</h2><p>大きな基盤を一度に完成させるのではなく、対象の仕事が一巡するために必要な最小セットをつくります。</p></div>
+  <div class="table-wrap"><table><caption>最初の90日で、先行対象に提供するもの。担当名は09章で定義。</caption><thead><tr><th style="width:18%">能力・主担当</th><th style="width:31%">整備する成果物</th><th style="width:26%">90日以内の提供範囲</th><th>使えると判断する条件</th></tr></thead><tbody>
+  <tr><td>① 利用環境<br><span class="small">IT＋基盤担当</span></td><td>承認済みの「製品×利用モード×認証×データ範囲」一覧。標準設定、利用開始・退職／異動時の手順。</td><td>現行Copilot・Claude Code・Geminiの棚卸し。先行利用端末で設定を配布・検証。</td><td>想定メンバーが利用開始でき、権限のない操作を止められ、解除・停止も実行できる。</td></tr>
+  <tr><td>② 文脈・知識<br><span class="small">チーム責任者</span></td><td>システムの入口文書、用語、構成、重要ルール、設計判断、正本へのリンク。更新責任・確認日。</td><td>3〜5リポジトリの「よく変更する領域」に絞る。全面Markdown化は着手条件にしない。</td><td>別の担当者とAIが必要情報を探せ、誤った・古い情報を指摘して更新できる。</td></tr>
+  <tr><td>③ 実行・検証<br><span class="small">基盤＋チームQA</span></td><td>再現できる起動・ビルド・テスト手順、テストデータ、CI、PR保護、停止・復旧手順。</td><td>対象作業の正常・異常・回帰テスト。エージェントの編集は分離された作業場所で実施。</td><td>標準環境で再実行できる。AIの自己申告ではなく、実際の結果で受入可否を判断できる。</td></tr>
+  <tr><td>④ スキル・手順<br><span class="small">基盤＋各資産所有者</span></td><td>共有カタログ、標準スキル、利用例、評価セット、版番号、所有者、変更履歴、配布・撤回手順。</td><td>候補を棚卸しし、まず3つ程度を標準化。共通Gitと既存の配布機能から開始。</td><td>作成者以外が使って同種の成果を出せ、どの版を使ったか分かり、前の版へ戻せる。</td></tr>
+  <tr><td>⑤ 情報への接続<br><span class="small">基盤＋データ所有者</span></td><td>データ／接続カタログ、目的別の権限、認証、読み取り・書き込みの区分、接続試験。</td><td>最も必要な読み取り接続を1件、必要性が確認できた場合に実装。既存連携で足りればMCPは増やさない。</td><td>未許可の情報を取得できない。取得元・時点が分かり、接続を個別に止められる。</td></tr>
+  <tr><td>⑥ 評価・可視化<br><span class="small">評価担当＋推進責任者</span></td><td>代表課題、失敗ケース、採点基準、導入前の値、実行記録、業務別の成果・費用表。</td><td>2つの開発チームと1つの業務手順で測定。最初は既存メトリクス＋小さな記録表。</td><td>採用・改善・中止を判断できる。未取得データや測定対象外も分かる。</td></tr>
+  <tr><td>⑦ 定着・支援<br><span class="small">現場支援担当＋管理職</span></td><td>実務ハンズオン、能力別の育成内容、相談窓口、伴走計画、よくある詰まりへの解決手順。</td><td>先行2チームに伴走し、次のチームへ引継ぎ。学習時間と既存業務の調整をセットで確保。</td><td>先行実践者に頼らず仕事が完了し、問い合わせから標準の改善につながる。</td></tr>
+  <tr><td>⑧ 方針・責任<br><span class="small">部門責任者＋IT・セキュリティ</span></td><td>利用範囲、データ分類、承認点、成果の責任、例外・変更・事故時の手順。委託先にも適用する条件。</td><td>「通常利用」「新しい接続・実行」「高リスク」の3経路を文書と設定に落とす。</td><td>通常利用で毎回の中央審査が不要。例外の判断者と期限、現場の相談先が明確。</td></tr>
+  <tr><td>⑨ 継続運用<br><span class="small">基盤＋運用責任者</span></td><td>資産台帳、リリース手順、通知、稼働・費用上限、障害対応、廃止・移行手順。</td><td>標準資産の更新運用を開始。無人の定期実行は限定領域での設計・試験までを基本とする。</td><td>担当者不在でも止められる。障害時に業務へ戻れる。保守の時間・費用を見込んでいる。</td></tr>
+  </tbody></table></div>
+  <div class="note"><strong>着手順：</strong>対象業務と責任者を決め、①〜④・⑥〜⑧を小さく同時に整えて仕事を一巡させます。⑤は必要な情報が足りないときに追加。⑨の版管理は初日から、定期自動実行は検証・復旧が整ってから進めます。</div>
+ </section>
+
+ <section id="repository">
+  <div class="section-head"><div class="section-kicker">06 / REPOSITORY STANDARD</div><h2>開発の標準セット：文脈・実行・検証をそろえる</h2><p>Markdownの設計書とスキルを、実際にビルド・テストできる環境につなぎます。この組合せを、本資料では「開発の標準セット」と呼びます。</p></div>
+  <div class="grid2">
+   <pre class="tree" aria-label="標準リポジトリの構成例">repository/
+├─ README.md             <span class="comment"># 開始・実行・検証の入口</span>
+├─ docs/
+│  ├─ domain.md          <span class="comment"># 用語・重要な業務ルール</span>
+│  ├─ architecture.md    <span class="comment"># 構成・依存・重要な制約</span>
+│  ├─ decisions/         <span class="comment"># 設計判断と理由</span>
+│  └─ source-map.md      <span class="comment"># 正本・所有者への導線</span>
+├─ ai/
+│  ├─ common/            <span class="comment"># ツール共通の指示の原稿</span>
+│  └─ asset-manifest.*   <span class="comment"># 採用資産・版・対応環境</span>
+├─ .github/
+│  ├─ copilot-instructions.md
+│  ├─ skills/            <span class="comment"># 検証した配布形式の一例</span>
+│  ├─ workflows/         <span class="comment"># CIと受入れの検査</span>
+│  └─ PULL_REQUEST_TEMPLATE.md
+├─ CLAUDE.md             <span class="comment"># Claude Code向け入口</span>
+├─ .claude/skills/       <span class="comment"># 必要なら別形式に配布</span>
+├─ scripts/              <span class="comment"># 起動・検証の実行手順</span>
+└─ tests/                <span class="comment"># 正常・異常・回帰の検証</span></pre>
+   <div>
+    <div class="card"><h3>ひな形に含める、最低限の5点</h3><ol><li><strong>何のシステムか：</strong>目的、責任者、重要な業務制約。</li><li><strong>どう動かすか：</strong>必要環境、依存、起動・テストの確実な手順。</li><li><strong>どう依頼するか：</strong>目的・受入条件・変更範囲・中断条件。</li><li><strong>どう確かめるか：</strong>既存テスト、独立した受入例、レビュー観点。</li><li><strong>どう戻すか：</strong>差分管理、既知の正常状態、設定・資産の版。</li></ol></div>
+    <div class="note amber"><strong>このツリーは構成案です。</strong><code>ai/</code>以下を製品が自動読込するとは限りません。製品ごとの入口から参照・生成し、対象のIDE／CLIで読込を試験します。同じ内容を複数箇所で手編集しません。既存のCI製品・設計管理方式に合わせて置き換えます。</div>
+   </div>
+  </div>
+  <h3>「AIへの指示」と「実行を制約する仕組み」を分ける</h3>
+  <div class="table-wrap"><table><thead><tr><th>目的</th><th>手段</th><th>扱い</th></tr></thead><tbody>
+  <tr><td>意図・作法を伝える</td><td>Copilot用指示、CLAUDE.md、スキル、作業カード。</td><td>理解・行動を助けるもの。指示文だけで秘密情報保護や承認を保証しない。</td></tr>
+  <tr><td>変更の品質を確かめる</td><td>ビルド、型・静的検査、業務テスト、セキュリティ検査、必須CI。</td><td>実行可能な検査にする。テストの削除・弱体化やCI設定の変更もレビュー対象。</td></tr>
+  <tr><td>できる操作を制限する</td><td>端末・実行環境、管理設定、ファイル／ネットワーク権限、接続先の認可、保護されたブランチ。</td><td>ツール外も含む制約。危険な操作や権限逸脱を、実際に遮断できるか確認する。</td></tr>
+  </tbody></table></div>
+  <div class="evidence">GitHubの公式資料は、指示・スキル・フックなどの対応がIDE／利用面ごとに異なることを示しています。Claude Codeにも共通仕様への独自拡張があります。共通の原稿と製品別の薄い設定を分け、実機で互換性を確かめます。<a class="cite" href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">[13] GitHub</a> <a class="cite" href="https://code.claude.com/docs/en/skills">[17] Anthropic</a></div>
+  <h3>既存システムは、使える範囲から段階的に整備する</h3>
+  <div class="grid3">
+   <div class="card"><h3>A. 理解・調査に使う</h3><p>信頼できる入口情報と参照範囲を用意。設計の復元案は、現行コード・挙動・有識者で確認。AIの推測を確定仕様にしません。</p></div>
+   <div class="card tint"><h3>B. 変更・PRまで任せる</h3><p>再現できる環境、対象範囲のテスト、必須レビュー、切戻しを用意。変更頻度が高く、検証可能な領域から着手します。</p></div>
+   <div class="card"><h3>C. 定期実行へ広げる</h3><p>Bに加え、サービス用ID、隔離実行、時間・費用・件数上限、通知、停止、再実行・復旧を整備。まず提案PRまでに限定します。</p></div>
+  </div>
+  <p class="small">これはシステムの「優劣」ではなく、作業別の利用準備区分です。テストが薄いシステムでは挙動を固定するテストから整備し、重要な未検証領域は人の作業として残します。全50システムの文書化完了を待つ必要はありません。</p>
+ </section>
+
+ <section id="skills">
+  <div class="section-head"><div class="section-kicker">07 / REUSABLE ASSETS</div><h2>個人のスキルを、保守できる組織資産へ</h2><p>共有フォルダに置くだけで終わらせず、使う人が選べて、作成者以外が保守・改善できる形にします。</p></div>
+  <figure>
+   <div class="figtitle">図3　実験の自由と、標準の信頼性を両立する資産のライフサイクル</div>
+   <div class="lifecycle">
+    <div class="life"><span class="index">01 →</span><b>個人・チームで試す</b><p>許可された環境とデータで実験。すべてを中央承認にはしない。</p></div>
+    <div class="life"><span class="index">02 →</span><b>共有候補にする</b><p>目的、入力・出力、手順、所有者、成功・失敗例を登録。</p></div>
+    <div class="life"><span class="index">03 →</span><b>別の人が検証する</b><p>有用性、再現性、権限、依存、対応クライアントを試験。</p></div>
+    <div class="life"><span class="index">04 →</span><b>標準版を配る</b><p>版を固定し、先行チームへ配布。問題がなければ適用を拡大。</p></div>
+    <div class="life"><span class="index">05 ↺</span><b>保守・統合・廃止</b><p>失敗例から更新。担当不在・重複・非対応の資産は引継ぎか廃止。</p></div>
+   </div>
+   <div class="loop-return">利用者の記録・評価結果を、資産所有者の改善バックログへ返す。変更後は再評価し、標準版へ反映。</div>
+   <figcaption>通常の文言・手順改善は資産所有者と基盤担当で処理します。新しい権限・外部接続・機密情報の利用を伴う変更だけ、該当する管理者へ判断を求めます。</figcaption>
+  </figure>
+  <div class="grid2">
+   <div class="card"><h3>スキルの説明に必ず付けるもの</h3><ul><li>使う場面・使わない場面、期待する成果。</li><li>必要な入力、正本、具体的な出力例。</li><li>実行する処理、依存ツール、必要権限。</li><li>テスト・評価例、苦手な条件、中断条件。</li><li>所有者、版、更新日、検証した製品・クライアント。</li><li>問い合わせ、既知の制約、変更・廃止履歴。</li></ul></div>
+   <div class="card"><h3>最初は「小さなカタログ」で足りる</h3><p>社内Gitに資産と一覧を置き、目的から探せる入口を作ります。製品の配布・管理機能が使える場合は活用し、未対応部分は版を固定した配布手順で補います。</p><p>利用側では採用版を記録し、更新はPRまたは管理された配布で通知。<strong>常に最新版を無条件に実行する仕組みにはしません。</strong></p><p>カタログの使いにくさが検証された段階で、検索UIや専用マーケットプレイスを検討します。</p></div>
+  </div>
+  <h3>最初に育てる標準スキルの候補</h3>
+  <div class="table-wrap"><table><thead><tr><th>候補</th><th>標準化する仕事</th><th>検証の観点</th></tr></thead><tbody>
+  <tr><td>変更影響の調査</td><td>チケットから関連コード・設計・依存・不明点を整理。根拠リンク付きで返す。</td><td>重要な影響先を見落とさないか。推測と確認済みを区別するか。</td></tr>
+  <tr><td>テスト観点と回帰テスト</td><td>業務ルール、異常系、既存不具合からテスト案を作り、承認された範囲を実装・実行。</td><td>実装と同じ誤解をテストにも埋め込まないか。失敗を検出できるか。</td></tr>
+  <tr><td>PRの提出前確認</td><td>差分、要求、検証結果、文書更新、未確認点を整理する。</td><td>実行していないテストを成功扱いしないか。重要な変更が説明されるか。</td></tr>
+  <tr><td>設計・運用文書の更新</td><td>承認済み差分や障害対応から、関連正本の更新案を出す。</td><td>原文やコードと矛盾しないか。正本以外のコピーだけ更新していないか。</td></tr>
+  </tbody></table></div>
+  <p class="small">候補から、頻度が高く成果を判定できる3つ程度を先に採用します。「全員がスキルを何個作ったか」は目標にせず、既存スキルで解決できる仕事を増やします。外部公開スキルも、実行コードを含む依存物として確認します。</p>
+ </section>
+
+ <section id="access">
+  <div class="section-head"><div class="section-kicker">08 / TOOLS, KNOWLEDGE &amp; CONTROLS</div><h2>既存ツールを生かし、必要な情報へ安全につなぐ</h2><p>製品名だけで利用可否を決めず、「誰が・どの利用面で・何を読み・何を実行するか」を管理します。</p></div>
+  <div class="table-wrap"><table><thead><tr><th>現在の入口</th><th>当面の位置づけ</th><th>最初に確認・整備すること</th></tr></thead><tbody>
+  <tr><td>GitHub Copilot</td><td>広く使われている開発の入口。補完だけでなく、エージェントを使う作業も評価対象。</td><td>契約プラン、IDE・CLI・クラウドなどの利用面、有効機能、組織設定、課金・ログ取得範囲。</td></tr>
+  <tr><td>Claude Code</td><td>すでに使う人の実践を取り込み、同じ代表課題でCopilotと比較する。用途ごとに推奨手順を持つ。</td><td>会社／個人の認証境界、契約・API課金、管理設定の配布、ツール・ネットワーク・MCP等の許可範囲。</td></tr>
+  <tr><td>Gemini / Workspace</td><td>既存の文書・会議・調査業務から標準手順を作る。開発エージェントの追加導入とは分ける。</td><td>契約エディション、有効な機能、管理者設定、共有範囲、保持・学習利用条件。CLI・API等は別途確認。</td></tr>
+  <tr><td>将来の追加候補</td><td>現行構成の未充足が確認された場合に、限定試験する。新規導入を最初の成果の前提にしない。</td><td>同一課題の品質・総時間・費用・管理性、既存資産の移植費、契約条件、撤退・切替方法。</td></tr>
+  </tbody></table></div>
+  <div class="evidence">Copilotには公式にエージェント機能があり、Claude Codeの管理機能は認証・課金方式や適用方法を区別しています。特定製品を「簡易用途のみ」「高度用途専用」と固定しません。<a class="cite" href="https://docs.github.com/en/copilot/get-started/features">[12] GitHub</a> <a class="cite" href="https://code.claude.com/docs/en/admin-setup">[16] Anthropic</a></div>
+  <h3>情報は、正本・責任者・権限を保ったまま使えるようにする</h3>
+  <div class="grid2">
+   <div class="card"><h3>コードと設計のつながり</h3><p>変更と一緒に管理すべき設計・判断はリポジトリへ。外部の設計管理システムやチケットを正本とする場合は、ID・版・リンクを記録します。</p><p>Markdownは有力な形式ですが、全件変換よりも、<strong>業務ルールが正しく、必要箇所が見つかり、変更時に更新されること</strong>を優先します。</p></div>
+   <div class="card"><h3>業務情報と検索</h3><p>Workspace等の正本について、所有者、対象者、共有範囲、更新日、保存期間を明確にします。回答に出典と情報の時点を付けます。</p><p>検索が不足するときだけ索引や検索基盤を追加。索引・キャッシュにも元情報のアクセス制御、削除・更新の反映が必要です。</p></div>
+  </div>
+  <p class="small">従来資料に登場したDatabricks等は、利用実態・運用体制を確認できれば既存資産の候補として比較します。今回の現状共有だけでは、AI接続やナレッジ検索が利用可能と断定しません。</p>
+  <h3>接続は、実際の業務の必要性から1件ずつ</h3>
+  <figure>
+   <div class="figtitle">図4　AIから情報・操作へ至る、確認すべき境界</div>
+   <div class="flow"><div class="node"><b>人・実行主体</b><span>会社アカウント<br>人の操作／定期実行<br>用途と責任者</span></div><div class="flow-arrow" aria-hidden="true">→</div><div class="node green"><b>実行環境</b><span>IDE / CLI / クラウド<br>ファイル・通信・コマンド<br>許可された範囲</span></div><div class="flow-arrow" aria-hidden="true">→</div><div class="node"><b>連携・接続先</b><span>ネイティブ連携 / API / MCP<br>接続先での認証・認可<br>読み取り／変更・監査</span></div></div>
+   <figcaption>学習への不使用、ログ保持、利用者認証、実行制限、接続先権限は別の論点です。会社契約や一つの管理画面の設定だけで、すべてが満たされるわけではありません。</figcaption>
+  </figure>
+  <div class="table-wrap"><table><thead><tr><th>接続を提供する前の確認</th><th>具体的に確かめること</th></tr></thead><tbody>
+  <tr><td>目的・所有者</td><td>どの仕事の何の情報が必要か。接続・データ・利用業務それぞれの責任者、停止窓口を登録する。</td></tr>
+  <tr><td>最小権限</td><td>必要なリポジトリ・文書・操作だけ許可。未許可データで否定テストを行う。共用の万能アカウントで権限を広げない。</td></tr>
+  <tr><td>秘密情報・外部入力</td><td>認証情報をコードやスキル、平文ログに埋め込まない。取得文書やチケット中の命令を、信頼された実行指示と混同させない。</td></tr>
+  <tr><td>操作と承認</td><td>初期は読み取り。書き込みを追加するときは対象・差分・確認者・再試行時の重複対策・切戻しを設計する。</td></tr>
+  <tr><td>記録・停止・費用</td><td>呼び出し元・接続先・結果・版・時間・費用を、機密を抑えて記録。レート上限、失効、個別遮断、復旧を試す。</td></tr>
+  </tbody></table></div>
+  <div class="note amber"><strong>公式情報で確認できる注意点：</strong>GitHubの文書では、IDEのCopilot Chatのagent modeはcontent exclusion非対応とされています。除外設定を、エージェントに対する実行境界の代用にしません。Googleも、GeminiのWorkspace情報へのアクセスは管理者設定とコンテンツ権限に左右されると説明しています。<a class="cite" href="https://docs.github.com/en/copilot/how-tos/configure-content-exclusion/exclude-content-from-copilot?tool=vscode">[14] GitHub</a> <a class="cite" href="https://support.google.com/a/users/answer/17010577?hl=en">[19] Google</a></div>
+  <div class="evidence">OpenAIの導入ガイドも、ワークスペース、ローカル実行、API、接続先権限を異なる管理境界として扱っています。これは管理設計の参考であり、OpenAI製品の追加導入を前提としません。MCPを実装する場合は、公式の認可・セキュリティ指針に沿ってトークンの宛先検証等を設計します。<a class="cite" href="https://learn.chatgpt.com/docs/enterprise/admin-setup">[20] OpenAI</a> <a class="cite" href="https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices">[22] MCP</a></div>
+ </section>
+
+ <section id="organization">
+  <div class="section-head"><div class="section-kicker">09 / ORGANIZATION &amp; ACCOUNTABILITY</div><h2>中央の基盤チームと、現場の責任者を組み合わせる</h2><p>中央は使える仕組みと支援を提供し、現場は仕事の成果と知識を持つ。責任と稼働時間を明示し、善意の兼務に依存しない体制にします。</p></div>
+  <figure>
+   <div class="figtitle">図5　推進体制：共通の能力を育て、業務ごとの実装につなぐ</div>
+   <div class="org-top"><strong>部門・経営スポンサー</strong><br>業務の優先順位 / 予算・稼働の確保 / 成果・リスクの受容</div>
+   <div class="org-link" aria-hidden="true">↓</div>
+   <div class="org-bottom">
+    <div class="org-box"><h4>AI推進・基盤チーム</h4><p>社内プロダクトとして、標準セット・配布・評価・支援を提供。現場の課題から優先順位を決める。</p><p><strong>主な役割：</strong>推進責任者、基盤エンジニア、現場支援担当、評価担当。</p></div>
+    <div class="org-box"><h4>開発・業務チーム</h4><p>対象の仕事を改善し、固有の知識・テスト・スキルを保守。効果を確かめて改善候補を返す。</p><p><strong>主な役割：</strong>チーム責任者、技術リード、チャンピオン、QA・業務担当者。</p></div>
+    <div class="org-box"><h4>既存の専門部門</h4><p>アカウント、端末、契約、データ、セキュリティ、運用の既存制度へ接続する。</p><p><strong>主な役割：</strong>IT管理、セキュリティ、データ所有者、法務・調達、運用責任者。</p></div>
+   </div>
+   <div class="loop-return">現場の課題・貢献 → 共通バックログ → 共同で実装・評価 → 標準と支援として現場へ</div>
+   <figcaption>専用組織を新設するか、既存の開発基盤・改善組織に役割を置くかは、現在の組織に合わせて決めます。必要なのは看板よりも、責任・専門性・実働時間です。</figcaption>
+  </figure>
+  <div class="table-wrap"><table><thead><tr><th style="width:22%">役割</th><th style="width:46%">実際に行う仕事</th><th>持つ責任・権限</th></tr></thead><tbody>
+  <tr><td>スポンサー<br><span class="small">部門長など</span></td><td>業務目標、対象チーム、投資枠、学習時間を決定。チーム間の優先順位や障害を解消する。</td><td>何に投資し、何をやめるか。成果の事業上の評価。</td></tr>
+  <tr><td>推進責任者<br><span class="small">社内プロダクト責任者</span></td><td>現場の仕事を把握し、共通バックログ、ロードマップ、利用体験、効果・費用を管理する。</td><td>共通基盤の提供範囲と優先順位。標準資産の採用・廃止。</td></tr>
+  <tr><td>基盤エンジニア</td><td>標準環境、設定配布、CI・接続、カタログ、計測、更新・切戻しを実装。利用チームと一緒に検証する。</td><td>共通機能の技術品質と運用。全システム固有の実装は抱え込まない。</td></tr>
+  <tr><td>現場支援担当<br><span class="small">イネーブラー</span></td><td>実務ハンズオン、短期のチーム伴走、詰まりの解消、教材・FAQ化、次の支援者の育成。</td><td>現場が自走できるところまで支援する。講習会の実施数だけを成果にしない。</td></tr>
+  <tr><td>評価担当<br><span class="small">QA・DevEx等との共同役割</span></td><td>代表課題、失敗例、採点基準、測定条件を整備。モデル・スキル変更の回帰試験と実務効果を確認する。</td><td>評価方法の妥当性。不利な結果も含めた判定材料の提示。</td></tr>
+  <tr><td>チーム責任者・技術リード</td><td>対象業務、受入品質、必要な整備、レビュー体制、時間配分を決め、チームの仕事として運営する。</td><td>その業務の成果・品質・リリース。固有知識・テストの所有。</td></tr>
+  <tr><td>チャンピオン</td><td>チーム内の一次相談、共同作業、スキル改善、共通基盤へのフィードバックを担う。</td><td>実践をつなぐ担当。最終承認者や、全員の代行実装者にはしない。</td></tr>
+  <tr><td>IT・セキュリティ・データ所有者</td><td>認証・契約・端末・データ・権限を管理し、標準パターンと例外の条件を定める。</td><td>担当領域の許可・拒否、権限の付与・失効、事故時の対応。</td></tr>
+  </tbody></table></div>
+  <h3>初期90日の稼働案</h3>
+  <div class="grid2">
+   <div class="card tint"><h3>中央の中核：4 FTEを起点に</h3><p><strong>推進責任者1 ＋ 基盤エンジニア2 ＋ 現場支援1。</strong>既存組織への配置でも構いませんが、この業務に使う時間を確保します。</p><p>加えて、QA・評価で0.5 FTE、IT・セキュリティ等で合計0.5 FTEを目安に協働枠を確保。<strong>中央・専門部門側で合計約5 FTE相当</strong>の初期案です。</p><p class="micro">FTE＝1人がフルタイムで働く量。これは今回の対象規模・整備範囲に対する仮説であり、他社の標準人数や確定した採用計画ではありません。</p></div>
+   <div class="card"><h3>現場の時間も、別に確保する</h3><p>先行2チームにチャンピオンを各1名、各20%の稼働で置く案とします。合計0.4 FTE相当。通常の開発作業・レビューと参加者の学習時間は別枠です。</p><p>10チームへ広げる場合、同じ20%配置ならチャンピオンだけで計2 FTE相当になります。拡大時は支援待ち・保守量を見て中央の体制も見直します。</p><p class="micro">中核2〜3 FTEしか確保できない場合は、先行1チーム・接続追加なしへ縮小。少人数のまま50システムの標準化と常時運用を同時に約束しません。</p></div>
+  </div>
+  <h3>判断の持ち主を一つにする</h3>
+  <div class="table-wrap"><table><thead><tr><th>判断すること</th><th>最終責任者</th><th>実務・協議に参加する人</th></tr></thead><tbody>
+  <tr><td>投資枠・対象業務の優先順位</td><td>スポンサー</td><td>推進責任者、対象チーム責任者、財務・調達</td></tr>
+  <tr><td>共通テンプレート・スキルの正式版</td><td>推進責任者</td><td>資産所有者、基盤エンジニア、評価担当。権限変更時は専門部門の承認も取得</td></tr>
+  <tr><td>AI生成物の業務上の受入れ</td><td>チーム／業務責任者</td><td>担当者、技術リード、QA・レビュアー</td></tr>
+  <tr><td>接続先データへのアクセス許可</td><td>データ所有者</td><td>IT・セキュリティ、基盤、利用チーム</td></tr>
+  <tr><td>本番変更の可否</td><td>既存制度の変更承認責任者</td><td>運用責任者、チーム、セキュリティ。AI専用の裏口を作らない</td></tr>
+  <tr><td>共通資産の緊急停止・切戻し</td><td>共通基盤の運用責任者</td><td>基盤担当、IT・セキュリティ、影響を受けるチーム。安全側の即時停止権限を事前付与</td></tr>
+  </tbody></table></div>
+  <h3>現場が待たされない運営にする</h3>
+  <p>承認済みの標準利用はセルフサービスとし、利用のたびに審査しません。相談は一つの窓口で受け、既知の問題は解決手順へ、共通の問題は改善バックログへ、権限変更は管理者へ振り分けます。</p>
+  <p class="small">初期の運営目安：問い合わせは翌営業日までの一次応答、例外申請は3営業日以内に判断または判断予定を返す。実際の稼働に合わせて合意します。事故・情報漏えい疑いは通常の問い合わせ待ちにせず、既存のインシデント連絡経路へ即時エスカレーションします。</p>
+ </section>
+
+ <section id="enablement">
+  <div class="section-head"><div class="section-kicker">10 / ENABLEMENT &amp; LEARNING</div><h2>「知っている」から「自分の仕事で使える」へ</h2><p>ツール説明会に加え、実務の時間・材料・伴走を用意します。育成の目標は、依頼・検証・判断ができることです。</p></div>
+  <div class="table-wrap"><table><thead><tr><th>対象</th><th>身につける能力</th><th>学ぶ方法・確認する課題</th></tr></thead><tbody>
+  <tr><td>全利用者</td><td>情報の扱い、目的と出力条件の伝え方、出典確認、誤り・不明点の見分け、相談・停止。</td><td>自分の文書や調査作業で実践。根拠を確認し、誤りを修正して提出する。</td></tr>
+  <tr><td>開発者・QA</td><td>作業の分割、文脈の与え方、標準スキルの利用、テスト実行、差分の読解、デバッグ。</td><td>実際の小さな変更をPRまで通す。AIが誤ったケースも使い、誤りの説明と修正を行う。</td></tr>
+  <tr><td>技術リード・チャンピオン</td><td>標準セットの整備、スキルの評価・保守、チームの仕事の改善、他者への支援。</td><td>同僚が完了できる手順を作り、別チームの人と再現試験する。</td></tr>
+  <tr><td>基盤・推進担当</td><td>実行・権限の設計、配布・回帰評価、計測・費用、障害対応、使い勝手の調査。</td><td>設定変更の段階配布と切戻し、未許可操作の遮断、失敗例からの改善を実演する。</td></tr>
+  <tr><td>管理職・業務責任者</td><td>業務の選び方、品質責任、時間配分、成果の測定、改善の優先順位づけ。</td><td>チームの業務を棚卸しし、対象と対象外、受入基準、再投資先を説明する。</td></tr>
+  </tbody></table></div>
+  <div class="grid2">
+   <div class="card tint"><h3>先行チームの6週間の学び方</h3><ol><li><strong>初回：</strong>半日を確保し、各自の実務を標準環境で一巡。</li><li><strong>毎週：</strong>業務時間内に2時間程度の学習・共同作業枠を用意。</li><li><strong>作業中：</strong>チャンピオンと現場支援担当が詰まりを解消。</li><li><strong>週末：</strong>30分で、使えた手順・失敗・改善候補を共有。</li><li><strong>終了時：</strong>参加者が別の人の作業を支援し、自走を確認。</li></ol><p class="micro">時間配分は初期案。管理職が通常業務の優先順位を調整し、残業や個人の学習時間に上乗せしない運営にします。</p></div>
+   <div class="card"><h3>使わない理由を、改善の材料にする</h3><p>環境が動かない、情報が見つからない、品質が悪い、使ってよいか不明、学習時間がない。原因を分けて対策します。</p><p>利用量や生成コード量で個人を順位づけせず、品質・業務改善・知識共有を評価します。「使わないことが合理的な業務」も記録します。</p><p>AIを使った成果を説明できる力を育てます。特に経験の浅い担当者には、コード読解・デバッグ・概念の説明を含む課題を設けます。</p></div>
+  </div>
+  <div class="evidence"><b>根拠：</b>DORAは明確な利用方針と勤務時間内の学習機会を重視しています。一方、Anthropicの学習実験では、AIで課題を進めても理解が同じように育つとは限らない結果が示されています。研修は操作習得だけでなく、理解と検証を含めます。<a class="cite" href="https://dora.dev/insights/adopt-gen-ai/">[1] DORA</a> <a class="cite" href="https://www.anthropic.com/research/AI-assistance-coding-skills">[10] Anthropic研究</a></div>
+ </section>
+
+ <section id="improvement">
+  <div class="section-head"><div class="section-kicker">11 / CONTINUOUS IMPROVEMENT</div><h2>改善のループを、仕事・チーム・組織の3段で回す</h2><p>記録を集めるだけでは改善されません。誰が何を変え、どの結果で有効性を確かめるかまでを決めます。</p></div>
+  <figure>
+   <div class="figtitle">図6　実行結果が、次の実行環境を良くする仕組み</div>
+   <div class="loop-row"><div class="loop-label">仕事のループ<span>毎回 / 担当者</span></div><div class="loop-cell"><b>実行して確かめる</b>コード・文書の生成<br>テスト・出典の確認</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>失敗を特定する</b>要求違い・テスト失敗<br>不足情報・実行の停止</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>修正・再実行する</b>受入条件で確認<br>解けなければ人へ戻す</div></div>
+   <div class="loop-row"><div class="loop-label">チームのループ<span>毎週 / 技術リード</span></div><div class="loop-cell"><b>詰まりを集める</b>PRの手戻り・相談<br>時間・品質・失敗例</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>原因に合うものを直す</b>仕様・テスト・環境<br>スキル・分担・手順</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>次の仕事で確認する</b>再発・確認工数を測る<br>共通化候補を提案</div></div>
+   <div class="loop-row"><div class="loop-label">組織のループ<span>毎月 / 推進責任者</span></div><div class="loop-cell"><b>候補を比較する</b>複数チームの課題<br>外部動向・費用・効果</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>評価して版を作る</b>代表課題＋過去の失敗<br>採用・見送りを記録</div><div class="flow-arrow" aria-hidden="true">→</div><div class="loop-cell"><b>段階配布・効果確認</b>先行 → 他チーム<br>悪化したら切戻す</div></div>
+   <div class="loop-return">各段の改善は、実行環境・スキル・知識・テストへ反映され、次の「仕事のループ」の入口に戻ります。</div>
+   <figcaption>重大な安全問題や誤設定は、月次会議を待たずに停止・対処します。日常の小改善も必要な評価を行ったうえで随時リリースできる運営とします。</figcaption>
+  </figure>
+  <h3>例：「重要な業務条件を、AIが繰り返し見落とす」</h3>
+  <div class="table-wrap"><table><thead><tr><th>段階</th><th>行うこと</th><th>残すもの</th></tr></thead><tbody>
+  <tr><td>発見・切り分け</td><td>業務条件が資料にないのか、検索できないのか、指示に埋もれたのか、検証がないのかを確認する。</td><td>対象チケット、失敗例、使用ツール・版、期待結果と実際の結果。</td></tr>
+  <tr><td>対策を実装</td><td>正本の仕様を修正し、必要な文脈への導線を整える。同じ誤りを検出するテストを追加する。</td><td>文書・スキル・テスト等の変更PR。「気をつける」だけで終わらせない。</td></tr>
+  <tr><td>評価・配布</td><td>元の失敗例と周辺の正常例で新旧を比較。標準版を先行チームで試し、他へ広げる。</td><td>比較結果、採否、資産の版、変更理由、切戻し先。</td></tr>
+  <tr><td>効果を確認</td><td>次の複数の実作業で、再発とレビュー工数を確認する。別原因が残るなら再度改善する。</td><td>再発の有無・件数、支援量、追加の課題。完了した改善の記録。</td></tr>
+  </tbody></table></div>
+  <div class="grid2">
+   <div class="card"><h3>新しい技術を取り込むループ</h3><p><strong>週次：</strong>公式更新・事例から、自社の具体的な詰まりに効く候補を選ぶ。単なるニュース収集で終わらせません。</p><p><strong>検証：</strong>初期は同時2件程度に絞り、共通の代表課題と失敗ケースで比較。品質、確認工数、費用、管理性、互換性を確認します。</p><p><strong>採用後：</strong>標準資産と教材を更新。モデル・契約・挙動の変更は、切替前に再評価します。</p></div>
+   <div class="card"><h3>自動化自体を運用する</h3><p>定期実行は、担当者・目的・入力・実行権限・頻度・上限・通知先・停止方法を台帳に登録します。</p><p>無限の再試行、大量PR、未確認の自動更新を防ぐため、時間・件数・費用の上限を設定。繰り返し失敗したら人へ戻します。</p><p>当初はテスト補強案や文書更新案などの<strong>提案・PR作成まで</strong>。自動マージや本番操作は、別のリスク評価と承認を経て拡張します。</p></div>
+  </div>
+  <div class="evidence">OpenAIの評価ガイドは、実行履歴から問題を調べ、評価データセットへ移して反復比較する流れを示しています。Uberも、成果単位の費用と評価を使い、モデル・文脈・実行手順を改善しています。本資料では、この原則を現在のツールと既存CIで実装する案としています。<a class="cite" href="https://developers.openai.com/api/docs/guides/agent-evals">[21] OpenAI</a> <a class="cite" href="https://www.uber.com/gb/en/blog/efficient-software-factory/">[7] Uber</a></div>
+ </section>
+
+ <section id="roadmap">
+  <div class="section-head"><div class="section-kicker">12 / ROLLOUT ROADMAP</div><h2>90日で一巡させ、実績に応じて広げる</h2><p>利用者への提供と基盤整備を並行します。期間は着手日からの目安で、次の段階へ進む条件を満たした範囲から展開します。</p></div>
+  <div class="note"><strong>初期範囲の案：</strong>先行の開発2チーム、3〜5リポジトリ、共有スキル3つ程度、Geminiを使う業務手順1つ。開発チームは、Markdown化などが進んだチームと、代表的な既存システムを持つチームを組み合わせ、得意な人だけで検証しない構成とします。</div>
+  <figure>
+   <div class="figtitle">図7　各段階の成果物と、次に進む判断</div>
+   <div class="timeline">
+    <div class="time">0〜2週<small>現在地と仕事を選ぶ</small></div><div class="phase"><h4>対象・責任・基本設定をそろえ、まず1件やってみる</h4><p>利用実態と契約・権限を棚卸し。対象の実作業を選び、導入前の時間・手戻りを記録。先行のスキル・Markdown資産を確認し、標準セットの薄い初版で最初の変更を進めます。</p><div class="gate"><strong>到達条件：</strong>責任者・利用可能範囲・受入条件・停止手段が決まり、実作業の問題点が具体的に見えている。</div></div>
+    <div class="time">3〜6週<small>先行2チームで一巡</small></div><div class="phase"><h4>調査 → 実装 → 検証 → PR → 知識更新をつなぐ</h4><p>3〜5リポジトリの対象領域に環境・テスト・入口文書を整備。候補スキルを別の人が試し、共通カタログへ。実務研修と伴走を行い、Geminiの業務手順も並行して試します。</p><div class="gate"><strong>到達条件：</strong>作成者以外が標準手順で仕事を完了。検証・権限の重要な欠落を解消し、使った版と失敗例を追跡できる。</div></div>
+    <div class="time">7〜12週<small>標準版と運営を確立</small></div><div class="phase"><h4>標準v1を配布し、改善を一度以上戻す</h4><p>現場の失敗を評価ケースにし、スキル・文書・CIを更新。先行配布と切戻しを実施。支援なしでの利用と、次のチームの担当者による再現を確認。成果・総費用・未解決課題をまとめます。</p><div class="gate"><strong>拡大判断：</strong>受入品質を維持し、対象業務で総時間または成果に改善が見える。運用・支援の持ち主と稼働が確保され、再現・停止・更新が機能している。</div></div>
+    <div class="time">4〜6か月<small>チーム単位で展開</small></div><div class="phase"><h4>次のチームが使えるようにする</h4><p>変更頻度・業務価値・検証可能性で対象を追加。先行チャンピオンが次の伴走へ参加。業務別の標準手順と読み取り接続を増やし、更新負荷・費用・問い合わせを確認します。</p><div class="gate"><strong>拡大条件：</strong>複数チームで効果を再現でき、中央の支援待ちやレビュー待ちが悪化しない。10チームへの展開速度は実稼働から調整する。</div></div>
+    <div class="time">6〜12か月<small>任せる範囲を拡張</small></div><div class="phase"><h4>反復業務を、運用できる自動実行へ</h4><p>評価と復旧が整った業務から、定期のテスト・文書更新提案、依存更新のPR作成、障害調査支援へ拡張。必要性が確認された検索・接続・監視機能を追加します。</p><div class="gate"><strong>拡張条件：</strong>業務別に品質・権限・運用上限・復旧を再確認。人の確認箇所を見直し、より価値の高い仕事へ時間を振り向ける。</div></div>
+   </div>
+   <figcaption>90日・6か月・12か月は計画の節目であり、ツールの能力や効果の予測ではありません。四半期ごとに目指す範囲と投資配分を見直します。条件が早く整った領域は、時期を待たずに限定的な自動実行を試し、成果を標準へ取り込みます。</figcaption>
+  </figure>
+  <h3>90日後に、残っているべき7つのもの</h3>
+  <div class="table-wrap"><table><thead><tr><th>成果物</th><th>「完成」の証拠</th></tr></thead><tbody>
+  <tr><td>① 利用と責任の台帳</td><td>現行ツールの利用面・契約・認証・データ範囲・管理者が分かる。代表端末で設定を確認済み。</td></tr>
+  <tr><td>② 開発標準セットv1</td><td>先行リポジトリで、入口文書・実行・検証・PR・知識更新がつながっている。</td></tr>
+  <tr><td>③ 共有スキルとカタログ</td><td>所有者・版・対象・評価例があり、作成者以外の利用結果と切戻し方法がある。</td></tr>
+  <tr><td>④ 現場の業務事例</td><td>開発とGemini業務で、目的、手順、出力、確認点、総時間、失敗・改善を説明できる。</td></tr>
+  <tr><td>⑤ 評価セットと成果表</td><td>代表課題・失敗例・採点方法・測定条件が保存され、効果と未確認事項を区別できる。</td></tr>
+  <tr><td>⑥ 運営の記録</td><td>問い合わせ、週次改善、標準更新、配布・切戻しの実績がある。担当と時間が確保されている。</td></tr>
+  <tr><td>⑦ 次の展開計画</td><td>拡大・追加検証・中止を業務ごとに判断し、次のチーム・資産・費用と担当を決めている。</td></tr>
+  </tbody></table></div>
+  <div class="note amber"><strong>効果が弱いときの進め方：</strong>データ不足なら評価期間を延ばす。準備不足なら対象領域を絞ってテスト・情報を整える。確認負担が上回るなら、その用途の利用を見直す。安全条件を満たさない用途は停止する。一つの用途の不成功と、組織全体でAIが使えないことを同一視しません。</div>
+ </section>
+
+ <section id="measurement">
+  <div class="section-head"><div class="section-kicker">13 / OUTCOMES &amp; INVESTMENT</div><h2>利用量ではなく、仕事全体の成果を測る</h2><p>速く生成できても、確認・手戻り・待ちが増えれば改善ではありません。価値・品質・使いやすさ・費用を一緒に見ます。</p></div>
+  <div class="table-wrap"><table><thead><tr><th style="width:19%">見るもの</th><th style="width:31%">指標の例</th><th style="width:26%">使う情報</th><th>判断につなぐこと</th></tr></thead><tbody>
+  <tr><td>業務の成果</td><td>受け入れられた変更・業務成果、課題解決までの時間、顧客・利用者への改善。</td><td>チケット、PR、業務の完了記録、利用者の確認。</td><td>投資する対象と、空いた力を使う仕事。</td></tr>
+  <tr><td>人の総作業時間</td><td>調査＋依頼準備＋確認＋修正＋レビュー。中央値と長時間側の傾向。</td><td>短い作業記録、サンプル観察。経過時間・AI実行時間とは分ける。</td><td>どの工程を直すと、全体が良くなるか。</td></tr>
+  <tr><td>流れ・品質</td><td>レビュー待ち、手戻り、流出不具合、変更失敗、切戻し、受入不適合。</td><td>CI、レビュー、リリース、障害記録。</td><td>任せる範囲、テスト・レビュー体制。</td></tr>
+  <tr><td>現場の自走</td><td>初回完了までの時間、支援なしの完了、相談理由、使わない理由、満足度。</td><td>利用者観察、短いアンケート、相談窓口。</td><td>標準セット・教材・伴走の改善。</td></tr>
+  <tr><td>統制・運用</td><td>未管理設定、権限逸脱試験、停止・復旧、期限切れ資産、更新の失敗。</td><td>設定台帳、試験、監査・運用記録。</td><td>展開可否、権限・運用の修正。</td></tr>
+  <tr><td>総費用と単位費用</td><td>ライセンス、従量利用、基盤・保守、学習・支援・確認工数。受入成果1件あたりの費用。</td><td>請求、利用記録、チーム別の概算工数。</td><td>モデル・手順・対象業務の選び直し。</td></tr>
+  </tbody></table></div>
+  <div class="grid2">
+   <div class="card"><h3>測定の設計</h3><ol><li>同種の課題を選び、導入前の時間と品質を記録する。</li><li>同じ受入基準を使い、経験、難易度、対象領域、使用版を残す。</li><li>段階導入や類似課題の比較を使う。可能なら順序を入れ替え、慣れの影響を確認する。</li><li>成功だけでなく、失敗・中断・AIを使わなかった仕事も含める。</li><li>少数事例の改善を全社に外挿しない。案件構成の違いも併記する。</li></ol></div>
+   <div class="card tint"><h3>初期目標の置き方</h3><p>例えば「反復する変更の総作業時間を10%改善し、受入品質を悪化させない」を仮の検証目標にします。<strong>10%は効果予測ではなく、投資判断の仮置き</strong>です。</p><p>着手時に、何をもって品質維持とするか、何件・どの種類の仕事を見るかを決めます。件数が少ない場合は、傾向として扱い拡大前に追加検証します。</p><p>重大な事故が起きなかったことだけでは安全を証明できません。権限・停止・復旧の意図的な試験も実施します。</p></div>
+  </div>
+  <h3>投資は、費用と「生まれた余力の使い道」をセットで考える</h3>
+  <div class="card"><p><strong>月次の投資額</strong> ＝ ライセンス固定費 ＋ 従量利用費 ＋ 実行・保存などの基盤費 ＋ 共通基盤の整備・保守・支援工数 ＋ 現場の追加学習・確認工数。</p><p><strong>創出した余力</strong>は、総作業時間の差を対象件数で確認します。待ち時間の短縮と人の作業時間の削減は別に扱います。案件差・他の改善の影響を検討し、同じ時間を二重計上しません。</p><p><strong>余力の再投資先</strong>は、顧客課題、機能改善、テスト不足、老朽化、障害予防などから責任者が決めます。工数換算の便益は、実際の支出削減や売上増とは分けて報告します。</p></div>
+  <div class="note amber"><strong>計測の限界を表示する。</strong>製品のダッシュボードで、すべてのIDE・CLI・クラウド利用が同じように取れるとは限りません。公式の取得範囲を確認し、不足分はタスク・請求・サンプル記録で補います。生の会話・コードを一律収集せず、目的・閲覧者・保持期間を定め、機密を最小化します。<a class="cite" href="https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/measure-success">[15] GitHub</a></div>
+ </section>
+
+ <section id="start">
+  <div class="section-head"><div class="section-kicker">14 / FIRST DECISIONS</div><h2>着手時に決めること、最初に動かすこと</h2><p>全社の理想構成を先に確定するのではなく、責任を持てる範囲で最初の仕事を始めます。</p></div>
+  <div class="table-wrap"><table><thead><tr><th>決めること</th><th>この資料のたたき台</th><th>確認・決定する人</th></tr></thead><tbody>
+  <tr><td>何を良くしたいか</td><td>反復する開発作業の総時間・品質を改善し、経験を標準へ戻す。業務活用は会議後整理など1手順から。</td><td>スポンサー、チーム／業務責任者</td></tr>
+  <tr><td>誰が責任を持つか</td><td>推進責任者を1名置き、中央の実働と先行チームのチャンピオン稼働を確保。</td><td>スポンサー、各部門の管理職</td></tr>
+  <tr><td>どこで始めるか</td><td>準備の進むチームと代表的な既存システムのチーム。頻度、効果、検証可能性、現場の協力で選ぶ。</td><td>推進責任者、チーム責任者</td></tr>
+  <tr><td>何を許可するか</td><td>現行契約とデータ分類を確認し、対話的な作業・分離環境・PRまでを基本経路にする。</td><td>IT・セキュリティ、データ所有者</td></tr>
+  <tr><td>何で拡大判断するか</td><td>代表作業の成果、総時間、品質、自走、費用。評価条件と失敗・中断の扱いを先に合意。</td><td>推進責任者、評価担当、チーム責任者</td></tr>
+  <tr><td>いくら・どれだけ使うか</td><td>90日の稼働枠・製品費・従量費の上限を設定。採用拡大時に保守と現場支援の増分も見積もる。</td><td>スポンサー、推進責任者、財務・調達</td></tr>
+  </tbody></table></div>
+  <div class="grid2">
+   <div class="card tint"><h3>最初の2週間に動かすもの</h3><ul><li>ツール・契約・認証・設定の簡易台帳。</li><li>先行チームと、今ある実作業の候補。</li><li>既存Markdown・スキル・テストの棚卸し。</li><li>リポジトリ標準セットの初版。</li><li>目的・受入条件・結果を残す作業カード。</li><li>相談窓口、週次の改善時間、月次の判断枠。</li></ul></div>
+   <div class="card"><h3>必要性を見てから大きくするもの</h3><ul><li>全社専用のAIポータルや巨大なカタログ。</li><li>全データの集約・一括Markdown変換。</li><li>全通信をまとめる独自ゲートウェイ。</li><li>常時無人で動く全社共通エージェント群。</li><li>独立したAI運用専任組織の新設。</li></ul><p>これらも選択肢ですが、実務上の不足、既存機能との差、運用負荷と費用が明らかになった段階で投資判断します。</p></div>
+  </div>
+  <div class="note"><strong>本構想の到達点：</strong>既存ツールを使う人を増やすだけでなく、現場が仕事を完了できる標準を持ち、その標準を現場の経験で更新できる組織にする。その循環を90日で実証し、対象と任せる範囲を広げていきます。</div>
+ </section>
+ <section id="cases">
+  <div class="section-head"><div class="section-kicker">15 / EVIDENCE &amp; LESSONS</div><h2>他社の実践と、うまくいかなかった条件から学ぶ</h2><p>成果数値を自社へ移すのではなく、成果を生んだ仕組み・前提・限界を、自社の整備項目へ結び付けます。</p></div>
+  <div class="note amber"><strong>読み方：</strong>以下は、企業の一次発信、研究機関の実験、製品公式ガイドを区別して記載しています。企業の自己報告は、無作為比較で実証された一般的な効果とは異なります。「うまくいかなかった例」も、現在のAI全般の限界を確定するものではありません。</div>
+  <h3>組織・基盤・支援を具体化した実践</h3>
+  <div class="cases">
+   <article class="card case"><div class="date"><span class="tag research">企業の実践・自己報告</span>2026-08-26</div><h3>LINEヤフー：QAの標準環境と実務定着</h3><div class="stat">49.4%<small> QA工数の削減報告 ※テスト実行を除く</small></div><p>約20名のQAユニットで、リポジトリ、スキル、実行環境をまとめたQA向け基盤と、実務に即した学習・改善を実施。情報共有や研修を続けても個人任せでは定着しにくかった経緯も説明しています。</p><p class="small"><strong>適用の限界：</strong>同社の特定組織・対象工程での報告。開発全体の49.4%短縮や、同じ製品を使えば再現するという意味ではありません。</p><p class="take"><strong>自社への適用案：</strong>開始できる標準セットと実務伴走を一緒に提供し、利用者の困りごとを次の基盤改善へ戻す。</p><a class="cite" href="https://techblog.lycorp.co.jp/ja/20260826b">[4] LINEヤフー Tech Blogで確認</a></article>
+   <article class="card case"><div class="date"><span class="tag research">企業の実践・自己報告</span>2026-07-21</div><h3>サイバーエージェント：リードを通じて現場へ展開</h3><div class="stat">96<small> プロダクトへの展開を紹介</small></div><p>技術リードを選び、知識共有だけでなく、実プロダクトでの適用と結果の共有へつなげています。ツールや学習機会を提供した段階から、組織的な実践へ進めた事例です。</p><p class="small"><strong>適用の限界：</strong>展開規模は生産性効果そのものではありません。将来の開発自動化方針と、記事時点の達成内容は分けて扱います。</p><p class="take"><strong>自社への適用案：</strong>チャンピオンを指名するだけでなく、現場での適用・支援・成果共有を役割に含め、時間を確保する。</p><a class="cite" href="https://developers.cyberagent.co.jp/blog/archives/64511/">[5] CyberAgent Developers Blogで確認</a></article>
+   <article class="card case"><div class="date"><span class="tag research">企業の実践・自己報告</span>2025-12-12</div><h3>メルカリ：業務ごとの構想と伴走役</h3><div class="stat">33<small> 領域の業務ロードマップ</small></div><p>AI Task Forceが業務を領域別に棚卸しし、理想像から施策を整理。業務理解から活用設計・PoCまでを支えるエンジニアの「イネーブラー」を各領域に配置したと説明しています。</p><p class="small"><strong>適用の限界：</strong>全社変革の自己報告であり、同規模のタスクフォースや特定のナレッジ製品の導入を自社にも求めるものではありません。</p><p class="take"><strong>自社への適用案：</strong>中央がツールを紹介するだけでなく、業務責任者と一緒に仕事を分解し、使える手順まで実装する。</p><a class="cite" href="https://careers.mercari.com/en/mercan/articles/56789/">[6] mercanで確認</a></article>
+   <article class="card case"><div class="date"><span class="tag research">企業の実践・自己報告</span>2026-08-27</div><h3>Uber：成果単位の評価と費用改善</h3><div class="stat">成果 × 品質 × 費用</div><p>マージされたPR等の成果単位で費用を捉え、品質指標と合わせてモデルや実行手順を評価。過剰な文脈やツール応答など、実行の非効率を計測して改善しています。</p><p class="small"><strong>適用の限界：</strong>大規模な自社基盤の実践です。記事にある将来の自動改善構想まで、実装済みの成果とは扱いません。</p><p class="take"><strong>自社への適用案：</strong>単価の安いモデルだけを選ばず、確認・再実行まで含む成果1件あたりの費用で、手順と文脈を改善する。</p><a class="cite" href="https://www.uber.com/gb/en/blog/efficient-software-factory/">[7] Uber Engineeringで確認</a></article>
+  </div>
+  <h3>効果が出なかった例・リスクが表れた例</h3>
+  <div class="cases">
+   <article class="card case fail"><div class="date"><span class="tag research">無作為比較実験</span>2025-07-10 / 追跡 2026-02-24</div><h3>METR：実感と実測が一致しなかった</h3><div class="stat">19%<small> 所要時間が長くなった初期実験</small></div><p>2025年前半のツールを使い、熟練OSS開発者16名・246課題を調べた実験では、AI利用で作業が遅くなりました。主観的な効率感ともずれがありました。</p><p class="small"><strong>重要な補足：</strong>慣れた大規模リポジトリ、当時のツールという条件付きです。2026年の追跡報告は、速度向上の可能性を認めつつ、参加者・課題の選択バイアスで効果量の推定が不確かとしています。</p><p class="take"><strong>自社への適用案：</strong>最新ツールを自社の代表課題で評価し、自己申告に加えて確認・手戻りを含む時間と品質を測る。</p><a class="cite" href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">[8] 初期実験</a> <a class="cite" href="https://metr.org/blog/2026-02-24-uplift-update/">[9] 追跡報告</a></article>
+   <article class="card case fail"><div class="date"><span class="tag research">短期の学習実験</span>2026-01-29</div><h3>Anthropic：課題完了と理解の獲得は別</h3><div class="stat">50% / 67%<small> AI支援群 / 非支援群（理解度の平均点）</small></div><p>新しいPythonライブラリを学ぶ52名の実験で、AI支援群は非支援群よりテストの平均点が17ポイント低い結果でした。</p><p class="small"><strong>適用の限界：</strong>短期の特定学習課題とチャット支援の実験です。長期的な技能低下や、現在のコーディングエージェント全般の効果を証明するものではありません。</p><p class="take"><strong>自社への適用案：</strong>新人・経験の浅い担当者もAIを使いつつ、説明・読解・デバッグで理解を確かめる。生成物の提出だけで習得と判定しない。</p><a class="cite" href="https://www.anthropic.com/research/AI-assistance-coding-skills">[10] Anthropic研究で確認</a></article>
+   <article class="card case fail"><div class="date"><span class="tag research">当事者の障害説明</span>2026-02-20</div><h3>AWS：AI利用時も権限設計が重要</h3><p>Amazonは、2025年12月の特定リージョンのCost Explorerの中断について、AIが自律的に起こした問題ではなく、誤ったアクセス設定が原因との公式説明を出し、本番アクセスのピアレビュー等の対策を説明しています。</p><p class="small"><strong>適用の限界：</strong>当事者による説明であり、独立した根本原因の検証ではありません。「AIがAWS全体を停止した」といった一般化はできません。</p><p class="take"><strong>自社への適用案：</strong>エージェントに人の広い権限を無条件で引き継がせない。本番権限の付与・変更と承認を別途管理する。</p><a class="cite" href="https://www.aboutamazon.com/news/aws/aws-service-outage-ai-bot-kiro">[11] Amazonの公式説明で確認</a></article>
+   <article class="card case fail"><div class="date"><span class="tag plan">上記の根拠からの設計上の整理</span></div><h3>自社で避けたい、4つの行き詰まり</h3><ul><li><strong>導入したが使えない：</strong>ライセンスだけでなく、開始手順・実務伴走・時間を用意する。</li><li><strong>速く作れて、確認が詰まる：</strong>小さな変更、受入テスト、レビュー体制を一緒に整える。</li><li><strong>個人の工夫が失われる：</strong>所有者・評価・版管理・配布・引継ぎを持つ。</li><li><strong>統制が追加の待ちになる：</strong>安全な通常利用を先に承認し、設定と標準手順へ埋め込む。</li></ul><p class="small">このカードは失敗率の統計や特定企業の事実ではなく、事例・研究を自社の設計に翻訳したものです。</p></article>
+  </div>
+  <h3>公式ガイドを、何の整備に使うか</h3>
+  <div class="table-wrap"><table><thead><tr><th>一次資料</th><th>確認したポイント</th><th>本構想への反映</th></tr></thead><tbody>
+  <tr><td>DORA</td><td>利用方針・学習時間・社内プロダクトとしての基盤。<a class="cite" href="https://dora.dev/insights/adopt-gen-ai/">[1]</a> <a class="cite" href="https://dora.dev/capabilities/platform-engineering/">[2]</a></td><td>現場支援を含む基盤チーム。勤務時間内の実務学習。</td></tr>
+  <tr><td>Anthropic</td><td>SDLC全体の文脈、検証可能な成果、管理設定、スキルの拡張性。<a class="cite" href="https://claude.com/blog/the-ai-native-sdlc-playbook">[3]</a> <a class="cite" href="https://code.claude.com/docs/en/admin-setup">[16]</a> <a class="cite" href="https://code.claude.com/docs/en/skills">[17]</a> <a class="cite" href="https://code.claude.com/docs/en/best-practices">[18]</a></td><td>開発標準セット、実際に動くテスト、製品別の設定検証。</td></tr>
+  <tr><td>GitHub</td><td>エージェント機能、カスタマイズの対応差、メトリクスの範囲。<a class="cite" href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">[13]</a> <a class="cite" href="https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/measure-success">[15]</a></td><td>Copilotを含む作業別評価。対応表と計測の欠落の管理。</td></tr>
+  <tr><td>Google</td><td>Geminiの情報利用には管理設定とコンテンツ側の権限が関係。<a class="cite" href="https://support.google.com/a/users/answer/17010577?hl=en">[19]</a></td><td>Workspaceの共有範囲・正本・利用機能を確認。</td></tr>
+  <tr><td>OpenAI</td><td>実行・API・接続先を分けた管理、実行履歴から反復可能な評価へ。<a class="cite" href="https://learn.chatgpt.com/docs/enterprise/admin-setup">[20]</a> <a class="cite" href="https://developers.openai.com/api/docs/guides/agent-evals">[21]</a></td><td>管理境界の設計と、失敗例から標準を更新するループ。</td></tr>
+  <tr><td>MCP公式</td><td>認可・トークン・代理接続等に固有のセキュリティ上の注意。<a class="cite" href="https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices">[22]</a></td><td>接続台帳、最小権限、否定テスト、停止・監査。</td></tr>
+  <tr><td>NIST</td><td>設計・開発・利用・評価を通じたリスク管理。生成AI向けプロファイルも公開。<a class="cite" href="https://www.nist.gov/itl/ai-risk-management-framework">[23]</a></td><td>導入時だけでなく運用中にも評価・見直しを行う。担当・記録・更新を明確化。</td></tr>
+  </tbody></table></div>
+  <p class="small">これらの資料を参考にしたことは、特定の認証取得、法令適合、すべての公式要件への準拠を意味しません。業種固有の規制、顧客・委託契約、個人情報、著作権・ライセンス等の条件は、対象業務とデータに応じて既存の専門部門で確認します。</p>
+ </section>
+
+ <section id="templates">
+  <div class="section-head"><div class="section-kicker">16 / WORKING TEMPLATES</div><h2>実務に持ち込む、小さなひな形</h2><p>新しい入力作業を増やしすぎないよう、既存のチケット・PR・資産台帳へ必要項目を組み込みます。下のひな形は提案であり、製品固有の設定仕様ではありません。</p></div>
+  <details open><summary>A. AIと進める作業カード — チケットに追記する</summary><div class="detail-body"><pre class="template">目的：誰の、何の問題を解決するか
+対象：システム／リポジトリ／業務、チケットID
+受入条件：正常・異常の具体例、品質・非機能の条件
+対象外：変更しない領域、許可しない操作
+参照する正本：文書・コード・過去判断へのリンクと版
+実行・検証：使える環境、実行手順、確認方法
+人の確認：判断が必要な点、レビュアー・受入責任者
+中断条件：仕様不明、許可範囲超過、繰返し失敗、上限到達
+完了記録：差分、検証結果、未確認点、更新した文書
+改善の種：詰まった点、次に直すとよいこと</pre></div></details>
+  <details><summary>B. 共有スキルの登録カード — 作成者以外が使えるようにする</summary><div class="detail-body"><pre class="template">名前／目的：どの仕事を完了するスキルか
+所有者・連絡先：保守・判断の担当者
+利用範囲：使う場面、使わない場面、必要な知識
+入力 → 処理 → 出力：具体的な例と、正本への参照
+必要権限：読み取り先・変更先・外部通信・実行コード
+依存：ツール、接続、パッケージ、検証したバージョン
+対応：Copilot / Claude Codeの利用面ごとの確認結果
+評価：正常・失敗・境界ケース、合格条件
+配布：版、適用チーム、更新・切戻し方法
+保守：更新日、次の見直し、既知の制約、廃止・引継ぎ条件</pre></div></details>
+  <details><summary>C. 改善・評価の記録 — 何を変え、何が良くなったか</summary><div class="detail-body"><pre class="template">課題ID：実作業・相談・障害との対応
+観測した事実：期待結果、実際の結果、失敗条件
+原因の仮説：文脈／要求／実行／検証／権限／スキル等
+変更したもの：資産名、変更PR、旧版・新版
+評価条件：同じ課題・環境、比較の順序、採点者・基準
+評価結果：品質、人の総時間、AI実行時間、費用、失敗
+限界：件数、対象外、課題差、未取得データ
+判断：採用／再検証／見送り、理由、責任者
+展開：先行範囲、監視・確認期間、切戻し条件
+実務での確認：再発・手戻り・支援負担に変化があったか</pre></div></details>
+  <details><summary>D. 用語 — 本資料での意味</summary><div class="detail-body"><div class="table-wrap"><table><thead><tr><th>用語</th><th>この資料での意味</th></tr></thead><tbody>
+  <tr><td>エージェント</td><td>目的に応じて情報を読み、ツールを使い、複数の処理を進めるAIの実行主体。現在の入口はCopilot・Claude Code。</td></tr>
+  <tr><td>スキル</td><td>特定の仕事のための指示・手順・補助ファイルのまとまり。実行コードや接続を含む場合があり、共有時には評価・保守が必要。</td></tr>
+  <tr><td>開発の標準セット<br>（ハーネスを含む）</td><td>AIが作業する文脈、道具、実行環境、制約、検証・反復の仕組みを組み合わせたもの。指示ファイル1枚を指すものではない。</td></tr>
+  <tr><td>MCP</td><td>AIツールと外部の情報・操作を接続するためのプロトコル。導入するだけで認証・認可・安全性が完成するものではない。</td></tr>
+  <tr><td>評価（eval）</td><td>代表課題や過去の失敗を使い、期待する結果と比較すること。モデルだけでなく、スキル・文脈・接続・手順全体を評価する。</td></tr>
+  <tr><td>イネーブルメント</td><td>現場が実務で使えるように、環境・知識・時間・伴走を提供すること。中央による代行実装や研修だけとは異なる。</td></tr>
+  <tr><td>正本</td><td>正式な最新情報として更新・参照する元の記録。コピーや検索用索引とは区別する。</td></tr>
+  <tr><td>ADR</td><td>重要な設計判断と、その理由・選択肢・影響を短く残す記録。</td></tr>
+  </tbody></table></div></div></details>
+ </section>
+
+ <section id="sources">
+  <div class="section-head"><div class="section-kicker">17 / SOURCE REGISTER</div><h2>参照情報</h2><p>公開資料の確認基準日：2026年9月8日。以下の23件の一次資料を本文の根拠として使用。更新型の製品情報は、導入・更新の判断時に再確認します。</p></div>
+  <h3>調査・組織能力</h3>
+  <div class="source-grid">
+   <div class="source" id="s1"><span class="refnum">01</span><a href="https://dora.dev/insights/adopt-gen-ai/">DORA — Adopt generative AI</a><p>2025-01-31公開。採用を支える方針・学習時間・支援。調査上の関連を、自社の因果効果や普遍的な増加率と扱わない。</p></div>
+   <div class="source" id="s2"><span class="refnum">02</span><a href="https://dora.dev/capabilities/platform-engineering/">DORA — Platform engineering</a><p>更新型。開発者向け社内プロダクト、最小の提供範囲、拡張とフィードバック。自社への設計案と区別して使用。</p></div>
+   <div class="source" id="s8"><span class="refnum">08</span><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR — Early-2025 AI on experienced open-source developers</a><p>2025-07-10。16名・246課題の無作為比較。特定のツール時点・熟練開発者・既存リポジトリという条件を明記。</p></div>
+   <div class="source" id="s9"><span class="refnum">09</span><a href="https://metr.org/blog/2026-02-24-uplift-update/">METR — Changing the developer productivity experiment design</a><p>2026-02-24。追跡調査の選択バイアスと測定上の不確実性。旧実験だけで現在の効果を断定しないために参照。</p></div>
+   <div class="source" id="s10"><span class="refnum">10</span><a href="https://www.anthropic.com/research/AI-assistance-coding-skills">Anthropic — How AI assistance impacts the formation of coding skills</a><p>2026-01-29。52名の短期学習実験。17ポイントの差を、17%の相対低下や長期の能力低下と混同しない。</p></div>
+   <div class="source" id="s23"><span class="refnum">23</span><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST — AI Risk Management Framework</a><p>AI RMF 1.0：2023-01-26。生成AIプロファイル：2024-07-26公表。任意の枠組みとして、ライフサイクルを通じたリスク管理の考え方を参照。</p></div>
+  </div>
+  <h3>企業の実践・当事者による報告</h3>
+  <div class="source-grid">
+   <div class="source" id="s4"><span class="refnum">04</span><a href="https://techblog.lycorp.co.jp/ja/20260826b">LINEヤフー Tech Blog — QAでのAI活用と定着の実践</a><p>2026-08-26。QAユニットの自己報告。49.4%削減はテスト実行を除く対象工程の工数。全社・開発全工程へ外挿しない。</p></div>
+   <div class="source" id="s5"><span class="refnum">05</span><a href="https://developers.cyberagent.co.jp/blog/archives/64511/">CyberAgent Developers Blog — AI駆動開発の96プロダクトへの展開</a><p>2026-07-21。推進組織と技術リードを介した実践。展開数と生産性の実証、将来目標と実績を区別。</p></div>
+   <div class="source" id="s6"><span class="refnum">06</span><a href="https://careers.mercari.com/en/mercan/articles/56789/">mercan — The first 100 days of the AI Task Force</a><p>2025-12-12。33領域のロードマップ、業務棚卸し、イネーブラーの役割。会社の自己報告として参照。</p></div>
+   <div class="source" id="s7"><span class="refnum">07</span><a href="https://www.uber.com/gb/en/blog/efficient-software-factory/">Uber Engineering — Efficient Software Factory</a><p>2026-08-27。成果単位の費用・評価と実行の効率化。自動的なスキル改善等の将来構想を、達成済みとしない。</p></div>
+   <div class="source" id="s11"><span class="refnum">11</span><a href="https://www.aboutamazon.com/news/aws/aws-service-outage-ai-bot-kiro">Amazon — AWS service interruption and Kiro: official response</a><p>2026-02-20。Cost Explorerの中断への公式説明。当事者の説明であり、独立した事故調査ではない。</p></div>
+  </div>
+  <h3>Anthropic・GitHubの公式ガイド</h3>
+  <div class="source-grid">
+   <div class="source" id="s3"><span class="refnum">03</span><a href="https://claude.com/blog/the-ai-native-sdlc-playbook">Anthropic — The AI-native SDLC playbook</a><p>2026-08-21。開発全体の流れ、文脈を引き継ぐ成果物、導入の考え方。自社向けに軽量化し、重要な人の判断を明示。</p></div>
+   <div class="source" id="s16"><span class="refnum">16</span><a href="https://code.claude.com/docs/en/admin-setup">Claude Code — Admin setup</a><p>更新型。組織展開、管理設定、認証・課金。個別契約・クライアントにおける機能の適用は実環境で確認する。</p></div>
+   <div class="source" id="s17"><span class="refnum">17</span><a href="https://code.claude.com/docs/en/skills">Claude Code — Extend Claude with skills</a><p>更新型。スキル構成と共通標準・独自拡張。形式の共通性だけで、他製品との完全互換を仮定しない。</p></div>
+   <div class="source" id="s18"><span class="refnum">18</span><a href="https://code.claude.com/docs/en/best-practices">Claude Code — Best practices</a><p>更新型。検証可能な成果、実行・テストを伴う進め方。AIの自己申告と実際の検証結果を分離する設計に使用。</p></div>
+   <div class="source" id="s12"><span class="refnum">12</span><a href="https://docs.github.com/en/copilot/get-started/features">GitHub — Copilot features</a><p>更新型。支援・エージェント・管理機能の概要。利用可能な機能は契約・設定・クライアントごとに再確認。</p></div>
+   <div class="source" id="s13"><span class="refnum">13</span><a href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">GitHub — Copilot customization cheat sheet</a><p>更新型。指示・スキル・フック等の用途と利用面別の対応。共通資産の配布・実機試験の設計に参照。</p></div>
+   <div class="source" id="s14"><span class="refnum">14</span><a href="https://docs.github.com/en/copilot/how-tos/configure-content-exclusion/exclude-content-from-copilot?tool=vscode">GitHub — Excluding content from Copilot</a><p>更新型。IDEのagent modeにおけるcontent exclusionの制約。機能上の除外と、強制される権限制御を区別する。</p></div>
+   <div class="source" id="s15"><span class="refnum">15</span><a href="https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/measure-success">GitHub — Measuring the success of a Copilot trial</a><p>更新型。目標、利用状況、定性情報、展開判断。メトリクスの対象面・対象外を確認するためにも参照。</p></div>
+  </div>
+  <h3>情報アクセス・管理・評価の公式ガイド</h3>
+  <div class="source-grid">
+   <div class="source" id="s19"><span class="refnum">19</span><a href="https://support.google.com/a/users/answer/17010577?hl=en">Google — What controls Gemini’s access to Workspace data</a><p>更新型。管理者とコンテンツ所有者による情報アクセスの制御。利用機能と共有範囲の確認に参照。</p></div>
+   <div class="source" id="s20"><span class="refnum">20</span><a href="https://learn.chatgpt.com/docs/enterprise/admin-setup">OpenAI — Admin rollout guide</a><p>更新型。ワークスペース、ローカル実行、クラウド、API、接続先の管理境界。新規導入の推奨ではなく設計原則の参考。</p></div>
+   <div class="source" id="s21"><span class="refnum">21</span><a href="https://developers.openai.com/api/docs/guides/agent-evals">OpenAI — Evaluate agent workflows</a><p>更新型。実行履歴の分析、採点、評価データセット、反復評価。特定SDKの導入を必須とはせず原則を適用。</p></div>
+   <div class="source" id="s22"><span class="refnum">22</span><a href="https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices">MCP — Security Best Practices</a><p>2025-11-25系列の公式ガイドを参照。代理接続、トークン、最小権限等。実装時には採用するプロトコル版の要件を再確認する。</p></div>
+  </div>
+  <h3>この資料で引き継いだ内部情報</h3>
+  <div class="card"><p><strong>今回の現状共有：</strong>会社契約のCopilot、部分的なClaude Code利用、WorkspaceのGemini、現行エージェントの範囲、部門のMarkdown化、個別スキル作成、全体統制の未整備。</p><p><strong>従来資料：</strong><a href="01_proposal-skeleton.md">企画書骨子</a>、<a href="02_L2-platform-detail.md">共通基盤の詳細</a>、<a href="09_revised-ai-adoption-roadmap.html">既存の全体構想資料</a>。規模の仮置きと既存の構想・検討事項を参照しました。従来資料にある効果の断定、製品の役割分担、将来目標は、そのまま事実として引き継いでいません。</p></div>
+ </section>
+ <footer class="footer"><strong>AI駆動開発・AI活用を組織の標準へ</strong><br>第1版 / 2026年9月8日。次回は初期棚卸し後に体制・対象・利用条件を具体化し、その後は月次で標準、四半期で構想と投資配分を見直す案とします。<br>本資料は独立した構想・実行計画です。既存資料や環境の設定を変更するものではありません。<br><a class="toplink" href="#top">資料の先頭へ戻る ↑</a></footer>
+ </main>
+ </div>
+</div>
+<script>
+document.documentElement.classList.add('js');
+document.getElementById('print-button').addEventListener('click',()=>window.print());
+for(const tableWrap of document.querySelectorAll('.table-wrap')){tableWrap.tabIndex=0;tableWrap.setAttribute('role','region');tableWrap.setAttribute('aria-label','比較表。幅が狭い場合は左右にスクロールできます。');}
+const reportSections=[...document.querySelectorAll('main section[id]')];
+const navLinks=[...document.querySelectorAll('.sidebar a[href^="#"]')];
+let pending=false;
+function updateNav(){let active=reportSections[0]?.id;for(const section of reportSections){if(section.getBoundingClientRect().top<=150)active=section.id;}for(const link of navLinks){const selected=link.hash==='#'+active;link.classList.toggle('active',selected);if(selected)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}pending=false;}
+window.addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(updateNav);}},{passive:true});
+updateNav();
+let printDetails=[];
+window.addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('main details')].map(el=>[el,el.open]);for(const [el] of printDetails)el.open=true;});
+window.addEventListener('afterprint',()=>{for(const [el,wasOpen] of printDetails)el.open=wasOpen;});
+</script>
+</body>
+</html>

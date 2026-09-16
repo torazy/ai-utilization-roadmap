@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑧ Fast-Trackレーンと共通APIゲートウェイ — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ（増補: 先行要望の受け皿）</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html" class="cur">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ⑧（v0.5で追加）</span>
+  <h1>Fast-Trackレーンと共通APIゲートウェイ — 整備を待たせない受け皿</h1>
+  <p class="lead">「業務でLLM APIを使いたい」という現在進行形の要望を止めずに、ガバナンスの中に乗せる。原則は「禁止でも放任でもなく、<strong>舗装された道を最速で提供する</strong>」。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか — 「整備待ちの死」と「野良APIの氾濫」の二択を壊す</h2>
+  <p>基盤整備には時間がかかる。その間に現場の要望を止めれば、事業機会と信頼を失い、世の中の変化にも置いていかれる。
+  逆に自由に使わせれば、契約条件（学習利用）・データ分類・コストが統制不能になり、後から回収するコストは膨大になる。</p>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">整備待ち</div><div class="lbl">「ガバナンスができるまで待って」→ 現場は待たない。シャドーAI化するだけ</div></div>
+    <div class="stat warn"><div class="num">放任</div><div class="lbl">個人契約のAPIキーが業務システムに混入 → 契約・監査・コストが統制不能</div></div>
+    <div class="stat good"><div class="num">舗装路</div><div class="lbl">正規ルートを「最速・最も楽な道」にする — プラットフォームエンジニアリングのPaved Road原則<sup><a href="#refs">[1]</a></sup></div></div>
+  </div>
+  <div class="callout point"><span class="ttl">設計思想</span>
+    統制は「審査を重くする」ことではなく「<strong>正規の道を野良より速く・楽にする</strong>」ことで実現する。
+    申請が面倒だから野良に流れる — なら申請を3問にし、低リスクは即日で通す。正規ルートには最初から計測（⑤）と監査（④）が組み込まれているので、<strong>使われるほどガバナンスが強くなる</strong>。
+  </div>
+</section>
+
+<section>
+  <h2>2. Fast-Trackレーン — 要望を止めない受け入れプロセス</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>1. 申請（3問だけ）</b>①何に使うか ②扱うデータの分類 ③出力を人が確認してから使うか</div><div class="arr">→</div>
+    <div class="step"><b>2. 自動トリアージ</b>社外秘以下×人の確認あり×承認済みモデル → <strong>低リスク: 即日〜翌日承認</strong>。それ以外は週次審査（SLA 5営業日）</div><div class="arr">→</div>
+    <div class="step"><b>3. キー払い出し</b>共通ゲートウェイの仮想キー（チーム・用途タグ、予算上限、レート制限つき）</div><div class="arr">→</div>
+    <div class="step"><b>4. 暫定利用（90日）</b>利用ログ・コストは自動で⑤へ。ガードレール5点（§4）の範囲で自由に使う</div><div class="arr">→</div>
+    <div class="step teal"><b>5. 90日レビュー</b>実績を見て 本則化／改善して継続／停止 を判定。得られた知見は①③へ還元</div>
+  </div>
+  <p class="anim-note">※ ポイントは「暫定承認＋期限付きレビュー」。完璧な事前審査を諦める代わりに、計測に基づく事後判定を制度化する</p>
+
+  <h3>「様々な要望」への一般化 — インテーク(受付)の一本化</h3>
+  <table>
+    <thead><tr><th style="width:26%;">要望の分類</th><th>扱い</th><th style="width:24%;">例</th></tr></thead>
+    <tbody>
+      <tr><td class="em">A. 既存の舗装路に乗る</td><td>Fast-Trackで即提供（このページの仕組み）</td><td>API利用、MCPツールの暫定登録（読み取り専用から）、承認済みツールの追加シート、Tier 1エージェント</td></tr>
+      <tr><td class="em">B. 新しい道の舗装が必要</td><td>暫定手段を提示しつつ、四半期の舗装計画（ロードマップ）に反映</td><td>新ツール導入、新しい接続先、新ユースケース類型</td></tr>
+      <tr><td class="em">C. 例外（リスク高）</td><td>個別審査（セキュリティ担当と合議）。断る場合も代替案とセットで返す</td><td>機密データの投入、顧客向け自動応答、本番書き込み</td></tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">要望はノイズではなく「需要側シグナル」</span>
+    ⑦フロンティアウォッチが「技術の供給側」の入力なら、インテークは「<strong>現場の需要側</strong>」の入力。
+    月次で要望の傾向を集計し、舗装の優先順位（ロードマップ）に反映する。整備計画は固定物ではなく、この2つの入力で回る計画ループになる。
+  </div>
+</section>
+
+<section>
+  <h2>3. 技術の受け皿 — 共通LLM APIゲートウェイ</h2>
+  <p>④MCPゲートウェイが「エージェント→社内システム」の統制点なら、⑧は「<strong>アプリ／業務→LLMモデル</strong>」の統制点。対で「2つの関所」になる。</p>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>利用側</b>業務システム／社内ツール／スクリプト／エージェント</div><div class="arr">→</div>
+    <div class="step"><b>共通ゲートウェイ</b>1エンドポイント（OpenAI互換API）。仮想キーで認証</div><div class="arr">→</div>
+    <div class="step"><b>統制</b>予算上限・レート制限・ガードレール・モデル許可リスト（no-training契約のみ）</div><div class="arr">→</div>
+    <div class="step"><b>モデル</b>Bedrock(Claude)／Gemini／その他承認済みプロバイダ</div><div class="arr">→</div>
+    <div class="step teal"><b>記録</b>全呼び出しのログ・コストをチーム/用途別に⑤へ自動集約</div>
+  </div>
+
+  <h3>実装候補の比較（検討項目E — 関係者で決める）</h3>
+  <table>
+    <thead><tr><th style="width:20%;"></th><th>E-1 Databricks Unity AI Gateway</th><th>E-2 OSSゲートウェイ自前ホスト（LiteLLM等）</th><th>E-3 Bedrockネイティブ＋IAM</th></tr></thead>
+    <tbody>
+      <tr><td class="em">概要</td><td>Databricksの統制レイヤー。予算・レート制限・ガードレール・<strong>ペイロードログのDeltaテーブル記録</strong>・監査を一元提供<sup><a href="#refs">[2]</a></sup></td><td>OpenAI互換の統合API＋仮想キー・予算・100+プロバイダ対応。AWS上に自前運用<sup><a href="#refs">[3]</a></sup></td><td>Bedrockを直接利用しゲートウェイ層を追加しない最小構成。IAM/SCPで権限、<strong>application inference profile＋コスト配分タグ</strong>で用途別コスト<sup><a href="#refs">[4]</a></sup>、モデル呼び出しログ（CloudWatch/S3）、<strong>Bedrock Guardrails</strong>で入出力防御（2026年に組織横断の一括適用GA・エージェント向けAPI追加<sup><a href="#refs">[4]</a></sup>）</td></tr>
+      <tr><td class="em">強み</td><td>既存契約で追加基盤なし。⑤(計測)と③(ナレッジ)に同居。managed MCPサーバー・Genie・Agent Bricksと直結<sup><a href="#refs">[2]</a></sup>。<strong>レート制限・利用権限・コスト配賦・ペイロードログが「設定」で完結する</strong>。土台のModel Servingは25K QPS超・オーバーヘッド50ms未満・SLA付きの本番グレード<sup><a href="#refs">[2]</a></sup></td><td>ベンダー中立・マルチプロバイダが最も広い。OpenAI互換なので業務アプリの組込みが容易</td><td>AWS域内完結・IAMネイティブ・最少ホップで運用最軽量。既存のAWS運用（IAM・タグ・CloudWatch・Cost Explorer）の延長で扱える。Guardrailsの組織一括適用・エージェント連携などAWSネイティブの統制機能が2026年に急拡充<sup><a href="#refs">[4]</a></sup></td></tr>
+      <tr><td class="em">弱み</td><td>可用性チェーンにDatabricksが加わる。外部モデルEndpointのPrivateLinkはPublic Preview（リージョン要確認）<sup><a href="#refs">[2]</a></sup>。認証はDatabricksサービスプリンシパル（AWS IAMではない）</td><td>運用責任を自分で持つ（可用性・アップグレード）。エンタープライズ機能(SSO/監査)は商用版<sup><a href="#refs">[3]</a></sup></td><td>マルチプロバイダに弱い（Gemini等はカバー外）。<strong>チーム別レート制限・予算上限・利用ダッシュボードは自分で組み立てる</strong>（コスト配賦タグ・CloudWatch・QuickSight等の素材はあるが、組み上げと保守は自前）</td></tr>
+      <tr><td class="em">向く用途</td><td>データ利活用API・RAG・業務エージェント（<strong>本番含む</strong>）、社内ツール、分析系</td><td>マルチプロバイダの社内共通API（E-1で不足が出た場合の控え）</td><td>データに依存しない純モデル呼び出しを、AWS本番システムの同期パスに最少ホップで組み込む場合</td></tr>
+    </tbody>
+  </table>
+
+  <h3>アーキテクチャから先に判断できること（検証を待たない一次判定）</h3>
+  <p style="font-size:13.5px;">向き不向きの大勢は、提供方法とアーキテクチャから<strong>PoC前に</strong>判定できる。E-1・E-3はいずれも本番システムに組み込める本番グレードの基盤であり、分かれ目は次の7観点にある。</p>
+  <table>
+    <thead><tr><th style="width:22%;">観点</th><th>E-1 Unity AI Gateway</th><th>E-3 Bedrockネイティブ＋IAM</th></tr></thead>
+    <tbody>
+      <tr><td class="em">基盤の本番グレード<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">本番システムに組み込める性能・可用性か</span></td><td>◎ Model Serving上に載る — 25K QPS超・オーバーヘッド&lt;50ms・SLA付きで、本番システムへの組み込みに耐える<sup><a href="#refs">[2]</a></sup></td><td>◎ AWSマネージド・リージョン内・AWS SLA</td></tr>
+      <tr><td class="em">ガバナンス機能の内蔵度<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">統制をどこまで設定だけで賄えるか</span></td><td>◎ レート制限／利用権限（Unity Catalog）／チーム・用途別コスト配賦／ペイロードログ（Deltaテーブル）が<strong>設定のみで完結</strong> — 最大の差別化点</td><td>△ コスト配賦はinference profile＋タグで可能だが、チーム別レート制限・予算上限・仮想キーは自作</td></tr>
+      <tr><td class="em">利用状況の可視化<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">どの部門が・何に・どれだけ使っているか</span></td><td>◎ <strong>組み込みダッシュボードが標準装備</strong> — リクエスト・トークン消費・レイテンシ・エラー率・コスト内訳から外部MCPトラフィック・コーディングエージェント利用まで、リクエストタグ（チーム/用途/エンドユーザー）とサービスタグ（コストセンター）別に表示<sup><a href="#refs">[2]</a></sup>。<code class="inline">system.ai_gateway.usage</code>テーブルで自由分析でき、⑤ダッシュボードの土台をほぼ作らずに得られる</td><td>○ 素材は揃う — inference profile＋コスト配分タグ→Cost Explorer、呼び出しログ→CloudWatch Logs Insights<sup><a href="#refs">[4]</a></sup>。ただし<strong>部門×用途の一覧ダッシュボードは自分で組む</strong>（CloudWatch/QuickSight）</td></tr>
+      <tr><td class="em">データ近接<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">社内データをどれだけ簡単・安全に参照できるか</span></td><td>◎ レイクハウスのデータ・Vector Search・Genieと<strong>同一の権限体系</strong>で参照。データを使うAPIの構造的本命</td><td>△ データ参照は別途接続（S3・API経由）で権限も別管理</td></tr>
+      <tr><td class="em">認証モデル・経路<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">誰の権限で・どの経路を通って呼ぶか</span></td><td>△ Databricksサービスプリンシパル（OAuth）。アプリ→Databricks→（外部モデルはさらにプロバイダ）。外部モデルのPrivateLinkはPreview</td><td>◎ IAMネイティブ・VPCエンドポイントで最少ホップ。AWSアプリと同一権限基盤</td></tr>
+      <tr><td class="em">本番／社内のワークロード分離<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">社内利用の障害・過負荷を本番サービスに波及させない方法</span></td><td>◎ <strong>エンドポイント分離</strong>が基本 — 本番用と社内用で別のサービングエンドポイントを立て、それぞれにレート制限（ITPM/OTPM/QPH）と予算を設定。本番側は<strong>プロビジョンドスループット</strong>で容量を確保<sup><a href="#refs">[2]</a></sup>。より強い分離が必要ならワークスペース自体を本番／社内で分ける。外部モデルはプロバイダ資格情報もエンドポイント別に分け、プロバイダ側クォータの共有を断つ</td><td>◎ <strong>AWSアカウント分離</strong>が基本（Well-Architectedの標準手法<sup><a href="#refs">[4]</a></sup>） — クォータ（トークン/分）はアカウント単位のため、社内アカウントの過負荷は本番アカウントに届かない。本番側はProvisioned Throughputで容量を確保し、SCPで越境アクセスを遮断</td></tr>
+      <tr><td class="em">クリティカルパス依存<br><span style="font-weight:400; font-size:11.5px; color:var(--muted);">依存するクラウドサービス自体の障害への巻き込まれ範囲</span></td><td>△ 可用性チェーンにDatabricksが加わる</td><td>◎ AWSのみ</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn"><span class="ttl">設計原則: 共通にするのは「仕組み」、分離するのは「実行資源」</span>
+    「共通ゲートウェイ」とは、ルール・キー払い出し・可視化・監査という<strong>管理の仕組みを1つにする</strong>ことであり、全利用を1本の実行資源に乗せることではない。
+    <strong>本番サービス利用と社内利用は、キー払い出しの時点で別レーンに分け</strong>、E-1ならエンドポイント（＋必要ならワークスペース）、E-3ならAWSアカウントを分けて紐づける。
+    これにより社内利用がどれだけ暴れても、本番サービスの容量・クォータ・可用性には届かない。ガードレール5点と⑤の可視化は両レーンに同一に適用される。
+  </div>
+
+  <div class="callout point"><span class="ttl">一次判定ルール: 原則E-1、例外条件に該当したらE-3</span>
+    データに依存しない純粋なLLM利用でも、E-1は<strong>外部モデルエンドポイントを設定で立てるだけ</strong>（OpenAI互換で呼べる）で、レート制限・権限・コスト配賦・ログが最初から付く。
+    「簡単に作れて統制も付く」という舗装路の要件を最も満たすため、<strong>データ利用の有無を問わずE-1を既定</strong>とする。<br>
+    <strong>E-3（Bedrock直）に切り替えるのは、次の例外条件に該当する場合:</strong>
+    ①閉域要件が厳しく、外部モデルEPのPrivateLink未GAリージョンである ②ミリ秒級の同期レイテンシ要件がある ③AWS IAMでの権限統一が必須の基幹系である ④Databricks障害時にも止められない可用性分離要件がある。<br>
+    <strong>PoCで測るのは方向ではなく数値:</strong> 実測レイテンシ（P50/P99）、負荷時のスループットとクォータ挙動、運用コスト（DBU・転送）、障害時フォールバック。第1号案件で「数字の裏取り」だけを行う。
+  </div>
+
+  <h3>APIだけではない — MCP・エージェントも同じ受け皿に乗せる</h3>
+  <p style="font-size:13.5px;">現場から出る要望は「APIを呼びたい」だけでなく「<strong>社内データ・ツールをMCPとして提供したい／使いたい</strong>」「<strong>エージェントを作りたい</strong>」を含む。
+  いずれも論点は同じ — どこで実装するか（一次判定）と、整備を待てないケースの受け皿（Fast-Track）。3類型で整理する。</p>
+  <table>
+    <thead><tr><th style="width:16%;">提供物</th><th style="width:44%;">実装の置き場所（一次判定）</th><th>Fast-Trackの扱い</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="em">API<br><span class="pill gray">モデル呼び出し</span></td>
+        <td>原則E-1（Unity AI GW）、例外条件でE-3（上記ルール）</td>
+        <td>本ページの仕組みそのまま（仮想キー・90日レビュー）</td>
+      </tr>
+      <tr>
+        <td class="em">MCP<br><span class="pill gray">ツール・データの提供</span></td>
+        <td><strong>データ系ツール</strong>（テーブル・Genie・Vector Search・UC関数）→ Databricksの<strong>managed MCPサーバー</strong>（設定で提供でき、Unity Catalog権限がそのまま効く<sup><a href="#refs">[2]</a></sup>）。
+        <strong>社内API・Lambda系ツール</strong> → AgentCore GatewayでMCP化（④の実装候補と同一）。特殊要件のみ自作（Databricks Apps／ECS）。
+        どの経路でも<strong>必ず④の承認済みレジストリに登録</strong>して全エージェントから発見可能にする</td>
+        <td>暫定登録レーンを用意: 読み取り専用スコープ＋利用ログ必須で即日登録 → 90日レビューで本登録。<strong>レジストリ外の野良MCPは禁止</strong>（L1ルール）のまま、正規登録を速くすることで両立する</td>
+      </tr>
+      <tr>
+        <td class="em">エージェント<br><span class="pill gray">構築・実行</span></td>
+        <td><strong>業務・データ系</strong> → Agent Bricks（ガバナンス・評価込み<sup><a href="#refs">[2]</a></sup>）。<strong>開発系</strong> → Claude Code＋②ハーネス。実行環境はActions／AgentCore Runtime（検討項目D-3）</td>
+        <td>Tier 1（報告のみ・読み取り専用）は Fast-Track対象。書き込み・自律実行を伴うものは例外審査（分類C）</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px; color:var(--muted);">この3類型はいずれも「⑧の受付（インテーク）→④⑤の統制点に自動接続」という同じ配管に乗る。受付を分けないことで、現場は「何を作りたいか」だけ言えばよく、実装の置き場所はAI推進チームが一次判定表で即答できる。</p>
+
+  <h3>ロードマップへの組み込み — 前倒しで作る</h3>
+  <p style="font-size:13.5px;">⑧はPhase 1完成を待たない。<strong>Phase 0（アセスメント期間中）に最小構成で稼働開始</strong>する:
+  Week 1-2 = 申請フォーム＋ガードレール5点の文書化、Week 3-4 = ゲートウェイPoC＋第1号案件のキー払い出し。
+  現在出ているAPI要望をそのまま第1号（灯台案件）にすることで、「整備が現場の役に立つ」最初の証拠を作る。</p>
+</section>
+
+<section>
+  <h2>4. ガードレール — 暫定利用でも譲らない5点（L1ルール）</h2>
+  <table>
+    <tbody>
+      <tr><td class="em" style="width:26%;">① 承認済みモデルのみ</td><td>no-training（学習不使用）契約が確認できたモデル・エンドポイントだけをゲートウェイの許可リストに載せる。個人契約キーの業務利用は禁止</td></tr>
+      <tr><td class="em">② データ分類の遵守</td><td>投入可否はL1のデータ分類マトリクスに従う。機密データはFast-Track対象外（例外審査C行き）</td></tr>
+      <tr><td class="em">③ キーは共通ゲートウェイから</td><td>仮想キー（チーム・用途タグ、予算上限、レート制限、有効期限90日）。生キーの直接配布はしない</td></tr>
+      <tr><td class="em">④ ログと監査</td><td>全呼び出しを記録し⑤に集約。コストはチーム・用途別に自動帰属（D-5の監査要件と共通）</td></tr>
+      <tr><td class="em">⑤ 人の確認基準</td><td>顧客向け出力・本番反映はHuman-in-the-Loop必須（L1既定と同一）。全自動化はFast-Trackの対象外</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn"><span class="ttl">「止めない」と「何でも通す」は違う</span>
+    Fast-Trackが速いのは、<strong>ガードレールの内側だけ</strong>。5点の外に出る要望はC（例外審査）に回り、そこは従来通り慎重に判断する。
+    速さの源泉は「審査を省く」ことではなく「リスクの低い大多数を仕組みで即決する」こと。
+  </div>
+</section>
+
+<section>
+  <h2>5. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:42%;">取得方法</th><th style="width:18%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>申請→利用開始リードタイム</td><td>インテーク記録（申請日・キー払い出し日）</td><td>低リスク: 即日〜5営業日</td></tr>
+      <tr><td>ゲートウェイ経由率</td><td>⑤のコスト集計 vs 部門のAI関連支出（経費・調達記録）の突合</td><td>90%以上（野良の代理指標）</td></tr>
+      <tr><td>Fast-Track案件数と本則化率</td><td>90日レビューの記録</td><td>本則化50%以上なら健全</td></tr>
+      <tr><td>要望→舗装への反映数</td><td>インテークB分類のロードマップ反映件数（四半期）</td><td>計画ループの稼働証拠</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>6. 落とし穴</h2>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>Fast-Trackの審査が肥大化する</strong>（3問が10問になった時点で野良に負ける。質問を増やしたくなったら分類C行きの条件を明確化する方が先）／
+    <strong>暫定のまま放置</strong>（90日レビューを飛ばすと「暫定」が実質無期限になり統制が空洞化。レビュー日はキー有効期限で強制）／
+    <strong>ゲートウェイの単一障害点化</strong>（本番組込み用途はSLA・フォールバック設計を先に確認。だからE-3併用の選択肢を残す）／
+    <strong>統制側の勝利宣言</strong>（経由率が上がっても、リードタイムが伸びたら失敗。速度と統制の両方をKPIにする）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] Paved Road / Golden Path: <a href="https://dora.dev/capabilities/platform-engineering/">DORA: Platform Engineering</a> — 内部プラットフォームは「使うのが最も楽な道」であることが成功条件</li>
+    <li>[2] <a href="https://www.databricks.com/product/artificial-intelligence/unity-ai-gateway">Databricks Unity AI Gateway</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">公式Docs: AI governance with Unity AI Gateway</a>（予算・レート制限・ガードレール・ペイロードログ） ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/usage-tracking-beta">利用トラッキングと組み込みダッシュボード</a>（system.ai_gateway.usage・タグ別表示） ／ <a href="https://www.databricks.com/blog/introducing-ai-spend-controls-unity-ai-gateway">AI支出コントロール（ユーザー別/共有の予算閾値）</a> ／ <a href="https://www.databricks.com/product/model-serving">Mosaic AI Model Serving</a>（25K QPS超・オーバーヘッド&lt;50ms・SLA） ／ <a href="https://docs.databricks.com/aws/en/generative-ai/external-models/">External models</a>（PrivateLinkはPublic Preview・リージョン依存） ／ <a href="https://docs.databricks.com/aws/en/machine-learning/model-serving/production-optimization">本番向け最適化</a>（プロビジョンドスループット・エンドポイント別レート制限） ／ <a href="https://www.databricks.com/blog/accelerate-ai-development-databricks-discover-govern-and-build-mcp-and-agent-bricks">managed MCPサーバーとAgent Bricks</a></li>
+    <li>[3] LLMゲートウェイ動向: <a href="https://www.truefoundry.com/blog/a-definitive-guide-to-ai-gateways-in-2026-competitive-landscape-comparison">AI Gateways 2026 競合比較</a> ／ <a href="https://api7.ai/portkey-vs-litellm">Portkey vs LiteLLM（仮想キー・予算機能の比較）</a></li>
+    <li>[4] Bedrock側の統制・可視化: <a href="https://aws.amazon.com/blogs/machine-learning/manage-multi-tenant-amazon-bedrock-costs-using-application-inference-profiles/">application inference profilesによるマルチテナントコスト管理（AWSブログ）</a> ／ <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles.html">inference profiles（公式Docs）</a> ／ <a href="https://aws.amazon.com/blogs/machine-learning/track-allocate-and-manage-your-generative-ai-cost-and-usage-with-amazon-bedrock/">コスト・利用のトラッキング（AWSブログ）</a> ／ <a href="https://aws.amazon.com/about-aws/whats-new/2026/04/bedrock-guardrails-cross-account-safeguards/">Guardrails組織横断適用GA（2026/4）</a> ／ <a href="https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-bedrock-guardrails-api-ai/">エージェント向けInvokeGuardrailChecks API（2026/6）</a> ／ <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/quotas.html">Bedrockクォータ（アカウント単位）</a> ／ <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/sec_securely_operate_multi_accounts.html">Well-Architected: アカウントによるワークロード分離</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_7_frontier-watch.html"><span class="dir">← 前</span><div class="t">⑦ フロンティアウォッチループ</div></a>
+  <a class="next" href="03_proposal.html"><span class="dir">戻る →</span><div class="t">企画書本体</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ⑧ ／ v1.0 ／ 2026-07-20</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑤ コスト・効果ダッシュボード — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (5/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html" class="cur">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ⑤ ＝ 統制点その2</span>
+  <h1>コスト・効果ダッシュボード — 「成果あたりコスト」で語る</h1>
+  <p class="lead">従量課金のAIコストと効果（DX Core 4）を同じ画面に並べる。KPIは「何を測るか」より「どう取るか」が難所 — 本ページは取得方法の実例を中心にまとめる。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 測定の設計原則 — 世の中の失敗から先に学ぶ</h2>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">体感+20%<br>実測−19%</div><div class="lbl">METR実験: 開発者の体感と実測は真逆になり得る</div><div class="src">→ アンケート単独では測れない<sup><a href="#refs">[1]</a></sup></div></div>
+    <div class="stat warn"><div class="num">歪む</div><div class="lbl">AIがコードの30〜70%を書くと、コミット数・行数・デプロイ頻度は指標として壊れる</div><div class="src">Zylos Research 2026<sup><a href="#refs">[2]</a></sup></div></div>
+    <div class="stat good"><div class="num">MTTR</div><div class="lbl">AI時代に最も歪みにくいDORA指標（復旧は人の判断と運用に依存するため）</div><div class="src">同上<sup><a href="#refs">[2]</a></sup></div></div>
+  </div>
+  <table>
+    <thead><tr><th style="width:34%;">原則</th><th>理由・実装</th></tr></thead>
+    <tbody>
+      <tr><td class="em">1. システム計測×サーベイのハイブリッド</td><td>体感（サーベイ）と実測（Git/CI/API）を両方取り、乖離そのものを監視する。DX Core 4の標準手法<sup><a href="#refs">[3]</a></sup></td></tr>
+      <tr><td class="em">2. 個人を測らない</td><td>集計はチーム単位が最小粒度。個人ランキングは活用を萎縮させ、数字ゲームを生む（L1方針に明記）</td></tr>
+      <tr><td class="em">3. 行数・コミット数を目標にしない</td><td>AIで無限に増やせる指標は目標化した瞬間に無意味化する。参考値としてのみ保持</td></tr>
+      <tr><td class="em">4. ベースラインを承認前に取る</dt></td><td>Phase 0で測定開始。「導入前後」が比較できないと効果は永遠に主張できない</td></tr>
+      <tr><td class="em">5. 品質指標を必ず併走させる</td><td>速度系だけ見ると品質劣化を見逃す（DORA 2025: AI比率+25ppで安定性−7.2%<sup><a href="#refs">[1]</a></sup>）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>2. 取得方法 — データソース別の実例</h2>
+  <div class="tabs">
+    <div class="tab-btns">
+      <button class="on" data-tab="d1">Copilot</button>
+      <button data-tab="d2">Claude Code</button>
+      <button data-tab="d3">AWS／Databricks</button>
+      <button data-tab="d4">開発活動（Git/CI）</button>
+      <button data-tab="d5">サーベイ</button>
+    </div>
+    <div class="tab-panel on" data-panel="d1">
+      <h4>GitHub Copilot Metrics API（2026年2月GA）<sup><a href="#refs">[4]</a></sup></h4>
+      <ul class="plain">
+        <li><strong>取れるもの</strong>: アクティブユーザー、補完・チャット・coding agentの利用量、言語・IDE・モデル別内訳、premium request消費</li>
+        <li><strong>チーム別集計</strong>: user-teamsレポート（2026年5月追加）でユーザー×チームを結合し、10チーム別の利用状況を出せる</li>
+        <li><strong>成熟度コホート</strong>: <code class="inline">ai_adoption_phase</code> フィールド（2026年5月追加）が直近28日の利用から各ユーザーの採用フェーズを自動分類 — <strong>人材ラダー（L1/L2/L3）の進捗測定にそのまま使える</strong></li>
+        <li><strong>実装</strong>: REST APIを日次で取得→Databricksに蓄積。公式の可視化OSS（copilot-metrics-viewer）も参考に</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="d2">
+      <h4>Claude Code — OpenTelemetry ＋ Analytics API<sup><a href="#refs">[5]</a></sup></h4>
+      <ul class="plain">
+        <li><strong>OTelエクスポート（公式サポート）</strong>: トークン消費・推定コスト・ツール実行・セッション情報をOTLPで送信。環境変数を managed settings（②）で全端末に配布すれば計測は自動化される</li>
+        <li><strong>送信先</strong>: OTLPコレクタ→Databricks（自作）または Grafana/SigNoz 等。Elastic等でのSIEM連携事例もあり（D-5の監査要件と両取り）</li>
+        <li><strong>Analytics API</strong>: Team/Enterpriseプランは利用状況・エンゲージメント指標をAPIで取得可能</li>
+        <li><strong>スキル利用の計測</strong>: ツール実行イベントから①のスキル呼び出し回数・利用チームを集計</li>
+      </ul>
+      <pre class="code"><span class="c"># managed settingsで配布する計測設定（例）</span>
+CLAUDE_CODE_ENABLE_TELEMETRY=1
+OTEL_METRICS_EXPORTER=otlp
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-collector.internal:4317
+OTEL_RESOURCE_ATTRIBUTES=team=payment,dept=dx   <span class="c"># チーム帰属タグ</span></pre>
+    </div>
+    <div class="tab-panel" data-panel="d3">
+      <h4>AWS／Databricks側のコスト</h4>
+      <ul class="plain">
+        <li><strong>Bedrock</strong>: モデル呼び出しログ＋Cost Explorer（タグ: チーム／用途）。自律ループやAI SREのコストはここに乗る</li>
+        <li><strong>AgentCore Observability（④のAPI・Lambda系統制）</strong>: エージェント実行単位のログ→「¥/障害調査」「¥/自律ループ実行」の分母に</li>
+        <li><strong>Databricks</strong>: system tables（billing.usage）でDBU消費をワークロード別に集計 — ③⑤の運用コスト</li>
+        <li><strong>Unity AI Gateway（⑧経由の利用）</strong>: 組み込み利用ダッシュボードが標準装備 — リクエスト・トークン・コスト内訳・外部MCPトラフィックをチーム/用途タグ別に表示。<code class="inline">system.ai_gateway.usage</code>で自由分析。<strong>⑤はこれを土台に拡張すればよく、D-4の自作コストを大きく下げる</strong></li>
+        <li><strong>横断集約</strong>: FinOps for AIの標準手法。Vantage等はOpenAI/Anthropic/AWSの請求を単一レポートに統合するが、当社はDatabricks上の自作が第一候補（D-4）<sup><a href="#refs">[6]</a></sup></li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="d4">
+      <h4>開発活動 — DORA系メトリクス（GitHub／CI）</h4>
+      <ul class="plain">
+        <li><strong>変更リードタイム</strong>: first commit→本番デプロイ（GitHub API＋デプロイイベント）</li>
+        <li><strong>変更失敗率／MTTR</strong>: デプロイ×インシデント管理の紐付け（⑥の記録と連動）。<strong>MTTRはAI時代に最も信頼できる指標</strong><sup><a href="#refs">[2]</a></sup></li>
+        <li><strong>AI起因の切り分け</strong>: AI関与PRのラベリング（coding agent起票・Claude Codeのco-author署名で自動判定）→ <strong>AI関与PRと非関与PRの品質・サイクルタイム比較</strong>（AI Usage Diff Mapping<sup><a href="#refs">[2]</a></sup>）が「AIは効いているか」への最も直接的な回答になる</li>
+        <li><strong>レビュー負荷</strong>: PRあたりレビューコメント数・レビュー滞留時間</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="d5">
+      <h4>サーベイ（体感）— 四半期・5分・チーム単位</h4>
+      <ul class="plain">
+        <li><strong>設問例</strong>: 週あたり節約時間（自己申告）／AI出力への信頼度／摩擦を感じる場面（自由記述）</li>
+        <li><strong>実例</strong>: 120人中80人にCopilotを配布した企業がDX Core 4で2ヶ月計測 — 満足度+9pt、<strong>自己申告の節約2.4時間/週/人</strong>（月768時間）をシステム指標と併記して報告<sup><a href="#refs">[3]</a></sup></li>
+        <li><strong>METR対策</strong>: 自己申告の節約時間は実測リードタイムと並べて表示し、乖離が大きいチームは深掘り（体感だけで投資判断しない）<sup><a href="#refs">[1]</a></sup></li>
+        <li><strong>回収率の担保</strong>: CoP内で結果を必ずフィードバック（「答えると改善される」体験を作る）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>3. ダッシュボード構成（Databricks上に自作 — D-4の第一候補）</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>収集（日次ジョブ）</b>Copilot API／Claude OTel・Analytics API／Bedrockログ／GitHub／サーベイ</div><div class="arr">→</div>
+    <div class="step"><b>正規化</b>チーム・用途タグ付け（Deltaテーブル）</div><div class="arr">→</div>
+    <div class="step"><b>結合</b>コスト×活動×品質×体感を突合（AI関与フラグで層別）</div><div class="arr">→</div>
+    <div class="step"><b>可視化</b>Lakeviewダッシュボード: 経営向け月次／チーム向け週次</div><div class="arr">→</div>
+    <div class="step"><b>アラート</b>チーム別コスト上限・品質劣化・体感/実測乖離を通知</div>
+  </div>
+
+  <h3>画面の3層構成</h3>
+  <table>
+    <thead><tr><th style="width:22%;">対象</th><th style="width:26%;">頻度</th><th>載せるもの</th></tr></thead>
+    <tbody>
+      <tr><td class="em">経営（DX部門長）</td><td>月次1枚</td><td>成果あたりコスト（¥/PR・¥/障害対応）、DX Core 4サマリ、投資判断に足る3つの数字</td></tr>
+      <tr><td class="em">チーム</td><td>週次</td><td>自チームの利用量・コスト・上限残・AI関与PRの品質比較</td></tr>
+      <tr><td class="em">AI推進チーム</td><td>常時</td><td>異常検知（コスト急増・品質劣化・利用停滞チーム）、スキル利用ランキング、adoption_phase分布</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>4. KPIツリー（何を経営報告するか）</h2>
+  <table class="fx">
+    <thead><tr><th style="width:18%;">層</th><th>KPI</th><th style="width:36%;">取得元</th></tr></thead>
+    <tbody>
+      <tr><td class="em">成果</td><td>変更リードタイム／MTTR／レガシー文書化数／成果あたりコスト</td><td>GitHub・⑥・②認定リスト・コスト÷成果</td></tr>
+      <tr><td class="em">品質ガード</td><td>変更失敗率・AI起因不具合率（悪化させない）</td><td>デプロイ×インシデント紐付け＋AI関与フラグ</td></tr>
+      <tr><td class="em">活用</td><td>adoption_phase分布（L1/L2/L3進捗）／スキル再利用／ハーネス整備数</td><td>Copilot API・Claude Analytics・①②</td></tr>
+      <tr><td class="em">体感</td><td>節約時間（自己申告）／信頼度／満足度</td><td>四半期サーベイ（実測と併記）</td></tr>
+      <tr><td class="em">コスト</td><td>ツール別・チーム別支出／premium request消費／上限超過件数</td><td>各Admin API・Bedrockログ・④</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    Copilot Metrics APIは2026年に急速に整備（2月GA→5月チーム別・adoption_phase→6-7月精度改善）<sup><a href="#refs">[4]</a></sup>。
+    Claude CodeのOTel計測はGrafana/SigNoz/Elastic等での構築例が多数公開<sup><a href="#refs">[5]</a></sup>。
+    DX Core 4での2ヶ月計測例（80/120人、2.4h/週）<sup><a href="#refs">[3]</a></sup>。パナソニック コネクトは全社AIで年18.6万時間削減を「時間」で報告 — 経営に通じる単位の好例<sup><a href="#refs">[7]</a></sup>。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>利用率だけの報告</strong>（「84%が使うが信頼は33%」が世の中の実態<sup><a href="#refs">[1]</a></sup> — 利用率が高くても成果ゼロはあり得る）／
+    <strong>体感アンケート単独</strong>（METRの体感+20%/実測−19%）／
+    <strong>個人監視化</strong>（数字ゲームと萎縮を生む。チーム集計を最小粒度に）／
+    <strong>測定システムの作り込みすぎ</strong>（Phase 0は「Copilot API＋スプレッドシート」でも始まる。完璧を待たない）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html">METR研究（InfoWorld）</a> ／ <a href="https://dora.dev/dora-report-2025/">DORA 2025</a> ／ <a href="https://www.technologyreview.com/2025/12/15/1128352/rise-of-ai-coding-developers-2026/">MIT Tech Review: 利用84%・信頼33%</a></li>
+    <li>[2] <a href="https://zylos.ai/research/2026-02-07-developer-productivity-metrics/">Developer Productivity Metrics 2026（Zylos）</a> — 歪む指標／MTTRの信頼性／AI Usage Diff Mapping</li>
+    <li>[3] <a href="https://www.buildmvpfast.com/blog/dx-core-4-developer-productivity-measurement-ai-impact-2026">DX Core 4によるAI影響測定（80/120人の実測例）</a> ／ <a href="https://getdx.com/blog/dora-metrics/">DORAメトリクス解説（DX）</a></li>
+    <li>[4] <a href="https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics">Copilot usage metrics（GitHub Docs）</a> ／ <a href="https://github.blog/changelog/2026-05-29-copilot-usage-metrics-api-adds-cohorts-for-ai-adoption/">adoption_phaseコホート追加</a> ／ <a href="https://github.com/github-copilot-resources/copilot-metrics-viewer">copilot-metrics-viewer（OSS）</a></li>
+    <li>[5] <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Monitoring（公式）</a> ／ <a href="https://signoz.io/blog/claude-code-monitoring-with-opentelemetry/">SigNoz構築例</a> ／ <a href="https://www.elastic.co/security-labs/claude-code-cowork-monitoring-otel-elastic">Elastic（SIEM連携）</a> ／ <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans">Claude Analytics API</a></li>
+    <li>[6] <a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps for AI</a> ／ <a href="https://www.datadoghq.com/blog/monitor-openai-cost-datadog-cloud-cost-management-llm-observability/">Datadog LLMコスト監視</a></li>
+    <li>[7] <a href="https://service.is-c.jpn.panasonic.com/column/generative_ai">パナソニック コネクト ConnectAI（年18.6万時間削減）</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_4_mcp-gateway.html"><span class="dir">← 前</span><div class="t">④ MCPゲートウェイ</div></a>
+  <a class="next" href="04_6_ai-sre.html"><span class="dir">次 →</span><div class="t">⑥ AI SRE</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ⑤ ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

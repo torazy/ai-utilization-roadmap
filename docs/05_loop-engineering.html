@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ループエンジニアリング詳説</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .cycle-anim .cycle-stage rect{transition:all .5s ease;}
+  .cycle-anim .cycle-stage.on rect{fill:#2f6fed; stroke:#2f6fed;}
+  .cycle-anim .cycle-stage.on text{fill:#ffffff;}
+  .tier{border:2px solid var(--line); border-radius:12px; background:#fff; padding:16px 18px; position:relative;}
+  .tier .tno{position:absolute; top:-13px; left:14px; font-size:12px; font-weight:800; padding:2px 12px; border-radius:999px; color:#fff;}
+</style>
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› 詳説シリーズ</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html" class="cur">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">詳説 — Phase 3の中核手法</span>
+  <h1>ループエンジニアリング詳説</h1>
+  <p class="lead">「エージェントにプロンプトを与える自分自身を、システムで置き換える」（Addy Osmani, 2026年6月）。手動指示を廃し、指示の生成・送出・検証まで自動で回る系を設計する。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 定義と階層 — ハーネスとの関係</h2>
+  <p>ハーネスが「<strong>1回の実行</strong>の装備」（モデル・ツール許可・文脈・検証）だとすれば、ループは「<strong>装備済みエージェントを反復制御する上位層</strong>」。
+  比喩では、ハーネス＝1試合の装備、ループ＝シーズン運営戦略<sup><a href="#refs">[1]</a></sup>。したがって<strong>ハーネス（②）の整備なしにループは成立しない</strong> — 本企画がPhase 1-2をハーネスに充てる理由。</p>
+
+  <figure class="cycle-anim">
+    <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs><marker id="arL" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#9db3cd"/></marker></defs>
+      <g class="cycle-stage">
+        <rect x="30" y="110" width="150" height="72" rx="12" fill="#f4f7fb" stroke="#d5dfec" stroke-width="2"/>
+        <text x="105" y="141" font-size="13.5" font-weight="800" fill="#16324f" text-anchor="middle">トリガー</text>
+        <text x="105" y="162" font-size="11" fill="#42556c" text-anchor="middle">cron／イベント発火</text>
+      </g>
+      <line x1="180" y1="146" x2="220" y2="146" stroke="#9db3cd" stroke-width="2" marker-end="url(#arL)"/>
+      <g class="cycle-stage">
+        <rect x="225" y="110" width="150" height="72" rx="12" fill="#f4f7fb" stroke="#d5dfec" stroke-width="2"/>
+        <text x="300" y="141" font-size="13.5" font-weight="800" fill="#16324f" text-anchor="middle">指示生成</text>
+        <text x="300" y="162" font-size="11" fill="#42556c" text-anchor="middle">バックログ／差分から自動生成</text>
+      </g>
+      <line x1="375" y1="146" x2="415" y2="146" stroke="#9db3cd" stroke-width="2" marker-end="url(#arL)"/>
+      <g class="cycle-stage">
+        <rect x="420" y="110" width="150" height="72" rx="12" fill="#f4f7fb" stroke="#d5dfec" stroke-width="2"/>
+        <text x="495" y="141" font-size="13.5" font-weight="800" fill="#16324f" text-anchor="middle">Maker実行</text>
+        <text x="495" y="162" font-size="11" fill="#42556c" text-anchor="middle">worktree分離で並列実装</text>
+      </g>
+      <line x1="570" y1="146" x2="610" y2="146" stroke="#9db3cd" stroke-width="2" marker-end="url(#arL)"/>
+      <g class="cycle-stage">
+        <rect x="615" y="110" width="150" height="72" rx="12" fill="#f4f7fb" stroke="#d5dfec" stroke-width="2"/>
+        <text x="690" y="141" font-size="13.5" font-weight="800" fill="#16324f" text-anchor="middle">Checker検証</text>
+        <text x="690" y="162" font-size="11" fill="#42556c" text-anchor="middle">独立文脈で審査＋CI柵</text>
+      </g>
+      <line x1="765" y1="146" x2="805" y2="146" stroke="#9db3cd" stroke-width="2" marker-end="url(#arL)"/>
+      <g class="cycle-stage">
+        <rect x="810" y="110" width="160" height="72" rx="12" fill="#f4f7fb" stroke="#d5dfec" stroke-width="2"/>
+        <text x="890" y="141" font-size="13.5" font-weight="800" fill="#16324f" text-anchor="middle">出力／記録</text>
+        <text x="890" y="162" font-size="11" fill="#42556c" text-anchor="middle">PR起票→人間 or 次サイクルへ</text>
+      </g>
+      <path d="M 890 182 C 890 260 105 260 105 185" fill="none" stroke="#9db3cd" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arL)"/>
+      <text x="500" y="272" font-size="11.5" font-weight="700" fill="#64748b" text-anchor="middle">状態保存（CLAUDE.md・メモリ）を介して次サイクルへ — 停止条件（§3）を満たすまで反復</text>
+    </svg>
+    <figcaption>ループの基本サイクル（自動でステージが進みます）— 各ステージを支えるのが6つの構成要素</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>2. 6つの構成要素<sup><a href="#refs">[1]</a></sup> — 当社実装との対応</h2>
+  <table>
+    <thead><tr><th style="width:20%;">構成要素</th><th style="width:38%;">役割</th><th>当社での実装（L2基盤との対応）</th></tr></thead>
+    <tbody>
+      <tr><td class="em">1. 自動化トリガー</td><td>GitHubイベント・cronでループを起動</td><td>GitHub Actions schedule／EventBridge（<a href="03_proposal.html#infra">AWS構成</a>）</td></tr>
+      <tr><td class="em">2. 並列隔離</td><td>git worktreeで複数エージェントの競合防止</td><td>②devcontainer＋worktree。クラウド実行はAgentCore Runtime（セッション分離microVM）</td></tr>
+      <tr><td class="em">3. 知識バンドル</td><td>SKILL.mdでプロジェクト固有知識を供給</td><td>①マーケットプレイスのスキル＋②AGENTS.md</td></tr>
+      <tr><td class="em">4. 外部連携</td><td>MCPで既存ツールに接続</td><td>④MCPゲートウェイ経由（承認済みレジストリ）</td></tr>
+      <tr><td class="em">5. 分業設計</td><td>Maker-Checker分離で生成と検証を独立化</td><td>②の計画/生成/評価サブエージェント＋CI不変条件</td></tr>
+      <tr><td class="em">6. 状態保存</td><td>セッションを超えた文脈保持</td><td>CLAUDE.md／AgentCore Memory／Lakebase（③）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">含意</span>
+    6要素のうち5つはL2基盤①〜④がそのまま部品になる。<strong>ループはゼロから作るものではなく、Phase 1-2で作った基盤の「組み合わせ方」</strong>である。
+  </div>
+  <div class="callout case"><span class="ttl">実装部品の最新動向（2026年時点）</span>
+    Claude Code公式の<strong>Agent Teams</strong>（2026年2月・実験的機能）は、リーダー＋2〜16のチームメイトが共有タスクリストとメッセージングで協調する仕組みで、
+    「並列隔離＋分業設計」の公式実装候補になる<sup><a href="#refs">[4]</a></sup>。研究面では<strong>ハーネス自体を外側ループで自動最適化する</strong>Meta-Harness（Stanford）が登場しており<sup><a href="#refs">[4]</a></sup>、
+    ⑦フロンティアウォッチで両者の成熟を追跡する。
+  </div>
+</section>
+
+<section>
+  <h2>3. 安全装置 — 停止条件4点セット（必須）</h2>
+  <p>ループ化したエージェントのトークン消費は通常チャットの<strong>5〜30倍</strong>に達し得る<sup><a href="#refs">[1]</a></sup>。全ループに以下を必須実装とする（テンプレ化して②で配布）。</p>
+  <div class="grid2">
+    <div class="card"><h4><span class="pill red">停止1</span> イテレーション上限</h4><p style="font-size:13px;">1タスクあたりの反復回数上限（例: 5回）。超えたら人間にエスカレーション</p></div>
+    <div class="card"><h4><span class="pill red">停止2</span> 予算キャップ</h4><p style="font-size:13px;">ループ別の日次/月次トークン予算。⑤の上限アラートと連動し、超過で自動停止</p></div>
+    <div class="card"><h4><span class="pill red">停止3</span> 無進展検出</h4><p style="font-size:13px;">同じ失敗の繰り返し・差分の振動を検出したら打ち切り（例: 同一テスト2回連続失敗）</p></div>
+    <div class="card"><h4><span class="pill red">停止4</span> サーキットブレーカー</h4><p style="font-size:13px;">失敗率が閾値を超えたらループ全体を停止し通知（例: 直近10実行の失敗5割）</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>4. 採点設計 — ループの品質は「回数」ではなく「止め方」で決まる</h2>
+  <p>無限リトライ型のループ（原型: RALPH — 同じプロンプトをひたすら渡し直すシェル1行<sup><a href="#refs">[4]</a></sup>）は粘り強いが、<strong>採点者が不在</strong>のため何周しても同じ失敗を繰り返す。
+  100周は努力の量であって品質の証明ではない。ループを品質に収束させるのは、<strong>仕事を「採点できる形」に翻訳し、続行判定を機械に渡す</strong>設計である。</p>
+
+  <h3>4-1. 採点軸の作り方（3手順・3層）</h3>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>1. あいまいな形容詞を書き出す</b>「良い」「ちゃんとした」「読みやすい」— 人によって解釈が変わる言葉を拾う</div><div class="arr">→</div>
+    <div class="step"><b>2. 数えられる事実に翻訳</b>「読みやすい」→「1文平均60字以下」、「速い」→「応答200ms以内」。機械が○×を出せる形に</div><div class="arr">→</div>
+    <div class="step"><b>3. 配点を振る</b>観点ごとに配点し合計100点の物差しに。<strong>採点軸に書いたものだけが毎周チェックされる</strong></div>
+  </div>
+  <table>
+    <thead><tr><th style="width:26%;">層</th><th>担当</th><th>例</th></tr></thead>
+    <tbody>
+      <tr><td class="em">機械の○×</td><td>スクリプト・テスト（CI相当。最も安く、ブレない）</td><td>テスト全通過、文字数、フォーマット、exit code</td></tr>
+      <tr><td class="em">観点つきLLM採点</td><td>評価エージェント（観点を言語化して渡す）</td><td>「構成が結論先行か」「訴求が刺さる1文があるか」</td></tr>
+      <tr><td class="em">原則ドキュメント採点</td><td>評価エージェント＋チームの原則集（②の資産）</td><td>設計原則・レビュー基準への適合</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px; color:var(--muted);">機械の○×で済む部分はループを立てる必要がない（ただのCI）。品質ループが効くのは、○×に落ちない「全体の質」を観点化して収束させるところ。</p>
+
+  <h3>4-2. 評価者の独立4原則（報酬ハッキング対策）</h3>
+  <table>
+    <thead><tr><th style="width:34%;">原則</th><th>実装</th></tr></thead>
+    <tbody>
+      <tr><td class="em">① まっさらな別コンテキストで採点</td><td>スキルの <code class="inline">context: fork</code>（公式機能<sup><a href="#refs">[4]</a></sup>）で起動。生成側の会話・言い訳を一切見せない — 期待への迎合を構造的に断つ</td></tr>
+      <tr><td class="em">② 採点基準を書き換えさせない</td><td>評価基準ファイル・テストを permissions の deny で保護（「テストを直して通す」逃げ道を塞ぐ）</td></tr>
+      <tr><td class="em">③ 絶対評価</td><td>「前回より良いか」でなく毎回ゼロから依頼文と採点軸に照らす（スコアドリフト防止）</td></tr>
+      <tr><td class="em">④ 報告でなく実物を確認</td><td>生成側の「できました」は読まない。ファイルを開き、テストを自分で再実行してから採点</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4-3. 続行判定は機械に渡す</h3>
+  <p style="font-size:13.5px;"><strong>「もう一周回すか」の判定に、AIも人も関与させない。</strong>AIに任せると期待に迎合して早く切り上げ、人に任せると10周目には根気が緩む。
+  「点数 ≥ 合格点か」「周回数 ≥ 上限か」は整数比較 — 応答終了のたびに自動実行される小さなスクリプト（Claude CodeならStop hook）に渡す。
+  状態（周回数・最新スコア・最良版）は会話でなく<strong>ファイルに置く</strong>ため、まっさらな頭で再開でき、コンテキスト劣化<sup><a href="#refs">[4]</a></sup>の影響を受けない。</p>
+  <div class="callout warn"><span class="ttl">運用ダイヤルは2つだけ — 迷ったら採点軸を疑う</span>
+    調整するのは<strong>合格点（threshold）</strong>と<strong>最大周回（max）</strong>のみ。コストは概ね「1周＝生成＋採点の2呼び出し」で読める。
+    「点は出るのに中身が良くならない」ときは、ダイヤルより先に<strong>採点軸の抜け穴</strong>（質と無関係な指標）を直す — 指標を目標にすると指標だけが最適化される（グッドハートの法則）。
+  </div>
+</section>
+
+<section>
+  <h2>5. 自律ティア — 段階的に権限を上げる<sup><a href="#refs">[1]</a></sup></h2>
+  <div class="grid3" style="margin-top:20px;">
+    <div class="tier"><span class="tno" style="background:#5a7089;">Tier 1</span>
+      <h4 style="margin-top:4px;">報告のみ</h4>
+      <p style="font-size:13px;">分析・提案まで。実行は人間。<br><span class="pill gray">例: ⑦の収集レポート、③の差分検出通知</span></p>
+      <p style="font-size:12px; color:var(--muted);">Phase 1〜2はここ。実績と信頼を積む</p>
+    </div>
+    <div class="tier"><span class="tno" style="background:#2f6fed;">Tier 2</span>
+      <h4 style="margin-top:4px;">検証付き修正</h4>
+      <p style="font-size:13px;">変更をPRとして実装。<strong>マージは人間</strong>。<br><span class="pill blue">例: 夜間テスト補強・文書更新PR</span></p>
+      <p style="font-size:12px; color:var(--muted);">Phase 3の主戦場。Checker＋CI柵が前提</p>
+    </div>
+    <div class="tier"><span class="tno" style="background:#f08c2e;">Tier 3</span>
+      <h4 style="margin-top:4px;">無人実行</h4>
+      <p style="font-size:13px;">denylist外を完全自動化（自動マージ含む）。<br><span class="pill orange">例: フォーマット修正・依存パッチ版更新</span></p>
+      <p style="font-size:12px; color:var(--muted);">Tier 2で誤り率が十分下がった対象のみ、範囲を明記して昇格</p>
+    </div>
+  </div>
+  <p style="font-size:13px; margin-top:14px;"><strong>昇格基準の例</strong>: Tier 2で「人間レビューでの修正指摘ゼロ」が対象カテゴリで20回連続 → そのカテゴリのみTier 3へ。カテゴリ単位で昇格し、一括昇格はしない。</p>
+</section>
+
+<section>
+  <h2>6. 当社で最初に回す3本のループ（Phase 3設計案）</h2>
+  <table>
+    <thead><tr><th style="width:18%;"></th><th>A. テスト補強ループ</th><th>B. 文書鮮度ループ</th><th>C. 依存更新ループ</th></tr></thead>
+    <tbody>
+      <tr><td class="em">トリガー</td><td>夜間cron＋カバレッジ低下検出</td><td>夜間cron（コードと設計書の差分検出）</td><td>依存脆弱性アラート／週次cron</td></tr>
+      <tr><td class="em">指示生成</td><td>カバレッジの低いモジュールを自動選定</td><td>差分箇所リストから更新対象を選定</td><td>更新候補と影響範囲を自動整理</td></tr>
+      <tr><td class="em">出力</td><td>テスト追加PR</td><td>設計書更新PR（③へ反映）</td><td>更新PR＋回帰テスト結果</td></tr>
+      <tr><td class="em">ティア</td><td>Tier 2</td><td>Tier 2 → 実績後Tier 3</td><td>パッチ版のみTier 3候補</td></tr>
+      <tr><td class="em">選定理由</td><td>失敗しても本番影響ゼロ。品質資産が積み上がる</td><td>③の鮮度KPIに直結。レビューが軽い</td><td>定型で判断基準が明確。セキュリティ価値</td></tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">共通する選定基準</span>
+    最初のループは「<strong>失敗してもロールバックが容易／本番に直接触れない／成果が毎朝目に見える</strong>」の3条件を満たすものから。
+    毎朝PRが積まれている体験が、現場の信頼と次の投資判断を作る。
+  </div>
+</section>
+
+<section>
+  <h2>7. 組織側の運用 — 「理解の喪失」を防ぐ</h2>
+  <div class="ops">
+    <div class="op"><div class="when">毎朝（各チーム10分）</div><div class="what">夜間ループの成果PRを確認・マージ。「AIの夜勤の検収」が朝会の新しい定例に</div></div>
+    <div class="op"><div class="when">週次（チーム）</div><div class="what"><strong>生成コードのウォークスルー枠（30分）</strong> — ループ任せで「何が動いているか分からない」状態になるのを防ぐ<sup><a href="#refs">[1]</a></sup>。設計判断はADRとして③へ</div></div>
+    <div class="op"><div class="when">月次（AI推進チーム）</div><div class="what">全ループの成功率・コスト・停止発動履歴をレビュー（⑤）。不調ループは休止して原因分析</div></div>
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>コスト暴走</strong>（5〜30倍のトークン消費。停止条件4点なしのループは運用禁止をL1ルールに）／
+    <strong>検証の形骸化</strong>（Maker と Checker が同一文脈だと甘い採点になる — 別システムプロンプト・別権限を必須に<sup><a href="#refs">[1]</a></sup>）／
+    <strong>理解の喪失</strong>（週次ウォークスルーを削った組織から壊れる）／
+    <strong>一括Tier昇格</strong>（「もう大丈夫だろう」でまとめて無人化 → カテゴリ単位・実績基準を守る）。
+  </div>
+</section>
+
+<section>
+  <h2>8. KPI</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:40%;">取得方法</th><th style="width:20%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>稼働ループ数／夜間成果PR数</td><td>Actions／AgentCoreの実行ログ</td><td>3ループ→拡大</td></tr>
+      <tr><td>成果PRのマージ率</td><td>GitHub API（ループ起票ラベルで集計）</td><td>70%+</td></tr>
+      <tr><td>停止条件の発動率</td><td>ループログ（発動は「正常な安全動作」として報告）</td><td>傾向監視</td></tr>
+      <tr><td>ループあたりコスト効率</td><td>⑤: トークン費 ÷ マージされた成果</td><td>四半期で改善</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://www.ai-souken.com/article/what-is-loop-engineering">ループエンジニアリングとは（AI総合研究所）</a> — 定義・6構成要素・自律ティア・停止条件・落とし穴</li>
+    <li>[2] <a href="https://jp.findy-team.io/blogs/loop-engineering/">ループエンジニアリング（Findy Team+）</a> ／ <a href="https://atmarkit.itmedia.co.jp/ait/articles/2607/03/news016.html">内側ループと外側ループ入門（@IT）</a></li>
+    <li>[3] <a href="https://aws.amazon.com/blogs/machine-learning/its-safe-to-close-your-laptop-now-hosting-coding-agents-on-amazon-bedrock-agentcore/">AWS: AgentCoreでのコーディングエージェント実行</a> ／ <a href="https://arxiv.org/pdf/2604.25850">Agentic Harness Engineering（観測駆動のハーネス自動進化）</a></li>
+    <li>[4] <a href="https://ghuntley.com/ralph/">Geoffrey Huntley: Ralph（無限リトライループの原型）</a> ／ <a href="https://code.claude.com/docs/en/agent-teams">Claude Code Docs: Agent teams（2026年2月・実験的）</a> ／ <a href="https://code.claude.com/docs/en/skills">Skills: context: fork</a> ／ <a href="https://arxiv.org/abs/2603.28052">Meta-Harness（Stanford・ハーネス自動最適化）</a> ／ <a href="https://www.trychroma.com/research/context-rot">Chroma: Context Rot</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_7_frontier-watch.html"><span class="dir">← 前</span><div class="t">⑦ フロンティアウォッチループ</div></a>
+  <a class="next" href="06_case-studies.html"><span class="dir">次 →</span><div class="t">事例集（成功と反面教師）</div></a>
+</div>
+</main>
+<footer>ループエンジニアリング詳説 ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

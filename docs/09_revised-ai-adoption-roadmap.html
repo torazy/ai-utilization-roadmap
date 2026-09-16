@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="100名・10チーム・50システム規模を想定した、AI活用の全体構想・目標像・共通基盤・運営モデル・18か月の実行ロードマップ">
+<title>AI活用ロードマップ 2026 — 全体構想と実行計画</title>
+<style>
+  :root{
+    --ink:#172335; --navy:#102d4f; --navy-2:#183f68; --blue:#2563eb; --blue-2:#3b82f6;
+    --sky:#eaf2ff; --teal:#087f72; --teal-bg:#e8f7f3; --amber:#b75b05; --amber-bg:#fff5e8;
+    --red:#c93645; --red-bg:#fff0f1; --purple:#6d4bd1; --purple-bg:#f2efff;
+    --muted:#5d6d82; --line:#d8e1ec; --line-strong:#bdcadd; --paper:#fff; --bg:#f3f6fa;
+    --shadow:0 10px 30px rgba(15,45,79,.08); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Meiryo",sans-serif;font-size:15.5px;line-height:1.75}
+  a{color:var(--blue)}
+  .skip{position:absolute;left:-9999px;top:8px;background:#fff;color:var(--navy);padding:10px 14px;border-radius:8px;z-index:100}
+  .skip:focus{left:8px}
+  .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(128deg,#0d2948 0%,#174c7c 56%,#276eea 130%);padding:58px 24px 52px}
+  .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to right,#000,transparent 88%)}
+  .hero::after{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-120px;top:-210px;box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 140px rgba(255,255,255,.018)}
+  .hero-inner{position:relative;z-index:1;max-width:1120px;margin:0 auto}
+  .kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.1);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:800;letter-spacing:.12em}
+  .kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:#68e2c8;box-shadow:0 0 0 4px rgba(104,226,200,.16)}
+  h1{max-width:890px;margin:19px 0 0;font-size:clamp(29px,4vw,45px);line-height:1.32;letter-spacing:.01em}
+  .mobile-break{display:none}
+  .hero-lead{max-width:850px;margin:18px 0 0;color:#d6e6fb;font-size:17px;line-height:1.8}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;color:#a9c4e5;font-size:12.5px}
+  .hero-meta strong{color:#fff}
+  .hero-principle{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:980px;margin-top:30px}
+  .hero-principle div{border:1px solid rgba(255,255,255,.18);background:rgba(6,30,55,.22);padding:11px 13px;border-radius:11px;font-size:12px;color:#dceaff}
+  .hero-principle b{display:block;color:#fff;font-size:13px;margin-bottom:2px}
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);box-shadow:0 3px 16px rgba(15,45,79,.06)}
+  .nav-inner{max-width:1120px;margin:0 auto;display:flex;overflow:auto;padding:0 16px;scrollbar-width:none}
+  .nav-inner::-webkit-scrollbar{display:none}
+  nav a{flex:none;padding:13px 12px 11px;color:var(--muted);font-size:12.5px;font-weight:750;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+  nav a:hover,nav a.active{color:var(--blue);border-bottom-color:var(--blue)}
+  main{max-width:1120px;margin:0 auto;padding:16px 22px 90px}
+  section{margin-top:64px}
+  .section-head{display:grid;grid-template-columns:46px 1fr;column-gap:15px;align-items:center;margin-bottom:8px}
+  .section-no{grid-row:1 / span 2;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:13px;background:var(--navy);color:#fff;font-size:16px;font-weight:850;box-shadow:0 7px 18px rgba(16,45,79,.16)}
+  h2{margin:0;color:var(--navy);font-size:25px;line-height:1.45;letter-spacing:.01em}
+  .section-lead{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+  h3{margin:30px 0 12px;color:var(--navy-2);font-size:18px;line-height:1.5;padding-left:12px;border-left:4px solid var(--blue)}
+  h4{margin:16px 0 7px;color:var(--navy);font-size:14px}
+  p{margin:8px 0}
+  strong{color:var(--navy)}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:21px 23px;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+  .context-flow{display:grid;grid-template-columns:1fr 52px 1.15fr 52px 1fr;gap:8px;align-items:stretch}
+  .context-node{display:flex;flex-direction:column;justify-content:center;min-height:164px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:19px 20px}
+  .context-node .label{font-size:10.5px;font-weight:850;letter-spacing:.1em;color:var(--blue)}
+  .context-node b{display:block;margin-top:5px;font-size:16px;line-height:1.45}
+  .context-node p{font-size:12px;color:var(--muted);line-height:1.65}
+  .context-node.change{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 8px 22px rgba(16,45,79,.14)}
+  .context-node.change .label{color:#7ff0d6}.context-node.change b{color:#fff}.context-node.change p{color:#c4d7eb}
+  .context-node.target{background:var(--teal-bg);border-color:#a9ded3}
+  .context-arrow{display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:28px;font-weight:900}
+  .workstream{border-top:4px solid var(--blue)}
+  .workstream:nth-child(2){border-color:var(--teal)}.workstream:nth-child(3){border-color:var(--purple)}
+  .workstream .path{margin:11px 0 8px;padding:9px 10px;border-radius:9px;background:#f5f8fc;color:var(--navy);font-size:11.5px;font-weight:750;line-height:1.6}
+  .workstream .human{font-size:11.5px;color:var(--muted)}
+  .decision{display:grid;grid-template-columns:1.25fr .75fr;gap:0;overflow:hidden;padding:0}
+  .decision-main{padding:27px 28px;background:linear-gradient(135deg,#eef4ff,#fff)}
+  .decision-side{padding:27px 25px;background:var(--navy);color:#e7f0fa}
+  .decision h3{border:0;padding:0;margin:0 0 9px;font-size:19px}
+  .decision-side h3{color:#fff}
+  .decision-side strong{color:#fff}
+  .decision ul,.check-list{margin:10px 0 0;padding-left:20px}
+  .decision li,.check-list li{margin:5px 0}
+  .north-star{margin-top:16px;padding:14px 17px;border-left:5px solid var(--teal);background:var(--teal-bg);border-radius:0 11px 11px 0;font-size:14px}
+  .outcome{position:relative;overflow:hidden;min-height:142px}
+  .outcome::after{content:attr(data-no);position:absolute;right:12px;bottom:-19px;font-size:76px;font-weight:900;color:#edf2f8;line-height:1}
+  .outcome .icon{display:flex;align-items:center;justify-content:center;width:35px;height:35px;border-radius:10px;background:var(--sky);color:var(--blue);font-weight:900;margin-bottom:10px}
+  .outcome b{display:block;position:relative;z-index:1;font-size:14px;color:var(--navy)}
+  .outcome span{display:block;position:relative;z-index:1;margin-top:5px;font-size:12.5px;color:var(--muted)}
+  .fact{position:relative;padding-top:18px}
+  .fact .eyebrow{font-size:11px;font-weight:850;letter-spacing:.1em;color:var(--blue)}
+  .fact .number{font-size:30px;font-weight:900;line-height:1.2;color:var(--navy);margin-top:5px}
+  .fact .caption{font-size:12.5px;color:var(--muted);margin-top:7px}
+  .fact .use{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12px}
+  .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10.5px;font-weight:800;vertical-align:middle}
+  .tag.primary{background:var(--teal-bg);color:var(--teal)}
+  .tag.survey{background:var(--sky);color:var(--blue)}
+  .tag.vendor{background:var(--amber-bg);color:var(--amber)}
+  .tag.caution{background:var(--red-bg);color:var(--red)}
+  .callout{border:1px solid;border-radius:13px;padding:15px 18px;margin:16px 0;font-size:13.5px}
+  .callout b{display:block;font-size:11.5px;letter-spacing:.1em;margin-bottom:4px}
+  .callout.blue{background:var(--sky);border-color:#c7d9ff}.callout.blue b{color:var(--blue)}
+  .callout.teal{background:var(--teal-bg);border-color:#bce6dc}.callout.teal b{color:var(--teal)}
+  .callout.amber{background:var(--amber-bg);border-color:#f1d3ac}.callout.amber b{color:var(--amber)}
+  .callout.red{background:var(--red-bg);border-color:#efc2c7}.callout.red b{color:var(--red)}
+  figure{margin:19px 0;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:21px 18px 12px;box-shadow:var(--shadow)}
+  figure svg{display:block;width:100%;height:auto}
+  figcaption{text-align:center;color:var(--muted);font-size:12px;font-weight:700;margin-top:9px}
+  .diagram-scroll{overflow-x:auto}
+  .diagram-scroll svg{min-width:760px}
+  .principle{border-top:4px solid var(--blue);padding-top:16px}
+  .principle:nth-child(2){border-color:var(--teal)}.principle:nth-child(3){border-color:var(--purple)}.principle:nth-child(4){border-color:#e78a24}
+  .principle .n{font-size:11px;color:var(--muted);font-weight:850}
+  .principle b{display:block;margin-top:3px;font-size:14px}
+  .principle p{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .ladder{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;gap:8px;margin:18px 0}
+  .rung{position:relative;background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 13px;box-shadow:0 5px 16px rgba(15,45,79,.05)}
+  .rung:nth-child(1){min-height:145px}.rung:nth-child(2){min-height:165px}.rung:nth-child(3){min-height:185px}.rung:nth-child(4){min-height:205px}.rung:nth-child(5){min-height:225px}
+  .rung::before{content:attr(data-level);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--sky);color:var(--blue);font-size:12px;font-weight:900}
+  .rung b{display:block;margin-top:9px;font-size:13.5px}
+  .rung p{font-size:11.5px;color:var(--muted);line-height:1.6}
+  .rung .gate{position:absolute;left:12px;right:12px;bottom:11px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;font-weight:750;color:var(--teal)}
+  .layer-title{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+  .layer-title .dot{width:10px;height:10px;border-radius:50%;background:var(--blue)}
+  .capability{padding:18px 18px 16px;min-height:170px}
+  .capability .cap-no{display:inline-flex;width:31px;height:31px;align-items:center;justify-content:center;border-radius:9px;background:var(--navy);color:#fff;font-weight:850;font-size:12px}
+  .capability b{display:block;margin-top:10px;font-size:14px}
+  .capability p{font-size:12.2px;color:var(--muted);line-height:1.65}
+  .capability ul{font-size:11.5px;margin:8px 0 0;padding-left:17px;color:#415268}
+  .optional{border-style:dashed;background:#fbfcfe;box-shadow:none}
+  .trust-chain{display:flex;align-items:stretch;gap:0;margin:16px 0;overflow-x:auto;padding-bottom:5px}
+  .trust-step{min-width:150px;flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px;text-align:center}
+  .trust-step b{display:block;font-size:13px}.trust-step small{display:block;margin-top:5px;color:var(--muted);font-size:10.5px;line-height:1.45}
+  .trust-arrow{flex:none;align-self:center;padding:0 5px;color:var(--blue);font-size:19px;font-weight:900}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;margin:14px 0;font-size:12.7px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;font-size:11.8px;letter-spacing:.02em}
+  td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:nth-child(even) td{background:#f8fafc}
+  td:first-child{font-weight:750;color:var(--navy)}
+  .status{display:inline-block;border-radius:999px;padding:2px 8px;font-size:10.5px;font-weight:850;white-space:nowrap}
+  .status.go{background:var(--teal-bg);color:var(--teal)}.status.gate{background:var(--amber-bg);color:var(--amber)}.status.no{background:var(--red-bg);color:var(--red)}.status.watch{background:var(--purple-bg);color:var(--purple)}
+  .knowledge-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:16px 0}
+  .knowledge-flow div{position:relative;border:1px solid var(--line);border-radius:11px;background:#fff;padding:12px 10px;text-align:center;font-size:11.5px;min-height:78px}
+  .knowledge-flow b{display:block;font-size:12px;color:var(--navy);margin-bottom:3px}
+  .knowledge-flow div:not(:last-child)::after{content:"›";position:absolute;right:-8px;top:23px;color:var(--blue);font-size:23px;font-weight:900;z-index:2}
+  .roles{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:12px;margin-top:14px}
+  .role{border:1px solid var(--line);border-radius:14px;background:#fff;padding:18px}
+  .role.center{border-color:#a9c4f9;box-shadow:0 7px 21px rgba(37,99,235,.09)}
+  .role .owner{font-size:11px;color:var(--muted);font-weight:850}.role b{display:block;margin-top:3px;font-size:15px}.role ul{padding-left:18px;font-size:12px;color:#415268}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:20px 0}
+  .phase{position:relative;border:1px solid var(--line);background:#fff;padding:17px 16px 58px;min-height:270px}
+  .phase:first-child{border-radius:14px 0 0 14px}.phase:last-child{border-radius:0 14px 14px 0}
+  .phase+.phase{border-left:0}
+  .phase .period{font-size:10.5px;font-weight:850;color:var(--blue);letter-spacing:.08em}
+  .phase b{display:block;margin-top:4px;font-size:14px}
+  .phase ul{padding-left:17px;font-size:11.7px;color:#415268}
+  .gate-box{position:absolute;left:12px;right:12px;bottom:12px;border-radius:9px;background:var(--navy);color:#fff;padding:8px 9px;font-size:10.5px;line-height:1.45}
+  .gate-box strong{color:#7ff0d6}
+  .stop{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .stop div{border:1px solid #efc2c7;background:var(--red-bg);border-radius:11px;padding:11px 12px;font-size:11.5px}
+  .stop b{display:block;color:var(--red);font-size:12px;margin-bottom:3px}
+  .metric-tree{display:grid;grid-template-columns:1.1fr 1fr 1fr .8fr;gap:10px;align-items:stretch;margin:17px 0}
+  .metric-layer{border-radius:13px;padding:16px 15px;border:1px solid var(--line);background:#fff}
+  .metric-layer:nth-child(1){background:var(--navy);color:#fff;border-color:var(--navy)}
+  .metric-layer:nth-child(1) b,.metric-layer:nth-child(1) strong{color:#fff}
+  .metric-layer:nth-child(4){background:#f8fafc;border-style:dashed}
+  .metric-layer b{display:block;font-size:13px}.metric-layer small{display:block;margin:3px 0 8px;font-size:10.5px;color:var(--muted)}
+  .metric-layer:nth-child(1) small{color:#b7cce3}
+  .metric-layer ul{margin:0;padding-left:17px;font-size:11.5px}
+  .metric-layer .label{display:inline-block;margin-top:9px;border-radius:999px;background:var(--teal-bg);color:var(--teal);padding:2px 8px;font-size:10px;font-weight:850}
+  .metric-layer:nth-child(4) .label{background:#eef1f5;color:var(--muted)}
+  .evidence-rule{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:13px}
+  .evidence-rule div{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:9px;text-align:center;font-size:10.5px;color:var(--muted)}
+  .evidence-rule b{display:block;color:var(--navy);font-size:11px}
+  .tool-grid{display:grid;grid-template-columns:1.05fr 1.5fr 1.2fr 1.1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin:15px 0}
+  .tool-grid>div{background:#fff;padding:11px 12px;font-size:11.5px}
+  .tool-grid .head{background:var(--navy);color:#fff;font-weight:800;font-size:11px}
+  .tool-grid .class{font-weight:800;color:var(--navy)}
+  .tool-grid small{display:block;color:var(--muted);margin-top:3px}
+  .source-notes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  summary{cursor:pointer;padding:12px 15px;color:var(--navy);font-size:13px;font-weight:800;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"＋";float:right;color:var(--blue)}
+  details[open] summary::after{content:"−"}
+  .detail-body{padding:0 15px 14px;border-top:1px dashed var(--line);font-size:12px;color:#415268}
+  .references{font-size:12.3px;color:#45566b}
+  .references ol{padding-left:22px}
+  .references li{margin:7px 0;padding-left:4px}
+  .references a{text-decoration:none;font-weight:700}
+  .references a:hover{text-decoration:underline}
+  .decision-list{counter-reset:decision;display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px}
+  .decision-item{position:relative;border:1px solid var(--line);background:#fff;border-radius:13px;padding:17px 15px 15px 47px;min-height:105px}
+  .decision-item::before{counter-increment:decision;content:counter(decision);position:absolute;left:14px;top:15px;width:24px;height:24px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+  .decision-item b{display:block;font-size:12.8px}.decision-item p{font-size:11.5px;color:var(--muted);line-height:1.55}
+  .footnote{font-size:11px;color:var(--muted)}
+  footer{border-top:1px solid var(--line);background:#fff;padding:24px;text-align:center;color:var(--muted);font-size:11.5px}
+  sup a{text-decoration:none;font-weight:900}
+  @media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(2,1fr)}.hero-principle{grid-template-columns:repeat(2,1fr)}.decision{grid-template-columns:1fr}.context-flow{grid-template-columns:1fr 38px 1.1fr}.context-flow .context-arrow:nth-of-type(4){display:none}.context-node.target{grid-column:1 / -1}.ladder{grid-template-columns:repeat(2,1fr);align-items:stretch}.rung:nth-child(n){min-height:190px}.roles{grid-template-columns:1fr}.timeline{grid-template-columns:repeat(2,1fr);gap:10px}.phase,.phase:first-child,.phase:last-child{border:1px solid var(--line);border-radius:13px}.metric-tree{grid-template-columns:repeat(2,1fr)}.tool-grid{grid-template-columns:1fr 1.5fr}.tool-grid .head:nth-child(3),.tool-grid .head:nth-child(4){display:none}.source-notes{grid-template-columns:1fr}.knowledge-flow{grid-template-columns:repeat(3,1fr)}.knowledge-flow div:nth-child(3)::after{display:none}.decision-list{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){body{font-size:14.5px}.hero{padding:42px 19px 37px}h1{font-size:26px;line-height:1.45}.mobile-break{display:block}.hero-lead{font-size:14px}.hero-principle,.grid2,.grid3,.grid4,.stop,.metric-tree,.decision-list,.context-flow{grid-template-columns:1fr}.context-flow .context-arrow{height:28px;transform:rotate(90deg)}.context-flow .context-arrow:nth-of-type(4){display:flex}.context-node.target{grid-column:auto}.section-head{grid-template-columns:39px 1fr}.section-no{width:39px;height:39px;font-size:13px}.section-lead{grid-column:1 / -1;margin-top:8px}.ladder{grid-template-columns:1fr}.rung:nth-child(n){min-height:170px}.timeline{grid-template-columns:1fr}.knowledge-flow{grid-template-columns:1fr}.knowledge-flow div::after{display:none}.evidence-rule{grid-template-columns:repeat(2,1fr)}table{display:block;overflow-x:auto}th,td{min-width:130px}th:first-child,td:first-child{min-width:98px}.tool-grid{display:block}.tool-grid .head{display:none}.tool-grid>div{border-bottom:1px solid var(--line)}.tool-grid .class{background:var(--sky)}.card{padding:18px}.hero-meta{display:block}.hero-meta span{display:block;margin-top:4px}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  @media print{nav,.skip{display:none}.hero{padding:32px 20px;background:#173b61!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{background:#fff;font-size:12px}main{max-width:none;padding:0 12px 30px}section{break-inside:auto;margin-top:35px}.card,figure{box-shadow:none;break-inside:avoid}.timeline,.grid4,.grid3{break-inside:avoid}a{color:inherit;text-decoration:none}.diagram-scroll{overflow:visible}.diagram-scroll svg{min-width:0}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">AI活用ロードマップ 2026 / 全体構想</div>
+    <h1>AIとともに、<br class="mobile-break">ソフトウェアと業務を<br>継続的に進化させる組織へ</h1>
+    <p class="hero-lead">本資料は、個人ごとのAI利用を組織の再現可能な成果へ転換するための全体構想である。目指す姿、共通基盤、業務領域ごとの変革、運営・安全性、18か月の進め方を一つの体系として示す。</p>
+    <div class="hero-meta">
+      <span><strong>対象:</strong> 開発・運用・データ・知識活用</span>
+      <span><strong>想定規模:</strong> 100名・10チーム・50システム</span>
+      <span><strong>基準日:</strong> 2026年8月25日</span>
+      <span><strong>更新:</strong> 四半期・重大イベントで見直す</span>
+    </div>
+    <div class="hero-principle" aria-label="本構想の四つの要点">
+      <div><b>目指す成果</b>価値提供を速め、品質・安定性・説明責任を守る</div>
+      <div><b>変革する範囲</b>開発・運用・知識・データをつながった流れで変える</div>
+      <div><b>進め方</b>灯台業務で実証し、再利用できた仕組みから共通化する</div>
+      <div><b>変化への備え</b>統制契約を固定し、モデル・製品は評価で交換する</div>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="ページ内ナビゲーション">
+  <div class="nav-inner">
+    <a href="#summary">背景・目的</a><a href="#evidence">外部環境</a><a href="#target">目指す姿</a><a href="#principles">基本方針</a>
+    <a href="#architecture">全体構成</a><a href="#safety">安全性</a><a href="#knowledge">知識</a><a href="#organization">運営</a>
+    <a href="#roadmap">ロードマップ</a><a href="#metrics">KPI</a><a href="#tools">製品戦略</a><a href="#governance">外部規範</a><a href="#decisions">最初の90日</a><a href="#refs">参照資料</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section id="summary">
+    <div class="section-head"><div class="section-no">01</div><h2>背景と目的 — 個人のAI活用を、組織の成果へ転換する</h2><p class="section-lead">AIの能力向上を待つだけでは、業務全体の時間・品質・リスクは改善しない。仕事の流れと運営の仕組みを同時に変える</p></div>
+    <div class="grid3">
+      <div class="card"><h4>AIの役割が変わった</h4><p class="footnote">補完・要約中心の支援から、複数ステップを計画し、コード・データ・業務ツールを扱うエージェントへ用途が広がっている。<sup><a href="#ref-11">[11]</a></sup><sup><a href="#ref-12">[12]</a></sup></p></div>
+      <div class="card"><h4>個人最適だけでは広がらない</h4><p class="footnote">チームごとに製品、権限、評価、知識の扱いが分かれると、重複投資と安全性のばらつきが増え、成功が他チームへ再現されない。</p></div>
+      <div class="card"><h4>共通基盤だけでも価値にならない</h4><p class="footnote">基盤機能の整備数ではなく、顧客価値までの時間、人の検証負荷、品質、総コストが実務で改善したかを成果として扱う。<sup><a href="#ref-1">[1]</a></sup></p></div>
+    </div>
+
+    <h3>この構想が実現する変化</h3>
+    <figure>
+      <div class="context-flow" aria-label="現在から目指す姿への変化">
+        <div class="context-node"><span class="label">CURRENT</span><b>点在するAI利用</b><p>個人の工夫、製品ごとの設定、断片的なPoC。速さ・品質・リスクを業務全体で説明しにくい。</p></div>
+        <div class="context-arrow" aria-hidden="true">→</div>
+        <div class="context-node change"><span class="label">TRANSFORMATION</span><b>仕事と共通能力を同時に設計</b><p>灯台業務を端から端まで変え、評価・権限・実行環境・再利用の共通契約を整える。</p></div>
+        <div class="context-arrow" aria-hidden="true">→</div>
+        <div class="context-node target"><span class="label">TARGET</span><b>安全に成果を出し続ける組織</b><p>各チームが安全な経路を自律的に選び、学びが標準へ戻り、変化にも追従できる。</p></div>
+      </div>
+      <figcaption>図1: AIツール導入ではなく、業務・共通能力・運営を一体で変革する</figcaption>
+    </figure>
+    <div class="callout teal"><b>この構想の目的</b>対象業務で「価値提供までの時間」と「人の検証負荷」を減らしながら、品質・安定性・安全性を悪化させない状態を、複数チームで再現可能にする。</div>
+
+    <h3>対象とする四つの領域</h3>
+    <div class="grid4">
+      <div class="card outcome" data-no="1"><div class="icon">&lt;/&gt;</div><b>開発</b><span>要件理解、設計、実装、テスト、レビュー、移行を一つの流れとして短縮する</span></div>
+      <div class="card outcome" data-no="2"><div class="icon">△</div><b>運用</b><span>アラートから情報収集、仮説、対処判断、振り返りまでを支援し、復旧を早める</span></div>
+      <div class="card outcome" data-no="3"><div class="icon">◎</div><b>知識・データ</b><span>根拠付き知識と権限に沿ったデータ活用で、探索と判断の時間を短縮する</span></div>
+      <div class="card outcome" data-no="4"><div class="icon">◇</div><b>共通イネーブルメント</b><span>評価、ID、Sandbox、接続、標準を提供し、各チームの成功を再利用可能にする</span></div>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="section-head"><div class="section-no">02</div><h2>外部環境と設計への示唆 — 効果は、仕事と組織の条件で変わる</h2><p class="section-lead">最新の調査・実験・先行企業の実装から、AI活用を組織能力にするための条件を導く</p></div>
+    <div class="grid4">
+      <div class="card fact"><div class="eyebrow">DORA 2025 <span class="tag primary">調査</span></div><div class="number">Amplifier</div><div class="caption">AIは組織の強みと弱みを増幅する。高品質な内部プラットフォームが効果を支える。</div><div class="use">設計への示唆: AIだけでなく、開発の基礎能力と共通経路へ投資する。<sup><a href="#ref-1">[1]</a></sup><sup><a href="#ref-2">[2]</a></sup></div></div>
+      <div class="card fact"><div class="eyebrow">Gartner 2026 <span class="tag survey">報告値</span></div><div class="number">+19.3%</div><div class="caption">エンジニアリングリーダーが報告した平均的な純生産性向上。大きな機会がある一方、効果は条件に依存する。</div><div class="use">設計への示唆: 業界値を目標にせず、自社の業務単位でベースラインを持つ。<sup><a href="#ref-3">[3]</a></sup></div></div>
+      <div class="card fact"><div class="eyebrow">METR 2025–26 <span class="tag caution">実験</span></div><div class="number">結果は混在</div><div class="caption">限定RCTの遅延結果と、後続データの高速化傾向が併存し、選択バイアスも指摘されている。</div><div class="use">設計への示唆: モデル名ではなく、時点とタスクを固定して継続評価する。<sup><a href="#ref-4">[4]</a></sup><sup><a href="#ref-5">[5]</a></sup></div></div>
+      <div class="card fact"><div class="eyebrow">Stack Overflow 2025 <span class="tag survey">開発者調査</span></div><div class="number">信頼 33%</div><div class="caption">AI出力を信頼する回答より、不信の回答46%が多い。検証負荷が導入効果を左右する。</div><div class="use">設計への示唆: 利用量だけでなく、人の修正・検証時間を測る。<sup><a href="#ref-6">[6]</a></sup></div></div>
+    </div>
+    <div class="callout blue"><b>この構想が置く四つの設計要件</b>①業務の最終成果で測る、②人の検証負荷を含める、③安全な共通経路を内部プロダクトとして提供する、④同じ評価セットでモデル・製品を交換できるようにする。外部数値は期待値の参考とし、自社の投資判断は実測で行う。</div>
+    <h3>先行事例が示す実装パターン</h3>
+    <table>
+      <thead><tr><th>先行事例・公式知見</th><th>確認できる実装</th><th>本構想への反映</th></tr></thead>
+      <tbody>
+        <tr><td>Mercari</td><td>領域ごとにAI Enablerを置き、現場へ埋め込んだ推進を実施。</td><td>中央チームだけに閉じず、各チームのChampionと共同で業務を変える。<sup><a href="#ref-8">[8]</a></sup></td></tr>
+        <tr><td>Uber Agent Identity</td><td>Registry、STS、短命トークン、actor chain、MCP Gatewayを組み合わせる。</td><td>人からエージェント、ツール、下流システムまで委任IDと権限を保つ。<sup><a href="#ref-9">[9]</a></sup></td></tr>
+        <tr><td>Uber Genie</td><td>情報源を事前選定し、回答に根拠URLを提示する。</td><td>知識を本文だけで管理せず、根拠・所有者・有効期限を持たせる。<sup><a href="#ref-10">[10]</a></sup></td></tr>
+        <tr><td>OpenAI / Anthropic</td><td>機微操作前の承認、トレース評価、最終状態の評価、単純な構成からの段階的複雑化を推奨。</td><td>権限境界ごとの承認と、評価結果に基づく自律度の昇格を標準にする。<sup><a href="#ref-11">[11]</a></sup><sup><a href="#ref-12">[12]</a></sup><sup><a href="#ref-17">[17]</a></sup><sup><a href="#ref-18">[18]</a></sup></td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">補足: Gartnerの「3.6時間/週」は2024年の5,000人超のデジタルワーカーによる自己申告で、AIコーディングエージェントの+19.3%とは別調査である。自社の効果試算へ直接転用しない。<sup><a href="#ref-7">[7]</a></sup></p>
+    <div class="evidence-rule" aria-label="外部情報の採用時に記録する項目">
+      <div><b>出典種別</b>一次・調査・企業公表・販売資料</div><div><b>基準日</b>モデル／製品世代</div><div><b>母集団</b>人数・役割・業界</div><div><b>測定法</b>実測・自己申告</div><div><b>因果性</b>相関か比較実験か</div><div><b>適用範囲</b>自社のどの業務か</div>
+    </div>
+  </section>
+
+  <section id="target">
+    <div class="section-head"><div class="section-no">03</div><h2>目指す姿 — 各チームが安全な経路で、自律的に成果を出す</h2><p class="section-lead">変化しにくい統制契約を中核に置き、モデル・製品・実装方式は評価で差し替える</p></div>
+    <figure>
+      <div class="diagram-scroll">
+        <svg viewBox="0 0 1080 620" role="img" aria-labelledby="target-title target-desc">
+          <title id="target-title">目指す姿の全体像</title><desc id="target-desc">事業成果を最上位に置き、共通の舗装路を通じて十チームが製品を改善し、評価結果を四半期とイベント駆動で標準へ戻す循環。</desc>
+          <defs><linearGradient id="topg" x1="0" x2="1"><stop offset="0" stop-color="#102d4f"/><stop offset="1" stop-color="#2563eb"/></linearGradient><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2563eb"/></marker><filter id="ds" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#102d4f" flood-opacity=".12"/></filter></defs>
+          <rect x="30" y="24" width="1020" height="112" rx="20" fill="url(#topg)" filter="url(#ds)"/>
+          <text x="64" y="57" fill="#a9c9ef" font-size="13" font-weight="700">BUSINESS OUTCOMES</text>
+          <text x="64" y="91" fill="#fff" font-size="25" font-weight="800">価値提供を速くし、品質・安定性・説明責任を同時に守る</text>
+          <text x="64" y="116" fill="#d8e8fb" font-size="13">利用率や生成量ではなく、顧客価値・総リードタイム・再作業・リスク調整後コストで評価</text>
+          <path d="M540 136 L540 176" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
+          <rect x="94" y="184" width="892" height="185" rx="18" fill="#fff" stroke="#b8c9df" stroke-width="2" filter="url(#ds)"/>
+          <text x="122" y="217" fill="#102d4f" font-size="20" font-weight="800">Paved Road — 使えば速く、安全になる共通経路</text>
+          <rect x="122" y="240" width="190" height="92" rx="13" fill="#eaf2ff" stroke="#a9c4f9"/><text x="217" y="268" text-anchor="middle" fill="#174c7c" font-size="14" font-weight="800">Use case / Policy</text><text x="217" y="291" text-anchor="middle" fill="#53657a" font-size="11">リスク階層・責任者</text><text x="217" y="309" text-anchor="middle" fill="#53657a" font-size="11">許可する自律度</text>
+          <rect x="330" y="240" width="190" height="92" rx="13" fill="#e8f7f3" stroke="#9ad9cd"/><text x="425" y="268" text-anchor="middle" fill="#087f72" font-size="14" font-weight="800">Identity / Sandbox</text><text x="425" y="291" text-anchor="middle" fill="#53657a" font-size="11">委任ID・短命権限</text><text x="425" y="309" text-anchor="middle" fill="#53657a" font-size="11">実行隔離・出口制御</text>
+          <rect x="538" y="240" width="190" height="92" rx="13" fill="#f2efff" stroke="#c8bdf2"/><text x="633" y="268" text-anchor="middle" fill="#6d4bd1" font-size="14" font-weight="800">Eval / Observe</text><text x="633" y="291" text-anchor="middle" fill="#53657a" font-size="11">代表タスク・回帰</text><text x="633" y="309" text-anchor="middle" fill="#53657a" font-size="11">トレース・コスト</text>
+          <rect x="746" y="240" width="212" height="92" rx="13" fill="#fff5e8" stroke="#eccb9e"/><text x="852" y="268" text-anchor="middle" fill="#a65408" font-size="14" font-weight="800">Standards / Reuse</text><text x="852" y="291" text-anchor="middle" fill="#53657a" font-size="11">AGENTS.md・CI契約</text><text x="852" y="309" text-anchor="middle" fill="#53657a" font-size="11">署名済みスキル</text>
+          <text x="540" y="354" text-anchor="middle" fill="#5d6d82" font-size="11" font-weight="700">製品・モデルはこの契約の内側で交換可能</text>
+          <path d="M540 369 L540 410" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
+          <rect x="70" y="418" width="940" height="105" rx="18" fill="#f8fafc" stroke="#c8d4e2"/>
+          <text x="96" y="448" fill="#102d4f" font-size="16" font-weight="800">10チーム / 対象業務・システム</text>
+          <g fill="#fff" stroke="#cbd6e4"><rect x="98" y="464" width="120" height="37" rx="9"/><rect x="230" y="464" width="120" height="37" rx="9"/><rect x="362" y="464" width="120" height="37" rx="9"/><rect x="494" y="464" width="120" height="37" rx="9"/><rect x="626" y="464" width="120" height="37" rx="9"/><rect x="758" y="464" width="224" height="37" rx="9"/></g>
+          <g fill="#32465f" font-size="11" font-weight="700" text-anchor="middle"><text x="158" y="488">設計・実装</text><text x="290" y="488">テスト・移行</text><text x="422" y="488">調査・運用</text><text x="554" y="488">知識検索</text><text x="686" y="488">データ活用</text><text x="870" y="488">対象外も正しい判断</text></g>
+          <path d="M993 473 C1050 473 1048 198 992 198" fill="none" stroke="#087f72" stroke-width="3" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+          <rect x="740" y="545" width="270" height="50" rx="12" fill="#e8f7f3" stroke="#9ad9cd"/><text x="875" y="568" text-anchor="middle" fill="#087f72" font-size="12" font-weight="800">四半期 ＋ 重大イベントで再評価</text><text x="875" y="585" text-anchor="middle" fill="#53657a" font-size="10.5">モデル・価格・規制・事故・新ユースケース</text>
+          <text x="70" y="575" fill="#5d6d82" font-size="12" font-weight="700">評価 → 標準更新 → 安全な配布 → 実運用 → 評価</text>
+        </svg>
+      </div>
+      <figcaption>図2: 成果を頂点に置く適応型の目標アーキテクチャ</figcaption>
+    </figure>
+    <div class="grid2">
+      <div class="card"><h4>変えない中核</h4><ul class="check-list"><li>事業成果と品質の定義</li><li>用途別の責任者・リスク階層</li><li>ID、最小権限、監査、承認</li><li>評価セットと昇格・停止条件</li><li>知識の根拠・所有者・鮮度</li></ul></div>
+      <div class="card"><h4>評価して差し替える周辺</h4><ul class="check-list"><li>基盤モデルと推論設定</li><li>コーディング／業務エージェント製品</li><li>オーケストレーションと長時間ハーネス</li><li>MCPサーバーと接続方式</li><li>価格プラン、実行環境、可観測性製品</li></ul></div>
+    </div>
+  </section>
+
+  <section id="principles">
+    <div class="section-head"><div class="section-no">04</div><h2>変革の基本方針 — 成果が確認できた範囲から、自律度を上げる</h2><p class="section-lead">Anthropicの実装知見とOpenAIの安全設計を、製品非依存の運営原則へ落とす</p></div>
+    <div class="grid4">
+      <div class="card principle"><div class="n">PRINCIPLE 1</div><b>最も単純な解法から始める</b><p>検索・テンプレート・決定的自動化で足りるなら、エージェントを使わない。<sup><a href="#ref-11">[11]</a></sup></p></div>
+      <div class="card principle"><div class="n">PRINCIPLE 2</div><b>評価してから複雑化する</b><p>同じ代表タスクで品質、時間、コスト、失敗を比較し、改善が出た構成だけ昇格。</p></div>
+      <div class="card principle"><div class="n">PRINCIPLE 3</div><b>副作用の前で止める</b><p>編集、シェル、外部送信、本番操作などの境界で人またはポリシー承認。<sup><a href="#ref-12">[12]</a></sup></p></div>
+      <div class="card principle"><div class="n">PRINCIPLE 4</div><b>モデルの進化で引き算する</b><p>ハーネスの仮定は陳腐化する。部品を一つずつ外して回帰評価する。<sup><a href="#ref-13">[13]</a></sup></p></div>
+    </div>
+    <h3>自動化・エージェント化の昇格ラダー</h3>
+    <div class="ladder" aria-label="自律度を五段階で上げるラダー">
+      <div class="rung" data-level="L0"><b>決定的自動化</b><p>ルール、SQL、スクリプト、CI。入力と結果が定義可能。</p><div class="gate">出発点: 再現性が最優先</div></div>
+      <div class="rung" data-level="L1"><b>AI支援</b><p>人が操作し、下書き・要約・候補を得る。最終判断は人。</p><div class="gate">昇格: 修正負荷が許容内</div></div>
+      <div class="rung" data-level="L2"><b>固定ワークフロー</b><p>LLMとツールを定義済み経路で接続。各段に検証ゲート。</p><div class="gate">昇格: 例外が限定的</div></div>
+      <div class="rung" data-level="L3"><b>単一エージェント</b><p>計画とツール選択を委任。権限・予算・時間・停止条件を限定。</p><div class="gate">昇格: 柔軟性の効果を実証</div></div>
+      <div class="rung" data-level="L4"><b>長時間／複数エージェント</b><p>分担、並列、評価ループ。隔離環境と独立評価が必須。</p><div class="gate">限定採用: 増分効果がコストを上回る</div></div>
+    </div>
+    <div class="callout blue"><b>三エージェント構成の扱い</b>Planner／Generator／Evaluatorは有効な候補であって全社標準ではない。Anthropicの2026年実験でも、強いモデルではEvaluatorが不要な負荷になるタスクがあり、約4時間・約125ドルを要した例がある。タスク境界に応じて採否を決める。<sup><a href="#ref-13">[13]</a></sup></div>
+  </section>
+
+  <section id="architecture">
+    <div class="section-head"><div class="section-no">05</div><h2>全体アーキテクチャ — 業務の変革を、共通能力が横断して支える</h2><p class="section-lead">AIを単体ツールとして配置せず、開発・運用・知識の仕事の流れと、全社共通の安全・評価・再利用をつなぐ</p></div>
+    <h3>業務領域ごとの変革像</h3>
+    <div class="grid3">
+      <div class="card workstream"><h4>開発 — 意図から安全な変更へ</h4><div class="path">要件・制約 → 計画 → 実装 → テスト → PR → 学習</div><p class="human"><strong>人の責任:</strong> 目的、設計上の判断、重要差分のレビュー、リリース判断。AIは調査・下書き・反復・検証を担う。</p></div>
+      <div class="card workstream"><h4>運用 — 検知から復旧と学習へ</h4><div class="path">Alert → 文脈収集 → 仮説 → 対処案 → 承認 → 振り返り</div><p class="human"><strong>人の責任:</strong> 影響判断と復旧操作。初期は読み取り専用とし、書き込みは個別の安全性評価を通す。</p></div>
+      <div class="card workstream"><h4>知識・データ — 根拠から判断へ</h4><div class="path">Event / Data → 根拠 → 検証 → 確定知識 → 検索・判断</div><p class="human"><strong>人の責任:</strong> 正しさ、公開範囲、更新責任。AIは下書き・関連付け・検索を担い、根拠へ戻れるようにする。</p></div>
+    </div>
+    <h3>全領域を支える共通イネーブルメント基盤</h3>
+    <div class="layer-title"><span class="dot"></span><strong>Minimum Viable Platform — Phase 0〜1で整える</strong></div>
+    <div class="grid4">
+      <div class="card capability"><span class="cap-no">A</span><b>ユースケース台帳・ポリシー</b><p>目的、責任者、データ、失敗影響、自律度、承認点を一枚にする。</p><ul><li>リスク階層</li><li>利用可能モデル／ツール</li><li>継続・停止条件</li></ul></div>
+      <div class="card capability"><span class="cap-no">B</span><b>ID・Sandbox・Gateway</b><p>人からエージェント、ツール、下流システムまで委任文脈を保つ。</p><ul><li>短命・用途限定権限</li><li>ファイル／ネットワーク隔離</li><li>モデル／MCP接続制御</li></ul></div>
+      <div class="card capability"><span class="cap-no">C</span><b>Eval・Observability</b><p>最終状態、実行経路、コスト、失敗を再現可能に評価する。</p><ul><li>代表タスクセット</li><li>トレース／回帰評価</li><li>品質・時間・総コスト</li></ul></div>
+      <div class="card capability"><span class="cap-no">D</span><b>標準・再利用</b><p>AGENTS.md、CI契約、承認済みスキルを安全に配布する。</p><ul><li>テンプレート</li><li>署名・版固定・所有者</li><li>失効／ロールバック</li></ul></div>
+    </div>
+    <div class="layer-title" style="margin-top:22px"><span class="dot" style="background:var(--teal)"></span><strong>Evidence-gated Extensions — 灯台で価値が出たものだけ共通化</strong></div>
+    <div class="grid3">
+      <div class="card capability optional"><span class="cap-no" style="background:var(--teal)">E</span><b>根拠付きナレッジ</b><p>イベントから下書きを作り、根拠・所有者・鮮度を持つ知識へ確定。</p></div>
+      <div class="card capability optional"><span class="cap-no" style="background:var(--teal)">F</span><b>AI SRE</b><p>まず読み取り専用の調査支援。書き込みは別の安全性ゲートを通す。</p></div>
+      <div class="card capability optional"><span class="cap-no" style="background:var(--teal)">G</span><b>Frontier Watch</b><p>変化を収集するだけでなく、同一評価セットで既存標準との差を測る。</p></div>
+    </div>
+    <div class="callout teal"><b>Platform as a product</b>DORAは高品質な内部プラットフォームがAI効果を支える一方、導入初期にはJカーブが起き得るとする。利用者、タスク成功率、明確な失敗フィードバック、運営負荷をプラットフォーム自身のKPIにする。<sup><a href="#ref-2">[2]</a></sup></div>
+  </section>
+
+  <section id="safety">
+    <div class="section-head"><div class="section-no">06</div><h2>安全性とガバナンス — Gatewayではなく「委任の連鎖」を制御する</h2><p class="section-lead">プロンプト上の指示、ツール権限、実行隔離、下流認可を別々の防御層として扱う</p></div>
+    <h3>すべての操作に「誰のための、どの目的の権限か」を残す</h3>
+    <div class="trust-chain" aria-label="人からシステムまでの委任と認可の連鎖">
+      <div class="trust-step"><b>人 / Trigger</b><small>本人ID<br>依頼目的・承認</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Agent</b><small>登録済みID<br>セッション・予算</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Sub-agent</b><small>委任元を保持<br>権限は縮小</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>MCP / Tool</b><small>ツール別scope<br>引数・結果検査</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>System</b><small>下流で再認可<br>操作・根拠を監査</small></div>
+    </div>
+    <div class="callout red"><b>MCP Gatewayの位置づけ</b>Gatewayは重要なポリシー実施点だが、セキュリティ境界全体ではない。OpenAIは信頼できるMCP、機微操作の承認、送信データの記録、Prompt Injection対策を求める。UberもGatewayに加えてRegistry、STS、短命トークン、actor chainを実装している。<sup><a href="#ref-9">[9]</a></sup><sup><a href="#ref-14">[14]</a></sup></div>
+    <h3>リスク階層と初期の許可範囲</h3>
+    <table>
+      <thead><tr><th>階層</th><th>例</th><th>Phase 1の扱い</th><th>追加条件</th></tr></thead>
+      <tbody>
+        <tr><td>R0 — 下書き</td><td>公開情報の要約、テンプレート生成</td><td><span class="status go">通常許可</span></td><td>出典表示、出力検査</td></tr>
+        <tr><td>R1 — 社内読取</td><td>コード検索、仕様・ログの参照</td><td><span class="status go">承認環境で許可</span></td><td>本人権限透過、監査、データ最小化</td></tr>
+        <tr><td>R2 — 開発書込</td><td>ブランチ編集、テスト、PR作成</td><td><span class="status gate">隔離＋レビュー</span></td><td>Sandbox、CI、CODEOWNERS、秘密・ライセンス検査</td></tr>
+        <tr><td>R3 — 業務／本番変更</td><td>チケット更新、設定変更、復旧操作</td><td><span class="status no">原則対象外</span></td><td>個別評価、二者承認、ロールバック、演習</td></tr>
+        <tr><td>R4 — 高影響判断</td><td>雇用、顧客権利、安全、重要インフラ</td><td><span class="status no">個別ガバナンス</span></td><td>法務・リスク評価、説明、独立検証</td></tr>
+      </tbody>
+    </table>
+    <h3>no-trainingは入口条件であり、データ統制の完成ではない</h3>
+    <div class="grid3">
+      <div class="card"><h4>契約・保持</h4><p class="footnote">学習利用、通常保持、ZDR適用範囲、サポート時アクセス、削除、第三者MCPの条件を機能単位で確認。</p></div>
+      <div class="card"><h4>データフロー</h4><p class="footnote">顧客アカウント、クラウドサービス、モデル提供者、ログ基盤、Web取得先を分け、リージョンと暗号化を記録。</p></div>
+      <div class="card"><h4>実行・持ち出し</h4><p class="footnote">ファイル読取、ネットワーク出口、資格情報、クリップボード、MCP応答を制御。Prompt Injectionを前提に最小権限化。</p></div>
+    </div>
+    <div class="callout blue"><b>公式資料からの注意</b>OpenAI APIは通常、入力をモデル学習に使わないが、不正利用監視ログ、ZDRの適用可否、機能ごとの状態保存、外部MCPの保持は別条件である。製品単位ではなくデータ経路単位で台帳化する。<sup><a href="#ref-15">[15]</a></sup></div>
+    <h3>スキル／プラグインは実行可能なサプライチェーンとして扱う</h3>
+    <table>
+      <thead><tr><th>公開範囲</th><th>公開条件</th><th>実行時制御</th><th>運用</th></tr></thead>
+      <tbody>
+        <tr><td>個人試作</td><td>隔離リポジトリ、実データ禁止</td><td>外部通信なし／明示許可</td><td>期限付き、共有禁止</td></tr>
+        <tr><td>チーム内</td><td>所有者、版固定、自動スキャン、依存一覧</td><td>チームscope、監査、危険操作承認</td><td>変更PR、即時失効可能</td></tr>
+        <tr><td>全社共通</td><td>CODEOWNERS、脅威レビュー、互換評価、署名</td><td>最小権限、許可MCP、Sandbox</td><td>段階配布、ロールバック、廃止期限</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">OWASP Agentic Applications Top 10を初期脅威モデルの観点として用いる。<sup><a href="#ref-16">[16]</a></sup></p>
+  </section>
+
+  <section id="knowledge">
+    <div class="section-head"><div class="section-no">07</div><h2>知識活用 — AI生成物ではなく、根拠と責任を持つ知識を増やす</h2><p class="section-lead">作成作業は自動化するが、正しさ・公開範囲・更新責任を自動化しきったとはみなさない</p></div>
+    <div class="knowledge-flow" aria-label="知識を確定する流れ">
+      <div><b>1. Event</b>PR、障害、設計決定、問い合わせ</div>
+      <div><b>2. Draft</b>AIが変更点・判断・FAQを下書き</div>
+      <div><b>3. Evidence</b>コミット、ログ、原文URLを関連付け</div>
+      <div><b>4. Validate</b>矛盾、権限、機密、再現性を検査</div>
+      <div><b>5. Approve</b>名前のある所有者が確定</div>
+      <div><b>6. Refresh</b>期限・変更イベントで再検証</div>
+    </div>
+    <div class="grid3">
+      <div class="card"><h4>知識単位の必須メタデータ</h4><p class="footnote">根拠、作成・確認者、対象システム、公開範囲、確信度、有効期限、最終確認日。</p></div>
+      <div class="card"><h4>検索品質の評価</h4><p class="footnote">代表質問、正解根拠、取得精度、引用一致、アクセス違反、回答不能時の停止を評価。</p></div>
+      <div class="card"><h4>Source of Truth</h4><p class="footnote">コード、構成管理、チケットなど本来の正を維持。生成文書は根拠への案内・説明層として扱う。</p></div>
+    </div>
+    <div class="callout amber"><b>実例からの教訓</b>Uber Genieは参照情報を事前選定し、回答に根拠URLを付ける設計でも、有用回答率は48.9%だった。「人の追加作業ゼロ」ではなく、「記述負荷を自動化し、確定責任を軽量に残す」を目標にする。<sup><a href="#ref-10">[10]</a></sup></div>
+  </section>
+
+  <section id="organization">
+    <div class="section-head"><div class="section-no">08</div><h2>運営モデル — CoEは全部を運用せず、舗装路をプロダクトとして経営する</h2><p class="section-lead">統制、共通サービス、業務責任を分け、既存のPlatform・Security・Data・SREと共同所有する</p></div>
+    <div class="roles">
+      <div class="role"><div class="owner">L1 / ENTERPRISE</div><b>経営・セキュリティ・法務</b><ul><li>リスク許容度と禁止領域</li><li>投資・例外・重大事故</li><li>規制と契約の説明責任</li></ul></div>
+      <div class="role center"><div class="owner">L2 / ENABLEMENT PRODUCT</div><b>AI Enablement Team</b><ul><li>ユースケース台帳とPaved Road</li><li>評価セット・共通計測</li><li>標準、移行、利用者フィードバック</li><li>各基盤所有者とのロードマップ調整</li></ul></div>
+      <div class="role"><div class="owner">L3 / DOMAIN</div><b>10チームとシステム所有者</b><ul><li>業務成果と品質責任</li><li>代表タスク・正解の提供</li><li>導入／対象外の判断</li></ul></div>
+    </div>
+    <h3>暫定的な体制仮説</h3>
+    <table>
+      <thead><tr><th>役割</th><th>主な責任</th><th>考え方</th></tr></thead>
+      <tbody>
+        <tr><td>Executive Sponsor</td><td>成果ポートフォリオ、リスク許容、部門間の優先順位</td><td>月次のGate判断</td></tr>
+        <tr><td>Enablement Product Lead</td><td>利用者課題、ロードマップ、サービス水準、採否</td><td>技術CoEではなく内部プロダクト責任者</td></tr>
+        <tr><td>Platform / Agent Engineering</td><td>Sandbox、Gateway、テンプレート、連携</td><td>既存Platformチームとの共同所有</td></tr>
+        <tr><td>Eval / Measurement</td><td>代表タスク、回帰、因果評価、経済性</td><td>独立評価機能を明示</td></tr>
+        <tr><td>Security / Data / Legal Liaison</td><td>脅威、データ、契約、例外、事故対応</td><td>専任または明確な兼務枠</td></tr>
+        <tr><td>Champion（各チーム）</td><td>ユースケース、現場支援、失敗の標準還元</td><td>一人に作業を集中させずペア化</td></tr>
+      </tbody>
+    </table>
+    <div class="callout blue"><b>人数の扱い</b>中央3〜5名で全機能の開発・運用・教育・審査を所有する前提は置かない。Phase 0でサービス一覧、SLO、問い合わせ量、既存組織との分担を見積もり、必要FTEを意思決定する。</div>
+  </section>
+
+  <section id="roadmap">
+    <div class="section-head"><div class="section-no">09</div><h2>ロードマップ — 縦に成果を通し、Gateごとに投資を増やす</h2><p class="section-lead">18か月は固定建設計画ではなく、仮説検証と共通化を繰り返す投資枠として扱う</p></div>
+    <div class="timeline">
+      <div class="phase"><div class="period">0〜6 WEEKS</div><b>Phase 0 — Discovery</b><ul><li>業務・品質・コストのベースライン</li><li>3つの灯台と責任者</li><li>評価セット／リスク階層</li><li>最小Sandbox・監査・接続PoC</li><li>製品候補の同一タスク比較</li></ul><div class="gate-box"><strong>G0:</strong> 測れる・守れる・責任者がいる</div></div>
+      <div class="phase"><div class="period">6〜14 WEEKS</div><b>Phase 1 — Lighthouse</b><ul><li>A: 反復的な開発／移行タスク</li><li>B: 読取専用の障害調査</li><li>C: 根拠付き知識検索</li><li>週次評価と失敗分類</li><li>人の修正・検証時間を計測</li></ul><div class="gate-box"><strong>G1:</strong> 成果改善、品質非劣化、重大事故なし</div></div>
+      <div class="phase"><div class="period">4〜9 MONTHS</div><b>Phase 2 — Productize</b><ul><li>再利用できた2〜3機能をL2化</li><li>3〜5チームへ段階展開</li><li>署名済みスキルとCI契約</li><li>運用SLO・費用上限</li><li>モデル／製品の交換訓練</li></ul><div class="gate-box"><strong>G2:</strong> 他チームでも再現、運営能力と総コストが許容内</div></div>
+      <div class="phase"><div class="period">10〜18 MONTHS</div><b>Phase 3 — Scale selectively</b><ul><li>適格な業務・システムへ展開</li><li>低リスク領域の非同期委任</li><li>AI SREの限定的書込評価</li><li>廃止・乗換え・事故演習</li><li>対象外システムも明示</li></ul><div class="gate-box"><strong>G3:</strong> リスク調整後ROIと継続運営が成立</div></div>
+    </div>
+    <h3>継続だけでなく「修正・停止」を正常な結果にする</h3>
+    <div class="stop">
+      <div><b>価値が出ない</b>リードタイムや検証負荷がベースラインを改善しない</div>
+      <div><b>品質が悪化</b>重大見逃し、再作業、変更失敗が許容範囲を超える</div>
+      <div><b>制御できない</b>ID、ログ、データ、権限の欠落を閉じられない</div>
+      <div><b>運営できない</b>総コスト、問い合わせ、更新追従がチーム能力を超える</div>
+    </div>
+  </section>
+
+  <section id="metrics">
+    <div class="section-head"><div class="section-no">10</div><h2>KPIと評価 — 成果から利用状況へ、上から下に読む</h2><p class="section-lead">AI生成コード率やトークン量は診断指標。投資判断は事業・提供・品質の指標で行う</p></div>
+    <div class="metric-tree">
+      <div class="metric-layer"><b>1. Business Outcomes</b><small>経営・業務責任者が所有</small><ul><li>顧客価値までの時間</li><li>サービス信頼性</li><li>収益／回避損失</li><li>重要業務の処理時間</li></ul><span class="label">投資判断</span></div>
+      <div class="metric-layer"><b>2. Delivery Outcomes</b><small>チームが所有</small><ul><li>変更リードタイム</li><li>変更失敗・再作業</li><li>復旧時間</li><li>レビュー待ち時間</li></ul><span class="label">非劣化条件</span></div>
+      <div class="metric-layer"><b>3. AI System Quality</b><small>Eval担当が所有</small><ul><li>タスク最終状態の成功率</li><li>人の修正・検証時間</li><li>重大な見逃し</li><li>成功タスクあたり総コスト</li></ul><span class="label">昇格・停止</span></div>
+      <div class="metric-layer"><b>4. Adoption Signals</b><small>診断のために使う</small><ul><li>アクティブ利用</li><li>対象業務カバレッジ</li><li>生成量・トークン</li><li>スキル再利用数</li></ul><span class="label">目標化しない</span></div>
+    </div>
+    <div class="callout amber"><b>測定上の注意</b>AI関与PRと非関与PRの単純比較は、利用者の熟練度やタスク難度が異なるため因果効果を示さない。段階導入、同種タスク、導入前後、可能なら差分の差分を組み合わせる。</div>
+    <h3>最小評価契約 — 各ユースケースが本番化前に持つもの</h3>
+    <table>
+      <thead><tr><th>要素</th><th>内容</th><th>例</th></tr></thead>
+      <tbody>
+        <tr><td>Task set</td><td>実務を代表する固定タスクと更新枠</td><td>正常、境界、失敗、安全性、長時間タスク</td></tr>
+        <tr><td>Outcome</td><td>発言ではなく環境の最終状態</td><td>テスト成功、正しい差分、チケット状態、引用一致</td></tr>
+        <tr><td>Trace</td><td>モデル、ツール、承認、再試行、停止</td><td>どこで失敗・逸脱・過剰コストが生じたか</td></tr>
+        <tr><td>Human load</td><td>人が確認・修正・説明した時間</td><td>レビュー、再プロンプト、手戻り、監督時間</td></tr>
+        <tr><td>Economics</td><td>推論以外を含む総コスト</td><td>実行、ログ、CI、レビュー、再作業、基盤FTE</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">OpenAIはモデル・ツール・ガードレール・ハンドオフを含むトレース評価を、Anthropicは最終発言ではなく環境の最終状態を含む評価を推奨している。<sup><a href="#ref-17">[17]</a></sup><sup><a href="#ref-18">[18]</a></sup></p>
+  </section>
+
+  <section id="tools">
+    <div class="section-head"><div class="section-no">11</div><h2>製品・モデル戦略 — 標準は製品名ではなく、選定方法と交換契約</h2><p class="section-lead">2026年8月時点の候補を持ちつつ、同一タスク評価・データ条件・撤退可能性で採否を更新する</p></div>
+    <div class="tool-grid" role="table" aria-label="製品カテゴリ別の評価方針">
+      <div class="head">カテゴリ</div><div class="head">現時点の候補例</div><div class="head">選定基準</div><div class="head">更新トリガー</div>
+      <div class="class">Coding agent</div><div>Claude Code / Codex / GitHub Copilot / Gemini系<small>主用途別に複数候補を評価</small></div><div>代表タスク成功、修正時間、隔離、管理、総コスト</div><div>主要モデル更新、価格・権限変更</div>
+      <div class="class">Model / API</div><div>OpenAI API / Amazon Bedrock / Databricks経由など<small>データ近接と利用機能で使い分け</small></div><div>品質、保持、リージョン、ZDR、可観測性、退出性</div><div>契約、保持条件、新規リージョン</div>
+      <div class="class">MCP / Data</div><div>社内MCP / Databricks Managed MCP等<small>2026-08-17時点でDatabricks Managed MCPはPublic Preview。<sup><a href="#ref-23">[23]</a></sup></small></div><div>ID伝播、scope、監査、更新統制、障害時停止</div><div>GA、仕様変更、脆弱性</div>
+      <div class="class">Operations</div><div>AWS DevOps Agent / 自社ワークフロー<small>AWS DevOps Agentは2026-03-31にGA。<sup><a href="#ref-24">[24]</a></sup></small></div><div>読取調査の有用性、誤誘導、検証時間、環境対応</div><div>実障害結果、書込機能の追加</div>
+    </div>
+    <div class="grid2">
+      <div class="callout blue" style="margin:0"><b>価格の扱い</b>GitHub Copilotは2026年6月からAI Creditsによる従量課金が始まったが、Business／Enterpriseは席料金と含有Creditsを持つ。単純な「席課金から全面従量課金へ」ではない。<sup><a href="#ref-19">[19]</a></sup></div>
+      <div class="callout teal" style="margin:0"><b>Frontier Watchの出口</b>情報収集で終わらず、既存構成と候補構成を同じ評価セットで比較し、採用・見送り・再評価日・移行コストを記録する。</div>
+    </div>
+    <h3>四半期／イベント駆動の変更手順</h3>
+    <div class="trust-chain">
+      <div class="trust-step"><b>Signal</b><small>モデル、価格、規制、脆弱性、現場失敗</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Reproduce</b><small>同一タスク・同一条件で再評価</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Decide</b><small>採用／維持／廃止と根拠</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Roll out</b><small>段階配布・互換性・ロールバック</small></div><div class="trust-arrow">→</div>
+      <div class="trust-step"><b>Observe</b><small>実利用の品質・費用・事故を監視</small></div>
+    </div>
+  </section>
+
+  <section id="governance">
+    <div class="section-head"><div class="section-no">12</div><h2>規制・外部フレームワーク — チェックリストではなく運営成果物へ変換する</h2><p class="section-lead">国内外の指針を、台帳・評価・責任・監視・事故対応の具体物に落とす</p></div>
+    <div class="grid3">
+      <div class="card"><h4>NIST AI RMF</h4><p class="footnote">Govern・Map・Measure・Manageを、ユースケース登録、リスク評価、評価セット、運用監視、停止判断へ対応付ける。<sup><a href="#ref-20">[20]</a></sup></p></div>
+      <div class="card"><h4>AI事業者ガイドライン 1.2</h4><p class="footnote">経産省公開のチェックリストとワークシートを、L1の初期成果物と証跡に利用する。<sup><a href="#ref-21">[21]</a></sup></p></div>
+      <div class="card"><h4>EU AI Act</h4><p class="footnote">2026年8月に一部執行。Annex III高リスクは2027年12月、製品組込み型は2028年8月。用途別に適用可能性を確認する。<sup><a href="#ref-22">[22]</a></sup></p></div>
+    </div>
+    <table>
+      <thead><tr><th>運営成果物</th><th>最低限含める内容</th><th>更新契機</th></tr></thead>
+      <tbody>
+        <tr><td>AIユースケース台帳</td><td>目的、利用者、責任者、モデル、データ、ツール、自律度、影響</td><td>新規・大幅変更・廃止</td></tr>
+        <tr><td>Risk / Control記録</td><td>誤り、差別、漏えい、過剰権限、依存、供給網、残余リスク</td><td>四半期・事故・脆弱性</td></tr>
+        <tr><td>Evaluation Card</td><td>対象タスク、指標、ベースライン、結果、限界、承認者</td><td>モデル・プロンプト・ツール変更</td></tr>
+        <tr><td>Data Flow / Retention</td><td>送信先、保持、地域、ログ、削除、第三者、暗号化</td><td>契約・機能・接続変更</td></tr>
+        <tr><td>Incident / Exit Plan</td><td>停止、鍵失効、影響特定、ロールバック、通知、代替製品</td><td>半期演習・重大変更</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="decisions">
+    <div class="section-head"><div class="section-no">13</div><h2>最初の90日 — 構想を実行へ移し、3つの灯台で成立性を確かめる</h2><p class="section-lead">業務成果のベースライン、最小の共通能力、実務での評価を一続きで進め、次の投資判断に必要な証拠を揃える</p></div>
+    <div class="grid3">
+      <div class="card workstream"><h4>0〜2週 — 焦点を定める</h4><div class="path">Sponsor・成果責任者 → 3つの灯台業務 → 現状ベースライン</div><ul class="check-list footnote"><li>開発、読取運用、知識から実業務を選定</li><li>時間、品質、人の検証、総コストを計測</li><li>責任者、利用者、対象データ、失敗影響を登録</li></ul></div>
+      <div class="card workstream"><h4>3〜6週 — 守りと測定を作る</h4><div class="path">評価セット → Sandbox・ID → 監査 → 製品比較</div><ul class="check-list footnote"><li>代表タスクと正解・非劣化条件を定義</li><li>最小権限、隔離、ログ、承認点を実装</li><li>候補製品を同じタスク・同じデータ条件で比較</li></ul></div>
+      <div class="card workstream"><h4>7〜12週 — 実務で検証する</h4><div class="path">灯台を実行 → 週次評価 → 失敗分類 → Gate判定</div><ul class="check-list footnote"><li>成果、修正・検証時間、品質、事故、総コストを測定</li><li>現場の失敗を共通標準と評価セットへ戻す</li><li>継続、修正、停止とPhase 2の投資範囲を決定</li></ul></div>
+    </div>
+    <h3>90日目に揃える成果物</h3>
+    <div class="grid4">
+      <div class="card outcome" data-no="A"><div class="icon">1</div><b>3つのEvaluation Card</b><span>ベースライン、代表タスク、結果、限界、人の負荷、総コスト</span></div>
+      <div class="card outcome" data-no="B"><div class="icon">2</div><b>安全性の実装証拠</b><span>ユースケース台帳、データフロー、権限、監査、承認、停止手順</span></div>
+      <div class="card outcome" data-no="C"><div class="icon">3</div><b>再利用候補</b><span>複数業務で使えた評価、Sandbox、標準、スキル、知識パターン</span></div>
+      <div class="card outcome" data-no="D"><div class="icon">4</div><b>次の投資判断</b><span>継続・修正・停止、対象チーム、必要FTE、予算、移行・退出案</span></div>
+    </div>
+    <h3>開始時に合意する六つのこと</h3>
+    <div class="decision-list">
+      <div class="decision-item"><b>目標状態と対象範囲</b><p>North Star、品質の非劣化条件、初期対象の業務・システム・利用者。</p></div>
+      <div class="decision-item"><b>灯台ユースケースと責任者</b><p>開発、読取運用、知識の3系統から実業務を選び、成果責任者を置く。</p></div>
+      <div class="decision-item"><b>Phase 0の人員・予算</b><p>6週間の専任枠、製品比較、Sandbox、ログ、Eval実行の暫定予算。</p></div>
+      <div class="decision-item"><b>リスク許容と初期権限</b><p>R0〜R4、Fast-Track対象、禁止データ、本番書込を許可しない初期線。</p></div>
+      <div class="decision-item"><b>Gate判定者と証拠</b><p>G0〜G3で誰が、どの実測値と残余リスクを見て継続・停止するか。</p></div>
+      <div class="decision-item"><b>共同所有と運営能力</b><p>AI Enablement、Platform、Security、Data、SRE、各チームのRACI。</p></div>
+    </div>
+    <div class="callout teal"><b>90日目のGate</b>3つの灯台それぞれで、事業・提供成果の改善、品質の非劣化、重大事故の不在、運営可能な総コストを証拠で確認する。成立しない灯台は正常に修正・停止し、再現可能だった共通能力だけを次段階へ投資する。</div>
+  </section>
+
+  <section id="refs" class="references">
+    <div class="section-head"><div class="section-no">14</div><h2>参照資料</h2><p class="section-lead">基準日 2026年8月25日。一次資料・公式資料を優先し、企業・ベンダー公表値は性質を明記</p></div>
+    <div class="card">
+      <ol>
+        <li id="ref-1"><span class="tag primary">調査</span> <a href="https://dora.dev/research/2025/dora-report/" target="_blank" rel="noopener">DORA, State of AI-assisted Software Development 2025</a> — AIは組織システムの増幅器。</li>
+        <li id="ref-2"><span class="tag primary">調査</span> <a href="https://dora.dev/capabilities/platform-engineering/" target="_blank" rel="noopener">DORA, Platform Engineering</a> — 内部プラットフォーム、明確なフィードバック、Jカーブ。</li>
+        <li id="ref-3"><span class="tag survey">市場調査</span> <a href="https://www.gartner.com/en/articles/enterprise-ai-coding-agent-market" target="_blank" rel="noopener">Gartner, Enterprise AI Coding Agents: 2026 Market Guide & Trends</a> — リーダー報告の純平均+19.3%、価格構造の複雑化。</li>
+        <li id="ref-4"><span class="tag primary">RCT</span> <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="noopener">METR, Early-2025 AI on Experienced OSS Developer Productivity</a> — 16人・246タスク、限定条件の遅延結果。</li>
+        <li id="ref-5"><span class="tag primary">研究更新</span> <a href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="noopener">METR, We are Changing our Developer Productivity Experiment Design</a> — 後続調査の選択バイアスと不確実性。</li>
+        <li id="ref-6"><span class="tag survey">開発者調査</span> <a href="https://survey.stackoverflow.co/2025/ai" target="_blank" rel="noopener">Stack Overflow Developer Survey 2025 — AI</a> — 信頼33%、不信46%。</li>
+        <li id="ref-7"><span class="tag survey">自己申告</span> <a href="https://www.gartner.com/en/newsroom/press-releases/2024-10-21-gartner-identifies-four-emerging-challenges-to-delivering-value-from-ai-safely-and-at-scale" target="_blank" rel="noopener">Gartner, Four Emerging Challenges to Delivering Value from AI</a> — 5,000人超のデジタルワーカー、平均3.6時間/週。</li>
+        <li id="ref-8"><span class="tag vendor">企業公表</span> <a href="https://careers.mercari.com/en/mercan/articles/56789/" target="_blank" rel="noopener">Mercari, The First 100 Days of the 100-Member AI Task Force</a> — 約70%のAI生成コード、前年比+64%の開発速度という公表。</li>
+        <li id="ref-9"><span class="tag primary">企業技術</span> <a href="https://www.uber.com/in/en/blog/solving-the-agent-identity-crisis/" target="_blank" rel="noopener">Uber, Solving the Identity Crisis for AI Agents</a> — Registry、STS、actor chain、MCP Gateway。</li>
+        <li id="ref-10"><span class="tag primary">企業技術</span> <a href="https://www.uber.com/us/en/blog/genie-ubers-gen-ai-on-call-copilot/" target="_blank" rel="noopener">Uber, Genie: Gen AI On-Call Copilot</a> — 根拠URL、情報源制御、48.9% helpfulness。</li>
+        <li id="ref-11"><span class="tag primary">公式技術</span> <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic, Building Effective Agents</a> — 最も単純な解法から始め、必要な場合だけ複雑化。</li>
+        <li id="ref-12"><span class="tag primary">公式技術</span> <a href="https://developers.openai.com/api/docs/guides/agents/guardrails-approvals" target="_blank" rel="noopener">OpenAI Docs, Guardrails and Human Review</a> — ツール検査と機微操作の承認。</li>
+        <li id="ref-13"><span class="tag primary">公式実験</span> <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener">Anthropic, Harness Design for Long-running Application Development</a> — Planner/Generator/Evaluator、費用・複雑性、モデル進化による簡素化。</li>
+        <li id="ref-14"><span class="tag primary">公式技術</span> <a href="https://developers.openai.com/api/docs/guides/tools-connectors-mcp" target="_blank" rel="noopener">OpenAI Docs, MCP and Connectors</a> — 信頼、承認、Prompt Injection、データ送信記録。</li>
+        <li id="ref-15"><span class="tag primary">公式仕様</span> <a href="https://developers.openai.com/api/docs/guides/your-data" target="_blank" rel="noopener">OpenAI Docs, Data Controls in the OpenAI Platform</a> — 学習利用、保持、ZDR、機能別状態、第三者接続。</li>
+        <li id="ref-16"><span class="tag primary">標準</span> <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">OWASP Top 10 for Agentic Applications 2026</a> — 自律エージェント固有の脅威分類。</li>
+        <li id="ref-17"><span class="tag primary">公式技術</span> <a href="https://developers.openai.com/api/docs/guides/agent-evals" target="_blank" rel="noopener">OpenAI Docs, Evaluate Agent Workflows</a> — Trace gradingと評価実行。</li>
+        <li id="ref-18"><span class="tag primary">公式技術</span> <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">Anthropic, Demystifying Evals for AI Agents</a> — transcript、最終状態、評価ハーネス。</li>
+        <li id="ref-19"><span class="tag primary">公式仕様</span> <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/billing/organizations-and-enterprises" target="_blank" rel="noopener">GitHub Docs, Copilot Billing for Organizations and Enterprises</a> — 席料金、含有AI Credits、追加利用。</li>
+        <li id="ref-20"><span class="tag primary">公的標準</span> <a href="https://airc.nist.gov/airmf-resources/airmf/5-sec-core/" target="_blank" rel="noopener">NIST AI RMF Core</a> — Govern、Map、Measure、Manage。</li>
+        <li id="ref-21"><span class="tag primary">公的指針</span> <a href="https://www.meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/20260331_report.html" target="_blank" rel="noopener">経済産業省 AI事業者ガイドライン 第1.2版</a> — 本編、チェックリスト、ワークシート。</li>
+        <li id="ref-22"><span class="tag primary">公的規制</span> <a href="https://digital-strategy.ec.europa.eu/en/policies/enforcement-ai-act" target="_blank" rel="noopener">European Commission, AI Act Enforcement Framework</a> — 2026〜2028年の段階的適用。</li>
+        <li id="ref-23"><span class="tag primary">公式仕様</span> <a href="https://docs.databricks.com/gcp/en/agents/mcp-tools/managed-mcp" target="_blank" rel="noopener">Databricks Managed MCP Servers</a> — 2026-08-17時点 Public Preview。</li>
+        <li id="ref-24"><span class="tag primary">公式発表</span> <a href="https://aws.amazon.com/blogs/mt/announcing-general-availability-of-aws-devops-agent/" target="_blank" rel="noopener">AWS, Announcing General Availability of AWS DevOps Agent</a> — 2026-03-31 GA。</li>
+      </ol>
+    </div>
+    <div class="source-notes">
+      <details><summary>出典の利用ルール</summary><div class="detail-body"><p>一次実験・公的資料・公式仕様を優先する。企業公表値は「その企業が公表した事実」として扱い、因果効果や再現可能な業界基準とはみなさない。販売企業の数値は仮説形成に使い、投資KPIには採用しない。</p></div></details>
+      <details><summary>この文書の更新ルール</summary><div class="detail-body"><p>四半期レビューに加え、主要モデル更新、価格体系変更、重大な脆弱性・事故、契約・保持条件、法規制、灯台評価の失敗をイベントとして更新する。更新時は主張、出典、基準日、適用範囲を同時に変更する。</p></div></details>
+    </div>
+  </section>
+</main>
+
+<footer>AI活用ロードマップ 2026 — 全体構想・目標像・共通基盤・運営モデル・実行計画を、評価と外部変化に応じて更新する</footer>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'))}).filter(Boolean);
+  if('IntersectionObserver' in window){
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting)return;
+        links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id)});
+      });
+    },{rootMargin:'-18% 0px -72% 0px',threshold:0});
+    sections.forEach(function(section){observer.observe(section)});
+  }
+})();
+</script>
+</body>
+</html>

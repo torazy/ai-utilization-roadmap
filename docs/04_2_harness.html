@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>② 標準ハーネステンプレート — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (2/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html" class="cur">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ②</span>
+  <h1>標準ハーネステンプレート ＝ 実行される開発標準</h1>
+  <p class="lead">エージェントが安全に・正しく・長時間働ける環境をリポジトリ内資産として定義する。文書標準と違い、エージェントが従うことで「自動的に実行される」標準。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. なぜハーネスか — METRの警告から</h2>
+  <div class="grid3">
+    <div class="stat warn"><div class="num"><span class="cnt" data-to="19" data-suf="%">0</span></div><div class="lbl">ハーネスなしでAIを使った経験豊富な開発者は、むしろ遅くなった</div><div class="src">METR実験（体感は+20%速いと誤認）<sup><a href="#refs">[1]</a></sup></div></div>
+    <div class="stat warn"><div class="num">−7.2%</div><div class="lbl">AIコード比率+25ppごとに安定性指標が低下</div><div class="src">DORA 2025<sup><a href="#refs">[2]</a></sup></div></div>
+    <div class="stat good"><div class="num">反転可能</div><div class="lbl">文脈供給＋機械的検証があれば速度と品質は両立する</div><div class="src">OpenAI Codex/Anthropicの実践<sup><a href="#refs">[3]</a></sup></div></div>
+  </div>
+  <p>METR実験の遅延要因は「AIの出力が信頼できず、全行を目視確認・修正していた」こと。つまり<strong>問題はモデルではなく、文脈の供給不足と検証の人力依存</strong>。
+  ハーネスはこの2つを構造的に解決する — AGENTS.mdが文脈を常時供給し、CI不変条件と評価エージェントが検証を機械化する。</p>
+
+  <h3>なぜ「ルールを書けば従う」が成立しないのか — LLMの構造的制約（公開研究）</h3>
+  <p style="font-size:13.5px;">ハーネスの各部品は思いつきではなく、LLMの測定済みの制約への対応になっている。「文書標準が守られない」のと同じ現象がAIにも構造的に起きる。</p>
+  <table>
+    <thead><tr><th style="width:30%;">構造的制約</th><th style="width:34%;">根拠（実測・論文）</th><th>ハーネス側の対応</th></tr></thead>
+    <tbody>
+      <tr><td class="em">コンテキストは長いほど劣化する</td><td>Chromaが18モデルで実測 — 上限のはるか手前から非線形に性能低下<sup><a href="#refs">[6]</a></sup></td><td>AGENTS.mdは「1枚メモ＋リンク」構造。スキルの遅延ロード、フェーズ分割</td></tr>
+      <tr><td class="em">指示を増やすほど個々の遵守率が下がる</td><td>IFScale — 指示密度の上昇で遵守率が減衰。最高モデルでも500指示で68%<sup><a href="#refs">[6]</a></sup></td><td>ルールを「書いて祈る」のをやめ、CI不変条件・Hookで<strong>機械的に強制</strong>する</td></tr>
+      <tr><td class="em">自己申告は完了の証拠にならない</td><td>SWE-bench等の評価設計思想（自己申告を排しテストのpass/failで判定）<sup><a href="#refs">[6]</a></sup></td><td>完了条件をテスト・exit codeで定義（AGENTS.mdの「完了条件」＋評価エージェント）</td></tr>
+      <tr><td class="em">バイアスは自覚されない</td><td>Anthropic研究 — モデルは入力のヒントに影響されつつ、思考過程でそれに言及しない<sup><a href="#refs">[6]</a></sup></td><td>生成と評価を<strong>別コンテキスト</strong>に分離（計画/生成/評価のサブエージェント分離）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">運用原則: 失敗の昇格ラダー</span>
+    同じ失敗が2回起きたら、現在の段では防げていない証拠 — 1段上へ昇格させる:
+    <strong>L0 口頭で指摘</strong>（セッションを跨がず消える）→ <strong>L1 AGENTS.mdに記載</strong>（確率的に守られる）→
+    <strong>L2 スクリプト検証</strong>（exit codeで判定、実行忘れはあり得る）→ <strong>L3 Hook／CIゲート</strong>（通過必須・物理的に再発不可能）。
+    L3まで上げた失敗は構造的に再発しない。「注意喚起で直そうとし続ける」のが最も高くつく。
+  </div>
+</section>
+
+<section>
+  <h2>2. 技術構成 — リポジトリに置く7点セット</h2>
+  <div class="tabs">
+    <div class="tab-btns">
+      <button class="on" data-tab="t1">AGENTS.md</button>
+      <button data-tab="t2">CI不変条件</button>
+      <button data-tab="t3">サブエージェント</button>
+      <button data-tab="t4">権限統制</button>
+      <button data-tab="t5">環境・文書</button>
+    </div>
+    <div class="tab-panel on" data-panel="t1">
+      <h4>作業指示書（AGENTS.md / CLAUDE.md）— 書きすぎない</h4>
+      <pre class="code"><span class="c"># AGENTS.md（例: 決済システム）</span>
+## ビルド・テスト
+- ビルド: `./gradlew build` ／ 単体テスト: `./gradlew test`
+- 統合テストはCIのみ（ローカル実行禁止: 外部接続あり）
+
+## 触ってよい領域 / いけない領域
+- 変更可: src/main/java/com/x/payment/**
+- <span class="k">変更禁止: src/main/java/com/x/legacy/**（凍結中）、DBマイグレーション（人間が作成）</span>
+
+## 規約
+- 例外は PaymentException 系に集約。ログは構造化ログ（logback、JSON）
+- 詳細設計は docs/design/ を必ず参照（AIリバース生成済み）
+
+## 完了条件
+- `./gradlew check` パス ＋ 変更行のテストカバレッジ80%以上</pre>
+      <p style="font-size:12.5px; color:var(--muted);">コツ: ルールブックではなく「新人に渡す1枚メモ」。長すぎると読み飛ばされる（モデルも同じ）。詳細はスキル（①）と設計文書（③）に分離してリンクする。</p>
+    </div>
+    <div class="tab-panel" data-panel="t2">
+      <h4>CI不変条件 — エージェントの暴走を止める柵</h4>
+      <table>
+        <thead><tr><th style="width:30%;">不変条件</th><th style="width:38%;">実装例</th><th>防ぐこと</th></tr></thead>
+        <tbody>
+          <tr><td class="em">アーキテクチャ境界</td><td>ArchUnit ／ dependency-cruiser</td><td>レイヤー違反・禁止依存の混入</td></tr>
+          <tr><td class="em">フォーマット・命名</td><td>Prettier ／ Checkstyle ／ ESLint（自動修正込み）</td><td>スタイル指摘でレビューが埋まる</td></tr>
+          <tr><td class="em">データ検証</td><td>スキーマテスト ／ 契約テスト（Pact等）</td><td>API/DB契約の暗黙破壊</td></tr>
+          <tr><td class="em">セキュリティ</td><td>secretスキャン ／ SAST ／ 依存脆弱性チェック</td><td>秘密情報混入・脆弱コード</td></tr>
+          <tr><td class="em">変更量ガード</td><td>1PRの差分上限（例: 800行）を超えたら人間レビュー必須ラベル</td><td>巨大PRの検証不能化</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px; color:var(--muted);">ポイント: 「レビューで人が指摘していたこと」を1つずつCIに移す。エージェントはCIが赤なら自分で直すので、<strong>柵は同時に自動修正ループの部品</strong>になる。</p>
+    </div>
+    <div class="tab-panel" data-panel="t3">
+      <h4>計画・生成・評価の分離（3エージェント構成）</h4>
+      <pre class="code"><span class="c"># .claude/agents/（役割ごとに定義。Anthropicの3エージェントハーネス構成 [3]）</span>
+planner.md   <span class="c"># 計画: タスクを分解し docs/plan.md に書く。コードは書かない</span>
+builder.md   <span class="c"># 生成: plan.md に従い実装。テストを先に書く</span>
+checker.md   <span class="c"># 評価: 別コンテキストで差分・テスト・設計整合を審査
+             #   → builderと同じ文脈を共有しない（甘い採点の防止）</span></pre>
+      <p style="font-size:12.5px; color:var(--muted);">Checkerの独立性が肝。「生成した本人が検証する」構成は形骸化する（→ <a href="05_loop-engineering.html">ループ詳説</a>の落とし穴参照）。</p>
+    </div>
+    <div class="tab-panel" data-panel="t4">
+      <h4>権限統制（managed settings — IT管理側で配布）</h4>
+      <pre class="code"><span class="c">// managed-settings.json（AI推進チームが端末管理経由で配布 [4]）</span>
+{
+  <span class="k">"permissions"</span>: {
+    <span class="k">"allow"</span>: [<span class="s">"Bash(./gradlew *)"</span>, <span class="s">"Bash(git *)"</span>, <span class="s">"Read(**)"</span>, <span class="s">"Edit(src/**)"</span>],
+    <span class="k">"deny"</span>:  [<span class="s">"Bash(rm -rf *)"</span>, <span class="s">"Read(.env*)"</span>, <span class="s">"Read(**/secrets/**)"</span>,
+              <span class="s">"WebFetch"</span> <span class="c">/* 外部送信はMCPゲートウェイ経由のみ */</span>]
+  },
+  <span class="k">"env"</span>: { <span class="k">"CLAUDE_CODE_USE_BEDROCK"</span>: <span class="s">"1"</span> }  <span class="c">// モデル呼び出しをAWS域内に</span>
+}</pre>
+      <p style="font-size:12.5px; color:var(--muted);">組織強制（managed）と推奨初期値（Starter Kit）の2層で配る。開発者の工夫の余地は残しつつ、denyだけは上書き不可にする<sup><a href="#refs">[4]</a></sup>。</p>
+    </div>
+    <div class="tab-panel" data-panel="t5">
+      <h4>再現可能環境と設計文書</h4>
+      <ul class="plain">
+        <li><strong>devcontainer</strong>: ワンコマンドで人にもエージェントにも同一環境。worktree分離で複数タスク並行（ループの前提）</li>
+        <li><strong>docs/design/</strong>: レガシーはAIリバース生成（legacy-docプラグイン→①）で整備。<strong>生成した設計書がそのままエージェントの常設コンテキストになる</strong>のがこの企画の要</li>
+        <li><strong>鮮度維持</strong>: 設計書とコードの差分をエージェントが夜間検出→更新PR起票（Phase 3、→③）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>3. 運用 — 50システムへの展開</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>0. テンプレ取得</b>template リポジトリから導入スクリプト実行（30分）</div><div class="arr">→</div>
+    <div class="step"><b>1. 文書リバース</b>legacy-docスキルで設計書・依存マップをAI生成（半日〜）</div><div class="arr">→</div>
+    <div class="step"><b>2. AGENTS.md生成</b>ドラフトはAIが作成 → 有識者が30分で赤入れ</div><div class="arr">→</div>
+    <div class="step"><b>3. CI柵の設置</b>不変条件セットから該当分を有効化</div><div class="arr">→</div>
+    <div class="step"><b>4. 試運転</b>小タスク5本をエージェントに委任し成功率を確認 → 合格で「ハーネス整備済み」認定</div>
+  </div>
+  <p class="anim-note">※ 1システムあたり実働2〜3日（レガシー度により変動）。伴走連鎖でチャンピオンに移転</p>
+  <div class="ops">
+    <div class="op"><div class="when">導入時</div><div class="what">灯台チームの2〜3リポジトリでテンプレv1を検証 → フィードバックをv2に反映してから横展開</div></div>
+    <div class="op"><div class="when">週次（自動）</div><div class="what">テンプレ更新はマーケットプレイス（①）経由で各リポジトリに更新PRを自動起票 — 各チームはレビューして取込</div></div>
+    <div class="op"><div class="when">月次</div><div class="what">「ハーネス整備済み」リポジトリのタスク成功率をレビュー。失敗パターンをテンプレ改善に還元（⑦経由）</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:40%;">取得方法</th><th style="width:20%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>ハーネス整備済みリポジトリ数</td><td>認定リスト（試運転合格制）— <strong>企画全体の進捗KPI</strong></td><td>10 → 25 → 50</td></tr>
+      <tr><td>エージェントタスク成功率</td><td>委任タスクのPR一発マージ率／手戻り回数（GitHub APIで自動集計）</td><td>整備前後で比較</td></tr>
+      <tr><td>レビュー負荷</td><td>PRあたりレビューコメント数の推移（機械的指摘がCIに移るほど減る）</td><td>−30%</td></tr>
+      <tr><td>変更失敗率</td><td>DORA指標（⑤で測定）— <strong>悪化させないことが合格条件</strong></td><td>横ばい以上</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    OpenAI Codexチーム: AGENTS.md＋再現環境＋CI不変条件の3点セット<sup><a href="#refs">[3]</a></sup>。
+    Anthropic: 計画/生成/評価分離で長時間自律開発<sup><a href="#refs">[3]</a></sup>。
+    国内: managed settings＋Starter Kitの企業配布パターン<sup><a href="#refs">[4]</a></sup>。
+    メルカリ: 「Agent Spec駆動開発」を社内標準化してAI生成コード比率70%<sup><a href="#refs">[5]</a></sup>。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>AGENTS.mdの肥大化</strong>（ルールブック化すると人もAIも読まない。1枚メモ＋リンク構造を守る）／
+    <strong>ハーネスなしの自律化</strong>（METRの-19%はこの状態<sup><a href="#refs">[1]</a></sup>。試運転合格までは対話利用に限定）／
+    <strong>テンプレ更新の放置</strong>（自動PR起票で追従を仕組み化）／
+    <strong>柵の過剰設置</strong>（開発が窮屈になったら柵を疑う。四半期で棚卸し）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html">METR研究: 経験豊富な開発者が19%遅くなる（InfoWorld）</a> ／ <a href="https://getdx.com/blog/unpacking-metri-findings-does-ai-slow-developers-down/">DXによる分析</a></li>
+    <li>[2] <a href="https://dora.dev/dora-report-2025/">DORA 2025</a> — AIコード比率+25ppごとに安定性-7.2%</li>
+    <li>[3] <a href="https://arxiv.org/html/2602.14690v5">Harness Engineering調査（OpenAI Codexの実践含む）</a> ／ <a href="https://www.infoq.com/news/2026/04/anthropic-three-agent-harness-ai/">Anthropic 3エージェントハーネス（InfoQ）</a></li>
+    <li>[4] <a href="https://blog.cloudnative.co.jp/articles/claude-code-enterprise-starter-kit-best-practices/">Claude Code企業配布設計（managed settings＋Starter Kit）</a></li>
+    <li>[5] <a href="https://type.jp/et/feature/29359/">メルカリ Project Double</a></li>
+    <li>[6] <a href="https://www.trychroma.com/research/context-rot">Chroma: Context Rot（18モデル実測）</a> ／ <a href="https://arxiv.org/abs/2507.11538">IFScale（指示密度と遵守率）</a> ／ <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think">Anthropic: Reasoning Models Don't Always Say What They Think</a> ／ <a href="https://www.swebench.com/">SWE-bench</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_1_marketplace.html"><span class="dir">← 前</span><div class="t">① マーケットプレイス</div></a>
+  <a class="next" href="04_3_knowledge.html"><span class="dir">次 →</span><div class="t">③ ナレッジ基盤</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ② ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成AIによる開発プロセス変革 — 企画書</title>
+<style>
+  :root{
+    --navy:#16324f; --navy2:#1e3a5f; --blue:#2f6fed; --blue-bg:#eef4ff;
+    --teal:#0e9f8a; --teal-bg:#e8f7f4;
+    --orange:#f08c2e; --orange-bg:#fef3e6;
+    --red:#d64550; --red-bg:#fdeeef;
+    --ink:#1f2937; --muted:#64748b; --line:#dbe2ea;
+    --bg:#f5f7fa; --card:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth; scroll-padding-top:64px;}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic Medium","Meiryo",sans-serif;
+    background:var(--bg); color:var(--ink); font-size:15.5px; line-height:1.75;
+  }
+  /* ===== header ===== */
+  .hero{
+    background:linear-gradient(135deg,#16324f 0%,#1e4976 55%,#2f6fed 130%);
+    color:#fff; padding:56px 24px 46px;
+  }
+  .hero-inner{max-width:1060px; margin:0 auto;}
+  .hero .tag{display:inline-block; font-size:12.5px; letter-spacing:.14em; font-weight:700;
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
+    padding:4px 14px; border-radius:999px; margin-bottom:18px;}
+  .hero h1{font-size:31px; font-weight:800; line-height:1.4; letter-spacing:.02em;}
+  .hero h1 .sub{display:block; font-size:16.5px; font-weight:500; color:#bcd2ee; margin-top:10px; letter-spacing:.04em;}
+  .hero .meta{margin-top:22px; font-size:13px; color:#9db8d8; display:flex; gap:22px; flex-wrap:wrap;}
+  /* ===== nav ===== */
+  nav{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.96); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); box-shadow:0 1px 6px rgba(22,50,79,.06);}
+  nav .nav-inner{max-width:1060px; margin:0 auto; display:flex; gap:2px; overflow-x:auto; padding:0 16px;}
+  nav a{flex:none; padding:12px 13px; font-size:13px; font-weight:600; color:var(--muted);
+    text-decoration:none; border-bottom:3px solid transparent; white-space:nowrap;}
+  nav a:hover{color:var(--blue);}
+  /* ===== layout ===== */
+  main{max-width:1060px; margin:0 auto; padding:14px 22px 90px;}
+  section{margin-top:58px;}
+  .sec-head{display:flex; align-items:center; gap:14px; margin-bottom:8px;}
+  .sec-num{flex:none; width:40px; height:40px; border-radius:10px; background:var(--navy);
+    color:#fff; font-size:17px; font-weight:800; display:flex; align-items:center; justify-content:center;}
+  h2{font-size:23px; font-weight:800; color:var(--navy); letter-spacing:.02em;}
+  .sec-lead{color:var(--muted); font-size:14px; margin:2px 0 22px 54px;}
+  h3{font-size:17px; font-weight:700; color:var(--navy2); margin:30px 0 12px;
+    padding-left:12px; border-left:4px solid var(--blue);}
+  h4{font-size:14.5px; font-weight:700; color:var(--navy2); margin:16px 0 8px;}
+  p{margin:8px 0;}
+  strong{color:var(--navy);}
+  /* ===== cards / grids ===== */
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 2px 8px rgba(22,50,79,.05);}
+  .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:16px;}
+  .grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
+  .grid4{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px;}
+  /* stat cards */
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 18px 15px;
+    box-shadow:0 2px 8px rgba(22,50,79,.05); position:relative; overflow:hidden;}
+  .stat::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--blue);}
+  .stat.warn::before{background:var(--red);}
+  .stat.good::before{background:var(--teal);}
+  .stat .num{font-size:31px; font-weight:800; color:var(--navy); line-height:1.15; letter-spacing:.01em;}
+  .stat.warn .num{color:var(--red);}
+  .stat.good .num{color:var(--teal);}
+  .stat .lbl{font-size:13px; font-weight:700; color:var(--ink); margin-top:6px;}
+  .stat .src{font-size:11.5px; color:var(--muted); margin-top:4px;}
+  /* ===== tables ===== */
+  table{width:100%; border-collapse:collapse; background:var(--card); font-size:13.5px;
+    border:1px solid var(--line); border-radius:10px; overflow:hidden; margin:14px 0;}
+  th{background:var(--navy); color:#fff; font-weight:700; text-align:left; padding:10px 13px; font-size:13px; letter-spacing:.03em;}
+  td{padding:10px 13px; border-top:1px solid var(--line); vertical-align:top;}
+  tbody tr:nth-child(even){background:#f8fafc;}
+  td .em{font-weight:700; color:var(--navy);}
+  /* ===== badges / pills ===== */
+  .pill{display:inline-block; font-size:11.5px; font-weight:700; padding:2px 11px; border-radius:999px; letter-spacing:.03em;}
+  .pill.blue{background:var(--blue-bg); color:var(--blue);}
+  .pill.teal{background:var(--teal-bg); color:var(--teal);}
+  .pill.orange{background:var(--orange-bg); color:#c26a10;}
+  .pill.gray{background:#eef1f5; color:var(--muted);}
+  .pill.navy{background:var(--navy); color:#fff;}
+  /* ===== callouts ===== */
+  .callout{border-radius:10px; padding:14px 18px; margin:16px 0; font-size:14px; border:1px solid;}
+  .callout.point{background:var(--blue-bg); border-color:#c6d9ff;}
+  .callout.point .ttl{color:var(--blue);}
+  .callout.case{background:var(--teal-bg); border-color:#bfe8e1;}
+  .callout.case .ttl{color:var(--teal);}
+  .callout.warn{background:var(--orange-bg); border-color:#f6d9b6;}
+  .callout.warn .ttl{color:#c26a10;}
+  .callout .ttl{font-size:12px; font-weight:800; letter-spacing:.1em; display:block; margin-bottom:5px;}
+  .callout a{color:inherit;}
+  /* ===== figure ===== */
+  figure{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 18px 12px; margin:18px 0; box-shadow:0 2px 8px rgba(22,50,79,.05);}
+  figure svg{width:100%; height:auto; display:block;}
+  figcaption{text-align:center; font-size:12.5px; color:var(--muted); margin-top:10px; font-weight:600;}
+  /* ===== L2 component blocks ===== */
+  .comp{background:var(--card); border:1px solid var(--line); border-radius:14px; margin:22px 0;
+    box-shadow:0 2px 10px rgba(22,50,79,.06); overflow:hidden;}
+  .comp-head{display:flex; align-items:center; gap:14px; padding:16px 22px;
+    background:linear-gradient(90deg,#f0f5fc, #ffffff); border-bottom:1px solid var(--line);}
+  .comp-num{flex:none; width:42px; height:42px; border-radius:50%; background:var(--blue); color:#fff;
+    font-weight:800; font-size:19px; display:flex; align-items:center; justify-content:center;}
+  .comp-head h3{margin:0; padding:0; border:none; font-size:17.5px;}
+  .comp-head .phase{margin-left:auto;}
+  .comp-body{padding:18px 22px 20px;}
+  .comp-body .purpose{background:#f8fafc; border-left:4px solid var(--navy); padding:10px 14px;
+    border-radius:0 8px 8px 0; font-size:14px; margin-bottom:14px;}
+  /* flow steps */
+  .flow{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:14px 0;}
+  .flow .step{flex:1; min-width:150px; background:var(--blue-bg); border:1px solid #c6d9ff;
+    border-radius:10px; padding:10px 12px; font-size:12.5px; text-align:center;}
+  .flow .step b{display:block; color:var(--navy); font-size:13px; margin-bottom:3px;}
+  .flow .arr{flex:none; align-self:center; padding:0 7px; color:var(--blue); font-size:19px; font-weight:800;}
+  .flow .step.teal{background:var(--teal-bg); border-color:#bfe8e1;}
+  .flow .step.orange{background:var(--orange-bg); border-color:#f6d9b6;}
+  /* effect mini-table */
+  .fx{margin-top:6px;}
+  .fx th{background:var(--teal); font-size:12.5px; padding:8px 12px;}
+  /* before-after */
+  .ba{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0;}
+  .ba .col{border-radius:10px; padding:14px 16px; font-size:13.5px;}
+  .ba .before{background:#f3f4f6; border:1px solid #e0e3e8;}
+  .ba .after{background:var(--teal-bg); border:1px solid #bfe8e1;}
+  .ba .col .hd{font-weight:800; font-size:13px; letter-spacing:.06em; margin-bottom:8px;}
+  .ba .before .hd{color:var(--muted);}
+  .ba .after .hd{color:var(--teal);}
+  .ba ul{list-style:none;}
+  .ba li{padding:4px 0 4px 20px; position:relative;}
+  .ba .before li::before{content:"✕"; position:absolute; left:0; color:#9aa3af; font-weight:700;}
+  .ba .after li::before{content:"✓"; position:absolute; left:0; color:var(--teal); font-weight:800;}
+  /* roadmap */
+  .phases{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0;}
+  .phase-card{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    box-shadow:0 2px 8px rgba(22,50,79,.05); display:flex; flex-direction:column;}
+  .phase-card .ph-head{padding:11px 16px; color:#fff; font-weight:800; font-size:14px; letter-spacing:.03em;}
+  .phase-card .ph-term{font-size:11.5px; font-weight:600; opacity:.85; display:block;}
+  .phase-card ul{list-style:none; padding:12px 16px 14px; font-size:13px;}
+  .phase-card li{padding:4px 0 4px 16px; position:relative;}
+  .phase-card li::before{content:"▸"; position:absolute; left:0; color:var(--blue); font-weight:700;}
+  .p0{background:#5a7089;} .p1{background:var(--blue);} .p2{background:var(--teal);} .p3{background:var(--orange);}
+  /* option compare */
+  .opt{border:2px solid var(--line); border-radius:12px; background:var(--card); padding:16px 18px; position:relative;}
+  .opt.rec{border-color:var(--teal);}
+  .opt .rec-badge{position:absolute; top:-11px; right:14px; background:var(--teal); color:#fff;
+    font-size:11px; font-weight:800; padding:2px 12px; border-radius:999px; letter-spacing:.06em;}
+  .opt h4{margin-top:0; font-size:15px;}
+  .opt .pm{font-size:12.8px; margin-top:8px;}
+  .opt .pm .p::before{content:"○ "; color:var(--teal); font-weight:800;}
+  .opt .pm .m::before{content:"△ "; color:#c26a10; font-weight:800;}
+  .opt .pm div{padding:2px 0;}
+  /* footnotes */
+  .refs{font-size:12.8px; color:var(--muted);}
+  .refs ol{padding-left:22px;}
+  .refs li{margin:5px 0;}
+  .refs a{color:var(--blue); text-decoration:none;}
+  .refs a:hover{text-decoration:underline;}
+  sup a{color:var(--blue); text-decoration:none; font-weight:700;}
+  footer{border-top:1px solid var(--line); margin-top:70px; padding:20px 24px 40px;
+    text-align:center; font-size:12px; color:var(--muted);}
+  @media (max-width:720px){
+    .ba{grid-template-columns:1fr;}
+    .hero h1{font-size:24px;}
+  }
+  @media print{
+    nav{display:none;} .hero{padding:30px 20px;}
+    body{background:#fff;} .card,.comp,figure{box-shadow:none;}
+    section{page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="tag">企画書ドラフト v0.5</span>
+    <h1>生成AIによる開発プロセス変革
+      <span class="sub">— 共通イネーブルメント基盤とハーネス／ループエンジニアリングによる部門全体の高度化 —</span>
+    </h1>
+    <div class="meta">
+      <span>対象: 開発部門 100名 / 10チーム / 50システム</span>
+      <span>作成日: 2026-07-06 ／ 更新: 2026-07-20</span>
+      <span>ステータス: 関係者ディスカッション用</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#summary">サマリ</a>
+    <a href="#background">1 背景</a>
+    <a href="#vision">2 目指す姿</a>
+    <a href="#model">3 全体像</a>
+    <a href="#l2">4 共通基盤の詳細</a>
+    <a href="#infra">AWS構成</a>
+    <a href="#uplift">5 引き上げ戦略</a>
+    <a href="#roadmap">6 ロードマップ</a>
+    <a href="#org">7 推進体制</a>
+    <a href="#kpi">8 効果</a>
+    <a href="#options">9 検討項目</a>
+    <a href="#risk">10 リスク</a>
+    <a href="06_case-studies.html">事例集↗</a>
+    <a href="#refs">出典</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ================= SUMMARY ================= -->
+<section id="summary">
+  <div class="sec-head"><div class="sec-num">◎</div><h2>エグゼクティブサマリ</h2></div>
+  <div class="card" style="font-size:14.5px;">
+    <p>各部署が個別に進めてきた生成AI活用を、<strong>部門共通の「イネーブルメント基盤」と「機械可読な開発標準（ハーネス）」</strong>に集約し、
+    開発から運用・ナレッジ・データ利活用までを一貫してAIエージェント駆動へ変革する。</p>
+    <p style="margin-top:10px;">世界的にAIパイロットの<strong>88%が基盤（ガバナンス・環境・評価）の欠如で本番化に失敗</strong>しており<sup><a href="#refs">[3]</a></sup>、
+    「AIは増幅器 — プラットフォーム投資こそが価値実現の条件」がDORA 2025の結論<sup><a href="#refs">[16]</a></sup>。
+    本企画は<strong>DX部門内の専任チーム「AI推進チーム（CoE）」3〜5名</strong>を核に、18ヶ月で
+    <strong>生産性+19%以上・MTTR-30%・レガシー文書化工数-90%</strong>の実現と、
+    技術進化に自動追従する組織能力の獲得を狙う。</p>
+  </div>
+</section>
+
+<!-- ================= 1 BACKGROUND ================= -->
+<section id="background">
+  <div class="sec-head"><div class="sec-num">1</div><h2>背景・課題 — なぜ「個別導入の延長」ではだめか</h2></div>
+  <p class="sec-lead">世界の実測データは「ツール配布だけでは成果が頭打ちになる」ことを示している</p>
+
+  <div class="grid4">
+    <div class="stat warn">
+      <div class="num">88%</div>
+      <div class="lbl">AIエージェントのパイロットが本番に到達しない</div>
+      <div class="src">原因はツールでなく基盤の欠如<sup><a href="#refs">[3]</a></sup></div>
+    </div>
+    <div class="stat good">
+      <div class="num">+19.3%</div>
+      <div class="lbl">正しく導入した場合の平均生産性向上</div>
+      <div class="src">節約時間 3.6h/週/人（Gartner）<sup><a href="#refs">[1]</a></sup></div>
+    </div>
+    <div class="stat warn">
+      <div class="num">29%</div>
+      <div class="lbl">AI出力を信頼する開発リーダーの割合（40%から低下）</div>
+      <div class="src">検証・評価の仕組みが不可欠<sup><a href="#refs">[1]</a></sup></div>
+    </div>
+    <div class="stat">
+      <div class="num">数ヶ月</div>
+      <div class="lbl">活用パラダイムの更新周期（ハーネス→ループ）</div>
+      <div class="src">個人の努力での追従は不可能<sup><a href="#refs">[19]</a></sup></div>
+    </div>
+  </div>
+
+  <h3>当部門の現在地と5つの課題</h3>
+  <table>
+    <thead><tr><th style="width:26%;">課題</th><th>現状</th><th style="width:34%;">放置した場合のリスク</th></tr></thead>
+    <tbody>
+      <tr><td class="em">① バラバラ導入</td><td>各部署が独自に導入。Copilot利用者は一部、Geminiチャット止まりの層も多い</td><td>活用度の格差が固定化。投資が分散し効果が出ない</td></tr>
+      <tr><td class="em">② 標準の不在</td><td>浸透する開発標準がなく、現場の方法に依存</td><td>AI出力の品質ばらつき。レビュー負荷の増大</td></tr>
+      <tr><td class="em">③ レガシー50システム</td><td>設計書が古い・存在しない。暗黙知が有識者個人に集中</td><td>有識者の異動・退職で保守不能に。AIも活用できない</td></tr>
+      <tr><td class="em">④ コスト圧力</td><td>Copilotの従量課金化（2026/6〜）等、AI費用は青天井化のリスク</td><td>費用対効果を説明できず投資が止まる</td></tr>
+      <tr><td class="em">⑤ 技術進化の速度</td><td>ハーネス構築の実践者は部門内に少数。世の中はループエンジニアリングへ</td><td>追従が特定個人に依存（属人化）。差が開き続ける</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout point"><span class="ttl">POINT</span>
+    課題①〜⑤はすべて「<strong>共通基盤と仕組みの不在</strong>」に帰着する。ツールの追加配布ではなく、
+    <strong>基盤・標準・追従の仕組み</strong>への投資が本企画の主眼。
+  </div>
+</section>
+
+<!-- ================= 2 VISION ================= -->
+<section id="vision">
+  <div class="sec-head"><div class="sec-num">2</div><h2>目指す姿（18ヶ月後の北極星）</h2></div>
+  <p class="sec-lead">「エージェントと対話する人」から「ループを設計し、成果を検収する人」へ</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4><span class="pill blue">開発</span></h4>
+      <p style="font-size:13.5px;">全50システムにハーネス（機械可読な設計書＋作業規約＋CI防護柵）が整備され、
+      <strong>どのシステムでもエージェントが安全に作業できる</strong>。夜間・イベント駆動の自律ループ（テスト補強、依存更新、文書鮮度維持）が常時稼働。</p>
+    </div>
+    <div class="card">
+      <h4><span class="pill teal">運用</span></h4>
+      <p style="font-size:13.5px;">障害の一次調査・報告書ドラフトはAIが実施し、人間は<strong>判断に集中</strong>。
+      MTTR 30%以上削減。対応記録は自動でナレッジ化され、対応するほど賢くなる。</p>
+    </div>
+    <div class="card">
+      <h4><span class="pill orange">ナレッジ・データ</span></h4>
+      <p style="font-size:13.5px;"><strong>蓄積もAI・活用もAI</strong>。障害記録・設計判断・レビュー知見が自動で構造化され、
+      次のエージェント実行のコンテキストになる。データ利活用はDatabricks（Genie/Agent Bricks）と連携。</p>
+    </div>
+    <div class="card">
+      <h4><span class="pill navy">組織能力</span></h4>
+      <p style="font-size:13.5px;">最新動向を自動収集・評価し標準に反映する<strong>フロンティアウォッチループ</strong>が稼働。
+      「追いつく」が個人の努力ではなく<strong>組織の仕組み</strong>になっている。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 MODEL ================= -->
+<section id="model">
+  <div class="sec-head"><div class="sec-num">3</div><h2>施策の全体像 — 3層モデル</h2></div>
+  <p class="sec-lead">共通化するのは「全員が速くなるもの」だけ。業務固有は部門所有（L3）を堅持する</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <!-- L3 -->
+      <rect x="30" y="20" width="940" height="110" rx="12" fill="#e8f7f4" stroke="#0e9f8a" stroke-width="2"/>
+      <text x="55" y="52" font-size="17" font-weight="800" fill="#0b7f6e">L3 部門・業務固有レイヤー</text>
+      <text x="820" y="52" font-size="12" font-weight="700" fill="#0b7f6e">所有: 各チーム</text>
+      <rect x="55" y="68" width="270" height="44" rx="8" fill="#fff" stroke="#9fdcd2"/>
+      <text x="190" y="95" font-size="13" text-anchor="middle" fill="#1f2937">業務固有スキル・エージェント</text>
+      <rect x="345" y="68" width="270" height="44" rx="8" fill="#fff" stroke="#9fdcd2"/>
+      <text x="480" y="95" font-size="13" text-anchor="middle" fill="#1f2937">業務ナレッジ</text>
+      <rect x="635" y="68" width="310" height="44" rx="8" fill="#fff" stroke="#9fdcd2"/>
+      <text x="790" y="95" font-size="13" text-anchor="middle" fill="#1f2937">各システムのハーネス（AGENTS.md等）</text>
+      <!-- L2 -->
+      <rect x="30" y="150" width="940" height="160" rx="12" fill="#eef4ff" stroke="#2f6fed" stroke-width="2"/>
+      <text x="55" y="182" font-size="17" font-weight="800" fill="#2455c4">L2 共通イネーブルメント基盤</text>
+      <text x="810" y="182" font-size="12" font-weight="700" fill="#2455c4">所有: AI推進チーム</text>
+      <g font-size="12.5" text-anchor="middle" fill="#1f2937">
+        <rect x="55"  y="198" width="205" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="157" y="224">① スキル・マーケットプレイス</text>
+        <rect x="275" y="198" width="205" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="377" y="224">② 標準ハーネステンプレート</text>
+        <rect x="495" y="198" width="205" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="597" y="224">③ ナレッジ基盤</text>
+        <rect x="715" y="198" width="230" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="830" y="224">④ MCPゲートウェイ</text>
+        <rect x="55"  y="252" width="280" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="195" y="278">⑤ コスト・効果ダッシュボード</text>
+        <rect x="350" y="252" width="280" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="490" y="278">⑥ AI SRE（障害調査・報告）</text>
+        <rect x="645" y="252" width="300" height="42" rx="8" fill="#fff" stroke="#b9cdf5"/><text x="795" y="278">⑦ フロンティアウォッチループ</text>
+      </g>
+      <!-- L1 -->
+      <rect x="30" y="330" width="940" height="80" rx="12" fill="#f1f3f7" stroke="#5a7089" stroke-width="2"/>
+      <text x="55" y="362" font-size="17" font-weight="800" fill="#42556c">L1 ガバナンス・方針レイヤー</text>
+      <text x="700" y="362" font-size="12" font-weight="700" fill="#42556c">所有: AI推進チーム＋セキュリティ担当</text>
+      <text x="55" y="392" font-size="12.5" fill="#42556c">承認済みAIサービス（no-training条件） ／ データ分類×投入可否 ／ ツール使い分け ／ Human-in-the-Loop基準 ／ コストポリシー</text>
+    </svg>
+    <figcaption>図1: 3層モデル — L2共通基盤が10チームを底支えし、L3の自由度を保つ</figcaption>
+  </figure>
+
+  <h3>ツール使い分け — 製品名ではなく「3つの軸」で決める（L1方針）</h3>
+  <p style="font-size:14px;">GitHub Copilot にもエージェント機能がある（IDE内で自律的に編集する <strong>agent mode</strong>、Issueを割り当てるとGitHub Actions上で作業しPRを返す <strong>coding agent</strong>＝2026年3月GA<sup><a href="#refs">[20]</a></sup>）。
+  したがって「Copilot＝補完、Claude＝エージェント」という<strong>製品での分担は成立しない</strong>。タスクの性質を次の3軸で見て選ぶ。</p>
+
+  <div class="grid3">
+    <div class="card" style="padding:14px 16px;">
+      <h4 style="margin-top:0;"><span class="pill navy">軸1</span>&nbsp;自律度</h4>
+      <p style="font-size:12.8px;">同期補完 → IDE内エージェント → 非同期委任（Issue→PR） → 常駐自律ループ。<strong>右に行くほどハーネス（②）が前提</strong>になる。</p>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <h4 style="margin-top:0;"><span class="pill navy">軸2</span>&nbsp;実行場所</h4>
+      <p style="font-size:12.8px;">開発者の手元（IDE・端末）か、クラウド（GitHub Actions／AWS上）か。非同期・常駐型はクラウド実行になる。</p>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <h4 style="margin-top:0;"><span class="pill navy">軸3</span>&nbsp;文脈の広さ</h4>
+      <p style="font-size:12.8px;">GitHub内で完結するか、MCPで社内システム・ナレッジを横断するか、データ基盤（Databricks）の中か。<strong>文脈がすでにある場所のツールを使う</strong>。</p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs><marker id="arX" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5a7089"/></marker></defs>
+      <!-- zones -->
+      <rect x="110" y="55" width="425" height="200" rx="10" fill="#f8fafc"/>
+      <rect x="545" y="55" width="415" height="200" rx="10" fill="#fef3e6" opacity="0.55"/>
+      <rect x="545" y="265" width="415" height="195" rx="10" fill="#eef4ff" opacity="0.6"/>
+      <text x="750" y="80" font-size="11.5" font-weight="800" fill="#c26a10" text-anchor="middle">ループエンジニアリング領域（狭義）— ⑤で単価監視</text>
+      <text x="750" y="285" font-size="11.5" font-weight="800" fill="#2455c4" text-anchor="middle">ハーネス（②）必須ゾーン</text>
+      <text x="320" y="448" font-size="11.5" font-weight="800" fill="#64748b" text-anchor="middle">全員配布・最も低単価</text>
+      <!-- axes -->
+      <line x1="110" y1="460" x2="965" y2="460" stroke="#5a7089" stroke-width="2" marker-end="url(#arX)"/>
+      <line x1="110" y1="460" x2="110" y2="48" stroke="#5a7089" stroke-width="2" marker-end="url(#arX)"/>
+      <text x="540" y="495" font-size="13" font-weight="800" fill="#42556c" text-anchor="middle">軸1: 自律度（同期・人が主導 → 非同期・AIが主導）</text>
+      <text x="60" y="255" font-size="13" font-weight="800" fill="#42556c" text-anchor="middle" transform="rotate(-90 60 255)">軸2: 実行場所（手元 → クラウド）</text>
+      <line x1="110" y1="260" x2="960" y2="260" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <line x1="540" y1="55" x2="540" y2="460" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <!-- plots -->
+      <g text-anchor="middle">
+        <rect x="140" y="375" width="180" height="58" rx="12" fill="#2f6fed"/>
+        <text x="230" y="399" font-size="13" font-weight="800" fill="#fff">Copilot 補完</text>
+        <text x="230" y="419" font-size="11" fill="#dce8ff">タイピング中の同期支援</text>
+
+        <rect x="345" y="330" width="185" height="58" rx="12" fill="#2f6fed"/>
+        <text x="437" y="354" font-size="13" font-weight="800" fill="#fff">Copilot agent mode</text>
+        <text x="437" y="374" font-size="11" fill="#dce8ff">IDE内で完結する中規模変更</text>
+
+        <rect x="560" y="345" width="210" height="66" rx="12" fill="#16324f"/>
+        <text x="665" y="369" font-size="13" font-weight="800" fill="#fff">Claude Code（端末）</text>
+        <text x="665" y="387" font-size="11" fill="#bcd2ee">深い文脈・MCP横断・レガシー解析</text>
+        <text x="665" y="402" font-size="11" fill="#bcd2ee">ハーネス上で対話〜半自律</text>
+
+        <rect x="575" y="120" width="200" height="62" rx="12" fill="#2f6fed"/>
+        <text x="675" y="144" font-size="13" font-weight="800" fill="#fff">Copilot coding agent</text>
+        <text x="675" y="162" font-size="11" fill="#dce8ff">Issue→PR。GitHub内で完結する</text>
+        <text x="675" y="175" font-size="11" fill="#dce8ff">非同期の定型タスク（Actions上）</text>
+
+        <rect x="795" y="85" width="170" height="66" rx="12" fill="#f08c2e"/>
+        <text x="880" y="109" font-size="13" font-weight="800" fill="#fff">自律ループ</text>
+        <text x="880" y="127" font-size="11" fill="#fff">Claude Code ＋ Actions／</text>
+        <text x="880" y="141" font-size="11" fill="#fff">AgentCore Runtime（Phase 3）</text>
+
+        <rect x="315" y="130" width="200" height="58" rx="12" fill="#0e9f8a"/>
+        <text x="415" y="154" font-size="13" font-weight="800" fill="#fff">Genie ／ Agent Bricks</text>
+        <text x="415" y="174" font-size="11" fill="#dff5f1">データ分析・業務エージェント</text>
+
+        <rect x="795" y="190" width="170" height="52" rx="12" fill="#0e9f8a"/>
+        <text x="880" y="212" font-size="13" font-weight="800" fill="#fff">AI SRE（⑥）</text>
+        <text x="880" y="230" font-size="11" fill="#dff5f1">イベント駆動の障害調査</text>
+
+        <rect x="140" y="290" width="150" height="52" rx="12" fill="#94a3b8"/>
+        <text x="215" y="312" font-size="13" font-weight="800" fill="#fff">Gemini</text>
+        <text x="215" y="330" font-size="11" fill="#f1f5f9">非開発業務（全社員）</text>
+      </g>
+      <!-- cost note -->
+      <text x="880" y="330" font-size="11" font-weight="700" fill="#c26a10" text-anchor="middle">右上ほど1タスク単価が上がる</text>
+      <text x="880" y="346" font-size="11" font-weight="700" fill="#c26a10" text-anchor="middle">→ ⑤ダッシュボードの監視対象</text>
+    </svg>
+    <figcaption>図2: ツール使い分けマップ — 自律度×実行場所の2軸に各ツールを配置（色は文脈: 青=GitHub系、紺=横断、緑=データ系、橙=自律ループ）</figcaption>
+  </figure>
+
+  <h4>使い分け一覧（軸で整理した改訂版）</h4>
+  <table>
+    <thead><tr><th style="width:38%;">タスクの性質</th><th style="width:24%;">使うもの</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td>手を動かしながらの補完・小修正（同期・IDE）</td><td class="em">Copilot 補完＋agent mode</td><td>全員配布。最も低単価・低レイテンシ</td></tr>
+      <tr><td>GitHub内で完結する非同期の定型タスク（バグ修正・依存更新・テスト追加のIssue→PR）</td><td class="em">Copilot coding agent</td><td>Actions上で実行。複雑タスクはpremium request 10〜30件/回を消費するため⑤で監視<sup><a href="#refs">[20]</a></sup></td></tr>
+      <tr><td>深い文脈・社内横断の作業（レガシー解析、大規模リファクタ、MCP経由で監視・チケット・ナレッジを参照）</td><td class="em">Claude Code</td><td>ハーネス（②）前提。L3層＋灯台チーム20〜30名から</td></tr>
+      <tr><td>常駐・スケジュール駆動の自律ループ（夜間のテスト補強・文書鮮度維持・依存更新）</td><td class="em">Claude Code ＋ Actions／AgentCore Runtime</td><td>狭義のループエンジニアリング領域（Phase 3）。実行場所は検討項目D-3</td></tr>
+      <tr><td>非開発業務（資料・議事録・メール）</td><td class="em">Gemini (Workspace)</td><td>全社員ライセンス済み。非エンジニアの入口</td></tr>
+      <tr><td>データ分析・業務エージェント・ナレッジ</td><td class="em">Databricks (Genie / Agent Bricks)</td><td>既存契約。Unity Catalogでガバナンス統合</td></tr>
+      <tr><td>障害調査・報告（イベント駆動）</td><td class="em">AI SRE（AWS DevOps Agent第一候補）</td><td>提供システムがAWS上のため。内製と比較（C-4）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout point"><span class="ttl">判断原則（迷ったときの優先順）</span>
+    ① <strong>文脈がすでにある場所で</strong> — GitHubで完結する仕事はCopilot系、社内横断はClaude系、データ基盤の中はDatabricks系。
+    ② <strong>同等なら低単価な方</strong> — 同じ自律度帯で両方できるなら安い方を使う。
+    ③ <strong>自律度を上げる前にハーネス</strong> — ②なしで非同期委任・自律ループに進まない（88%失敗の轍<sup><a href="#refs">[3]</a></sup>）。
+    境界の細部（coding agentの適用範囲等）は<strong>検討項目D-1</strong>で確定する。
+  </div>
+  <div class="callout point"><span class="ttl">2026年上期の変化: 「モデル」と「ハーネス」の選択は分離した</span>
+    Copilot Business/Pro内で<strong>ClaudeやCodexをエージェントのモデルとして選択可能</strong>になり（2026年2月〜、JetBrains対応は6〜7月に拡充<sup><a href="#refs">[26]</a></sup>）、
+    「どのモデルを使うか」と「どのハーネス（実行環境・統制・文脈）で使うか」は別の意思決定になった。
+    製品名でなく<strong>自律度×実行場所×文脈の3軸</strong>で選ぶ本マトリクスの枠組みは、この変化後も有効に機能する。
+  </div>
+  <div class="callout warn"><span class="ttl">セキュリティ前提</span>
+    いずれも<strong>学習に利用されない（no-training）構成での契約・設定を承認条件</strong>とする。データ分類×投入可否マトリクスをL1で整備。
+    Claudeは<strong>Amazon Bedrock経由ならプロンプト・コードがAWSアカウント内に留まる</strong>構成が可能（→ <a href="#infra">AWS構成</a>・検討項目D-2）。
+  </div>
+</section>
+
+<!-- ================= 4 L2 DETAIL ================= -->
+<section id="l2">
+  <div class="sec-head"><div class="sec-num">4</div><h2>共通イネーブルメント基盤（L2）の詳細</h2></div>
+  <p class="sec-lead">設計思想: 「基盤を使え」と言わない。普段の作業が自然に基盤を通る構造にし、統制点は④と⑤の2箇所だけに絞る</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#2f6fed"/>
+        </marker>
+        <marker id="arT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#0e9f8a"/>
+        </marker>
+      </defs>
+      <!-- users -->
+      <rect x="330" y="14" width="340" height="46" rx="23" fill="#16324f"/>
+      <text x="500" y="43" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">開発者 100名 ／ 10チーム ／ 50システム</text>
+      <!-- top row -->
+      <g font-size="13" font-weight="700" text-anchor="middle">
+        <rect x="60" y="100" width="240" height="64" rx="10" fill="#eef4ff" stroke="#2f6fed" stroke-width="1.8"/>
+        <text x="180" y="127" fill="#16324f">① マーケットプレイス</text>
+        <text x="180" y="147" font-size="11.5" font-weight="500" fill="#64748b">スキル／プラグイン配布</text>
+        <rect x="380" y="100" width="240" height="64" rx="10" fill="#eef4ff" stroke="#2f6fed" stroke-width="1.8"/>
+        <text x="500" y="127" fill="#16324f">② 標準ハーネス</text>
+        <text x="500" y="147" font-size="11.5" font-weight="500" fill="#64748b">各リポジトリに展開＝新開発標準</text>
+        <rect x="700" y="100" width="240" height="64" rx="10" fill="#eef4ff" stroke="#2f6fed" stroke-width="1.8"/>
+        <text x="820" y="127" fill="#16324f">⑥ AI SRE</text>
+        <text x="820" y="147" font-size="11.5" font-weight="500" fill="#64748b">障害調査・リカバリ・報告</text>
+      </g>
+      <line x1="405" y1="60" x2="200" y2="98" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="500" y1="60" x2="500" y2="97" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="600" y1="60" x2="800" y2="98" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="300" y1="132" x2="378" y2="132" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="339" y="124" font-size="10.5" fill="#64748b" text-anchor="middle">配布</text>
+      <!-- gateway -->
+      <rect x="60" y="215" width="880" height="58" rx="10" fill="#16324f"/>
+      <text x="500" y="240" font-size="14.5" font-weight="800" fill="#fff" text-anchor="middle">④ MCPゲートウェイ — 認証・権限（利用者と同一）・監査ログ・レート制御</text>
+      <text x="500" y="260" font-size="11.5" fill="#9db8d8" text-anchor="middle">統制点その1: エージェントが社内に触る経路をここに一元化</text>
+      <line x1="500" y1="164" x2="500" y2="212" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="820" y1="164" x2="820" y2="212" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="655" y="192" font-size="11" fill="#64748b" text-anchor="middle">すべてのツール呼び出し</text>
+      <!-- backends -->
+      <g font-size="12.5" font-weight="700" text-anchor="middle">
+        <rect x="60"  y="310" width="180" height="52" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="150" y="341" fill="#1f2937">GitHub / CI</text>
+        <rect x="260" y="310" width="180" height="52" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="350" y="341" fill="#1f2937">チケット / Wiki</text>
+        <rect x="460" y="310" width="180" height="52" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="550" y="341" fill="#1f2937">監視 / ログ</text>
+        <rect x="660" y="310" width="280" height="52" rx="9" fill="#e8f7f4" stroke="#0e9f8a" stroke-width="1.8"/>
+        <text x="800" y="333" fill="#0b7f6e">③ ナレッジ基盤</text>
+        <text x="800" y="351" font-size="11" font-weight="500" fill="#0b7f6e">リポジトリ内docs ＋ Databricks</text>
+      </g>
+      <line x1="150" y1="273" x2="150" y2="307" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="350" y1="273" x2="350" y2="307" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="550" y1="273" x2="550" y2="307" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="800" y1="273" x2="800" y2="307" stroke="#2f6fed" stroke-width="2" marker-end="url(#ar)"/>
+      <!-- knowledge auto-accumulate -->
+      <path d="M 940 336 C 975 336 975 241 942 241" fill="none" stroke="#0e9f8a" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arT)"/>
+      <text x="985" y="292" font-size="11" font-weight="700" fill="#0b7f6e" text-anchor="middle" transform="rotate(90 985 292)">自動蓄積</text>
+      <!-- frontier watch -->
+      <rect x="60" y="405" width="880" height="52" rx="10" fill="#fef3e6" stroke="#f08c2e" stroke-width="1.8"/>
+      <text x="500" y="428" font-size="13.5" font-weight="800" fill="#c26a10" text-anchor="middle">⑦ フロンティアウォッチループ — 最新動向を自動収集・評価 → ①②を更新して全チームに自動配布</text>
+      <text x="500" y="447" font-size="11.5" fill="#c26a10" text-anchor="middle">部門初のループエンジニアリング実装（ドッグフーディング）</text>
+      <path d="M 62 431 C 20 431 20 132 57 132" fill="none" stroke="#f08c2e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+      <!-- dashboard -->
+      <rect x="60" y="492" width="880" height="52" rx="10" fill="#f1f3f7" stroke="#5a7089" stroke-width="1.8"/>
+      <text x="500" y="515" font-size="13.5" font-weight="800" fill="#42556c" text-anchor="middle">⑤ コスト・効果ダッシュボード（FinOps ＋ DX Core 4）</text>
+      <text x="500" y="534" font-size="11.5" fill="#42556c" text-anchor="middle">統制点その2: 利用ログ・コスト・成果指標をここに集約し「成果あたりコスト」で経営報告</text>
+      <line x1="500" y1="457" x2="500" y2="489" stroke="#5a7089" stroke-width="2" stroke-dasharray="5 4"/>
+    </svg>
+    <figcaption>図3: L2基盤 全体アーキテクチャ — 統制点は④（アクセス）と⑤（コスト・効果）の2箇所のみ</figcaption>
+  </figure>
+
+  <div class="callout point"><span class="ttl">構成要素ごとの詳細ページ（技術・運用・KPI取得方法・落とし穴）</span>
+    <a href="04_1_marketplace.html">① マーケットプレイス</a> ／
+    <a href="04_2_harness.html">② ハーネス</a> ／
+    <a href="04_3_knowledge.html">③ ナレッジ</a> ／
+    <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a> ／
+    <a href="04_5_dashboard.html">⑤ コスト・効果</a> ／
+    <a href="04_6_ai-sre.html">⑥ AI SRE</a> ／
+    <a href="04_7_frontier-watch.html">⑦ ウォッチ</a> ／
+    <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+    ｜ 関連: <a href="05_loop-engineering.html">ループエンジニアリング詳説</a> ／ <a href="06_case-studies.html">事例集（成功と反面教師）</a>
+  </div>
+
+  <h3>⑧ Fast-Trackレーンと共通APIゲートウェイ（v0.5追加 — 整備を待たせない受け皿）</h3>
+  <p style="font-size:14px;">「業務でLLM APIを使いたい」等の<strong>現在進行形の要望を止めずにガバナンスへ乗せる</strong>仕組み。
+  原則は「禁止でも放任でもなく、舗装された道を最速で提供する」（Paved Road）。
+  申請3問→低リスクは即日〜翌日承認→共通ゲートウェイの仮想キー（予算・レート制限・用途タグつき）を払い出し→利用ログとコストは自動で⑤へ→<strong>90日レビューで本則化/停止</strong>。
+  整備期間中に増える様々な要望も、インテーク一本化（既存の道に乗せる／舗装計画に反映／例外審査の3分類）で受ける。
+  受け皿はAPIに限らず、<strong>MCPツールの提供（暫定登録レーン: 読み取り専用＋ログ必須で即日）とエージェント構築（Tier 1は即時、書き込み系は例外審査）も同じインテーク</strong>に乗せる。
+  ゲートウェイ実装は原則Unity AI Gateway・例外条件でBedrock直（検討項目E）。
+  <strong>Phase 0から前倒しで稼働開始</strong>し、現在のAPI要望を第1号灯台案件にする。詳細は<a href="08_fast-track-api.html">⑧詳細ページ</a>。</p>
+
+  <!-- ===== ① ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">①</div><h3>社内スキル／プラグイン・マーケットプレイス</h3><span class="phase pill blue">Phase 1〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 各チーム・各個人の工夫を「1回作れば100人が使える資産」に変える。最先端の型を全員に配る配布チャネル。</div>
+      <p style="font-size:13.5px;">実体は<strong>社内Gitリポジトリ1つ</strong>（カタログ定義ファイルを置くだけ）。利用者は1コマンドで全スキルを同期できる。
+      スキル本体はMarkdown資産としてツール非依存に保ち、Claude Code / Copilot / Gemini CLI から共用する<sup><a href="#refs">[5]</a></sup>。</p>
+      <h4>スキルの昇格フロー</h4>
+      <div class="flow">
+        <div class="step"><b>個人の工夫</b>即チーム公開可</div><div class="arr">→</div>
+        <div class="step"><b>チームプラグイン</b>チャンピオンが管理（L3）</div><div class="arr">→</div>
+        <div class="step orange"><b>CoEレビュー</b>3ヶ月サイクル・品質ゲートはここだけ</div><div class="arr">→</div>
+        <div class="step teal"><b>共通プラグイン</b>全チームに自動配布</div>
+      </div>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:30%;">定量目安</th><th style="width:30%;">根拠</th></tr></thead>
+        <tbody>
+          <tr><td>定型作業の時間短縮</td><td class="em">対象作業で 1/5〜1/7</td><td>見積書作成 15分→2分の国内事例<sup><a href="#refs">[6]</a></sup></td></tr>
+          <tr><td>スキル資産の蓄積</td><td class="em">6ヶ月で共通30本＋チーム50本</td><td>1社で50本超の運用事例<sup><a href="#refs">[6]</a></sup></td></tr>
+          <tr><td>最先端の伝播速度</td><td class="em">更新→全チーム反映まで数日</td><td>Git同期による自動配布</td></tr>
+        </tbody>
+      </table>
+      <div class="callout case"><span class="ttl">事例</span>
+        Thoughtworks Technology Radarが社内Git配布モデルを採用評価<sup><a href="#refs">[4]</a></sup>。
+        <strong>メルカリ</strong>はCTO直轄専任部隊が社内標準を全社展開し、AIツール利用率<strong>95%</strong>・AI生成コード比率<strong>70%</strong>・開発量<strong>+64%</strong>を公表<sup><a href="#refs">[7]</a></sup>。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ② ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">②</div><h3>標準ハーネステンプレート ＝ 新しい開発標準</h3><span class="phase pill blue">Phase 1〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 浸透しなかった文書ベースの開発標準を、<strong>エージェントが従うことで自動的に実行される</strong>リポジトリ内資産として再定義する。50システムを「エージェントが安全に作業できる状態」にする共通の型。</div>
+      <h4>1リポジトリに配置する7点セット</h4>
+      <table>
+        <thead><tr><th style="width:34%;">資産</th><th>役割</th></tr></thead>
+        <tbody>
+          <tr><td class="em">AGENTS.md / CLAUDE.md</td><td>作業指示書。ビルド／テストコマンド、規約、触ってよい／いけない領域<sup><a href="#refs">[8]</a></sup></td></tr>
+          <tr><td class="em">settings（managed settings）</td><td>権限・許可コマンドの統制。IT部門が配布<sup><a href="#refs">[10]</a></sup></td></tr>
+          <tr><td class="em">システム固有スキル</td><td>そのシステム特有の手順・知識</td></tr>
+          <tr><td class="em">計画／生成／評価サブエージェント</td><td>役割分離で長時間の自律作業を安定化<sup><a href="#refs">[9]</a></sup></td></tr>
+          <tr><td class="em">devcontainer</td><td>ワンコマンドで再現する開発環境（人にもエージェントにも同一）</td></tr>
+          <tr><td class="em">設計ドキュメント（docs/design）</td><td>レガシーはAIリバース生成で整備 → エージェントの常設コンテキストに</td></tr>
+          <tr><td class="em">CI不変条件チェック</td><td>アーキテクチャ境界・命名・フォーマットを機械的に強制。<strong>エージェントの暴走を止める柵</strong><sup><a href="#refs">[8]</a></sup></td></tr>
+        </tbody>
+      </table>
+      <h4>導入前後の変化</h4>
+      <div class="ba">
+        <div class="col before"><div class="hd">BEFORE — 対話的利用（現状）</div>
+          <ul>
+            <li>人が毎回プロンプトで文脈を説明</li>
+            <li>出力は人が目視で全チェック</li>
+            <li>標準は文書。読まれず浸透しない</li>
+            <li>個人PCの環境差で再現に失敗</li>
+            <li>1人1エージェントの対話が限界</li>
+          </ul>
+        </div>
+        <div class="col after"><div class="hd">AFTER — ハーネス整備後</div>
+          <ul>
+            <li>AGENTS.mdが常時文脈を供給。指示は「何を」だけ</li>
+            <li>評価エージェント＋CIが一次チェック。人は判断に集中</li>
+            <li>標準はエージェントが従うので「実行」される</li>
+            <li>devcontainerで誰でも・どのエージェントでも同一環境</li>
+            <li>worktree分離で複数タスク並行 → 自律ループへ</li>
+          </ul>
+        </div>
+      </div>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:30%;">定量目安</th><th style="width:30%;">根拠</th></tr></thead>
+        <tbody>
+          <tr><td>エージェントタスクの成功率・手戻り</td><td class="em">大幅改善（88%失敗の轍を回避）</td><td>失敗要因は基盤欠如<sup><a href="#refs">[3]</a></sup></td></tr>
+          <tr><td>レビュー負荷</td><td class="em">機械的指摘をCIが先取り</td><td>CI不変条件<sup><a href="#refs">[8]</a></sup></td></tr>
+          <tr><td>開発標準の浸透率</td><td class="em">導入リポジトリ数で初めて測定可能に</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="callout case"><span class="ttl">事例</span>
+        OpenAI Codexチームは「AGENTS.md＋再現可能環境＋CI不変条件」の3点セットで自社開発を運用<sup><a href="#refs">[8]</a></sup>。
+        Anthropicは計画・生成・評価を分離した3エージェントハーネスで長時間の自律フルスタック開発を実証<sup><a href="#refs">[9]</a></sup>。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ③ ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">③</div><h3>ナレッジ基盤 — 蓄積もAI・活用もAI</h3><span class="phase pill teal">Phase 2〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 障害対応・設計判断・レビュー知見が個人の記憶やチャットログに消える状態をやめ、<strong>発生した瞬間にAIが構造化して蓄積し、次のAI実行のコンテキストとして自動供給される</strong>ループを作る。</div>
+      <h4>蓄積 → 活用のループ（人は何もしない）</h4>
+      <div class="flow">
+        <div class="step"><b>発生源</b>障害対応／PR・レビュー／設計判断／議事録</div><div class="arr">→</div>
+        <div class="step orange"><b>収集エージェント</b>イベント駆動で要約・タグ・関係抽出</div><div class="arr">→</div>
+        <div class="step teal"><b>ナレッジストア</b>コード系: リポジトリ内docs<br>横断系: Databricks</div><div class="arr">→</div>
+        <div class="step"><b>利用側</b>開発エージェント／AI SRE／Genieが④経由で検索（利用者と同一権限）</div>
+      </div>
+      <p style="font-size:13.5px;">検索は<strong>ハイブリッド（ベクトル＋キーワード＋リランカー）</strong>を標準とする。純粋なベクトル検索は専門領域で15〜20%外すのが業界実測<sup><a href="#refs">[11]</a></sup>。
+      Phase 3では設計書とコードの差分をエージェントが夜間検出し、更新PRを自動起票（鮮度の自律維持）。</p>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:30%;">定量目安</th><th style="width:30%;">根拠</th></tr></thead>
+        <tbody>
+          <tr><td>レガシー文書化工数</td><td class="em">−90%以上</td><td>富士通のリバース生成: −97%<sup><a href="#refs">[13]</a></sup></td></tr>
+          <tr><td>類似障害の調査時間</td><td class="em">過去事例の即時提示（⑥と相乗）</td><td>MTTR削減の構成要素<sup><a href="#refs">[17]</a></sup></td></tr>
+          <tr><td>有識者依存</td><td class="em">50システムの暗黙知を資産化</td><td>異動・退職リスクの低減</td></tr>
+        </tbody>
+      </table>
+      <div class="callout case"><span class="ttl">事例</span>
+        Databricks <strong>Genie Ontology</strong>は「組織の全ナレッジの自己改善するコンテキスト層」を提供。Lakebaseのエージェントメモリ、MCPツールアクセスと合わせ、当社の既存契約で使える範囲が広い<sup><a href="#refs">[12]</a></sup>。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ④ ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">④</div><h3>MCPゲートウェイ — 統制点その1</h3><span class="phase pill blue">Phase 1末〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> エージェントが社内システムに触る経路を1箇所に集約し、<strong>認証・権限・監査・レート制御を一元管理</strong>。「エージェントは代行するユーザーと同一権限」の原則を技術的に担保する。</div>
+      <div class="grid3">
+        <div class="card" style="padding:14px 16px;"><h4 style="margin-top:0;">認証・認可</h4><p style="font-size:13px;">SSO連携。エージェントの権限を利用者と同一にマッピング</p></div>
+        <div class="card" style="padding:14px 16px;"><h4 style="margin-top:0;">監査・帰属</h4><p style="font-size:13px;">誰のエージェントが何を読み書きしたかを記録。コストは⑤へ帰属</p></div>
+        <div class="card" style="padding:14px 16px;"><h4 style="margin-top:0;">レジストリ</h4><p style="font-size:13px;">承認済みMCPサーバー一覧。野良サーバー接続はL1ルールで禁止</p></div>
+      </div>
+      <p style="font-size:13.5px; margin-top:12px;"><strong>段階導入:</strong> Phase 1は「承認済みサーバーのリスト管理」のみで軽く開始 → Phase 2で集中統制へ。
+      実装は自社開発せず、<strong>接続先の所在で使い分ける</strong> — データ系ツールはDatabricks managed MCP＋Unity AI Gateway（設定でMCP化・Unity Catalog権限透過）、AWS上のAPI・Lambda系はAgentCore Gateway（Identity＋監査）。
+      レジストリと監査の管理は一元に保つ（→ <a href="#infra">AWS構成</a>・検討項目E-4）<sup><a href="#refs">[21]</a></sup>。</p>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:30%;">定量目安</th><th style="width:30%;">根拠</th></tr></thead>
+        <tbody>
+          <tr><td>エージェント経由のデータ事故</td><td class="em">権限透過＋監査で構造的に防止</td><td>ガードレール標準構成<sup><a href="#refs">[14]</a></sup></td></tr>
+          <tr><td>新規ツール接続</td><td class="em">サーバー1本追加で全エージェントから利用可</td><td>MCP標準化の効果<sup><a href="#refs">[15]</a></sup></td></tr>
+          <tr><td>セキュリティレビュー</td><td class="em">個別ツールごと → 1点に集約</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="callout case"><span class="ttl">事例</span>
+        <strong>Uber</strong>はMCPゲートウェイ＋レジストリで社内1万超のサービスをエージェントから統制利用（月間アクティブエージェント1,500、週6万実行）。
+        <strong>Block（Square）</strong>は既定MCPサーバー整備等により全社トークン消費<strong>−98.7%</strong>を達成<sup><a href="#refs">[15]</a></sup> — 基盤整備がそのままコスト削減になる代表例。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑤ ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">⑤</div><h3>コスト・効果ダッシュボード — 統制点その2</h3><span class="phase pill blue">Phase 1〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 従量課金時代のAIコストをチーム別・用途別に可視化し、同じ画面で効果（DX Core 4）と並べる。「使いすぎの統制」ではなく<strong>「成果あたりコスト」での経営報告</strong>を可能にする。</div>
+      <div class="grid2">
+        <div class="card" style="padding:16px 18px;">
+          <h4 style="margin-top:0;">コスト面（FinOps for AI<sup><a href="#refs">[18]</a></sup>）</h4>
+          <ul style="font-size:13px; padding-left:18px;">
+            <li>ツール別支出（Copilot／Claude／Databricks）を各ベンダーAdmin APIから集約</li>
+            <li>チーム別・用途別の帰属（④のログ＋APIキーのタグ付け）</li>
+            <li>チーム別上限アラート（青天井の防止）</li>
+            <li>成果あたりコスト: ¥/PR、¥/障害対応</li>
+          </ul>
+        </div>
+        <div class="card" style="padding:16px 18px;">
+          <h4 style="margin-top:0;">効果面（DX Core 4<sup><a href="#refs">[16]</a></sup>）</h4>
+          <ul style="font-size:13px; padding-left:18px;">
+            <li>変更リードタイム／デプロイ頻度／変更失敗率</li>
+            <li>節約時間（h/週/人）、AI起因不具合率</li>
+            <li>活用度: 利用率、スキル利用回数、ハーネス導入数（/50システム）</li>
+            <li>実装はDatabricks上の自作も現実的（データ基盤が既にあるため）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout point" style="margin-top:14px;"><span class="ttl">POINT</span>
+        「測定なしのAI導入は改善が停滞する」がDORA 2025の結論<sup><a href="#refs">[16]</a></sup>。ベースライン測定は<strong>企画承認前（Phase 0）から開始</strong>し、効果主張の説得力を確保する。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑥ ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">⑥</div><h3>AI SRE — 運用工程のAI化</h3><span class="phase pill teal">Phase 2〜</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 障害対応の「調査・整理・報告」をAIに移し、人間は<strong>判断と意思決定</strong>に集中する。対応記録は③に自動蓄積され、対応するほど賢くなる。</div>
+      <h4>3段階の導入ステップ</h4>
+      <div class="flow">
+        <div class="step"><b>Step 1: 一次調査</b>アラート発火→監視・ログ・デプロイ履歴・過去事例を横断し、5分以内に「状況＋原因仮説＋類似事例」を投稿</div><div class="arr">→</div>
+        <div class="step"><b>Step 2: 報告自動化</b>対応ログから報告書ドラフト・タイムライン・再発防止案を生成→人間レビューで確定→③へ蓄積</div><div class="arr">→</div>
+        <div class="step orange"><b>Step 3: リカバリ支援</b>ランブック化された定型対処を<strong>人間承認付き</strong>で実行（Human-in-the-Loop）</div>
+      </div>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:30%;">定量目安</th><th style="width:30%;">根拠</th></tr></thead>
+        <tbody>
+          <tr><td>MTTR（平均復旧時間）</td><td class="em">−30%（先進事例は30〜70%）</td><td>AI SRE導入企業の実績<sup><a href="#refs">[17]</a></sup></td></tr>
+          <tr><td>障害報告書の作成時間</td><td class="em">−80%</td><td>ドラフト自動生成＋人間レビュー構成</td></tr>
+          <tr><td>オンコール負荷</td><td class="em">深夜の一次調査を自動化</td><td>AWS/Azure同構成でGA<sup><a href="#refs">[17]</a></sup></td></tr>
+        </tbody>
+      </table>
+      <div class="callout case"><span class="ttl">事例</span>
+        AWS DevOps Agent／Azure SRE Agentが2026年3月GA（一次調査エージェント構成）<sup><a href="#refs">[17]</a></sup>。
+        当社は提供システムがAWS上のため<strong>AWS DevOps Agentが第一候補</strong>。内製（Claude Code＋MCP。②④の資産を流用可）とPhase 1末に比較評価する（C-4）。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑦ ===== -->
+  <div class="comp">
+    <div class="comp-head"><div class="comp-num">⑦</div><h3>フロンティアウォッチループ — 「追いつく」の仕組み化</h3><span class="phase pill orange">Phase 1〜常時</span></div>
+    <div class="comp-body">
+      <div class="purpose"><strong>目的:</strong> 「世の中が速すぎて個人では追いきれない」問題を組織の自律ループに転換。①②を常に最先端に保つ。<strong>部門初のループエンジニアリング実装（ドッグフーディング）</strong><sup><a href="#refs">[19]</a></sup>。</div>
+      <div class="flow">
+        <div class="step"><b>週次（自動）</b>収集エージェントがリリースノート・論文・実践記事を巡回し「今週の5件」を影響度つきでレポート</div><div class="arr">→</div>
+        <div class="step orange"><b>週次（人・15分）</b>CoEが「試す／見送る／即展開」を判定</div><div class="arr">→</div>
+        <div class="step"><b>月次（人＋AI）</b>評価用リポジトリ＋評価シナリオのサンドボックスで検証</div><div class="arr">→</div>
+        <div class="step teal"><b>展開（自動）</b>有効→①②を更新し全チームへ自動配布。無効→見送り理由を③に記録（再評価条件つき）</div>
+      </div>
+      <table class="fx">
+        <thead><tr><th>効果</th><th style="width:34%;">定量目安</th></tr></thead>
+        <tbody>
+          <tr><td>最新プラクティスの導入リードタイム</td><td class="em">世の中の発表 → 全チーム展開まで数週間</td></tr>
+          <tr><td>CoEリードの調査負担</td><td class="em">週15分のレビューに圧縮</td></tr>
+          <tr><td>属人化リスク</td><td class="em">「追従できる個人」への依存を解消。判定基準・見送り理由がナレッジ化</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <h3 id="infra" style="scroll-margin-top:64px;">実行基盤 — AWS前提の構成（新規基盤製品は原則導入しない）</h3>
+  <p style="font-size:14px;">当社の提供システムはAWS上にあるため、L2基盤の実行環境も<strong>既存の3点 — AWS・GitHub・Databricks（on AWS）</strong>で構成する。
+  エージェント実行・接続統制・監視はAWSのマネージドサービス（Bedrock／AgentCore）を第一候補とし、自社開発を最小化する<sup><a href="#refs">[21]</a></sup>。</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs><marker id="arI" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#2f6fed"/></marker></defs>
+      <!-- dev terminal -->
+      <rect x="30" y="25" width="330" height="130" rx="12" fill="#fff" stroke="#5a7089" stroke-width="2"/>
+      <text x="195" y="52" font-size="14" font-weight="800" fill="#16324f" text-anchor="middle">開発者端末（100名）</text>
+      <rect x="50" y="66" width="140" height="70" rx="8" fill="#eef4ff" stroke="#b9cdf5"/>
+      <text x="120" y="93" font-size="12" font-weight="700" fill="#16324f" text-anchor="middle">IDE</text>
+      <text x="120" y="112" font-size="11" fill="#42556c" text-anchor="middle">Copilot 補完／</text>
+      <text x="120" y="126" font-size="11" fill="#42556c" text-anchor="middle">agent mode</text>
+      <rect x="205" y="66" width="140" height="70" rx="8" fill="#eef4ff" stroke="#b9cdf5"/>
+      <text x="275" y="93" font-size="12" font-weight="700" fill="#16324f" text-anchor="middle">ターミナル</text>
+      <text x="275" y="112" font-size="11" fill="#42556c" text-anchor="middle">Claude Code</text>
+      <text x="275" y="126" font-size="11" fill="#42556c" text-anchor="middle">（モデルはBedrock経由）</text>
+      <!-- GitHub -->
+      <rect x="420" y="25" width="550" height="130" rx="12" fill="#fff" stroke="#5a7089" stroke-width="2"/>
+      <text x="695" y="52" font-size="14" font-weight="800" fill="#16324f" text-anchor="middle">GitHub</text>
+      <rect x="440" y="66" width="250" height="70" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="565" y="90" font-size="12" font-weight="700" fill="#16324f" text-anchor="middle">リポジトリ × 50システム</text>
+      <text x="565" y="109" font-size="11" fill="#42556c" text-anchor="middle">② ハーネス（AGENTS.md・CI不変条件）</text>
+      <text x="565" y="124" font-size="11" fill="#42556c" text-anchor="middle">① マーケットプレイス（社内リポジトリ）</text>
+      <rect x="705" y="66" width="245" height="70" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="827" y="90" font-size="12" font-weight="700" fill="#16324f" text-anchor="middle">GitHub Actions</text>
+      <text x="827" y="109" font-size="11" fill="#42556c" text-anchor="middle">CI不変条件 ／ Copilot coding agent</text>
+      <text x="827" y="124" font-size="11" fill="#42556c" text-anchor="middle">夜間ループの実行候補（D-3）</text>
+      <!-- AWS zone -->
+      <rect x="30" y="205" width="940" height="290" rx="14" fill="#fdf7ef" stroke="#f08c2e" stroke-width="2.5"/>
+      <text x="70" y="236" font-size="15" font-weight="800" fill="#c26a10">AWS</text>
+      <!-- Bedrock -->
+      <rect x="60" y="255" width="240" height="100" rx="10" fill="#fff" stroke="#f08c2e" stroke-width="1.8"/>
+      <text x="180" y="281" font-size="13" font-weight="800" fill="#16324f" text-anchor="middle">Amazon Bedrock</text>
+      <text x="180" y="302" font-size="11.5" fill="#42556c" text-anchor="middle">Claude モデル</text>
+      <rect x="85" y="315" width="190" height="26" rx="13" fill="#e8f7f4"/>
+      <text x="180" y="333" font-size="10.5" font-weight="700" fill="#0b7f6e" text-anchor="middle">データ域内・学習不使用・請求一元化</text>
+      <!-- AgentCore -->
+      <rect x="330" y="255" width="360" height="140" rx="10" fill="#fff" stroke="#f08c2e" stroke-width="1.8"/>
+      <text x="510" y="281" font-size="13" font-weight="800" fill="#16324f" text-anchor="middle">Bedrock AgentCore</text>
+      <g font-size="11" fill="#42556c" text-anchor="middle">
+        <rect x="350" y="296" width="150" height="40" rx="7" fill="#eef4ff"/>
+        <text x="425" y="313" font-weight="700" fill="#16324f">Gateway</text>
+        <text x="425" y="328">④の実装候補（API・Lambda系）</text>
+        <rect x="515" y="296" width="155" height="40" rx="7" fill="#eef4ff"/>
+        <text x="592" y="313" font-weight="700" fill="#16324f">Runtime</text>
+        <text x="592" y="328">自律ループ実行（分離microVM・8h）</text>
+        <rect x="350" y="344" width="150" height="38" rx="7" fill="#f8fafc"/>
+        <text x="425" y="360" font-weight="700" fill="#16324f">Identity</text>
+        <text x="425" y="374">利用者と同一権限の担保</text>
+        <rect x="515" y="344" width="155" height="38" rx="7" fill="#f8fafc"/>
+        <text x="592" y="360" font-weight="700" fill="#16324f">Observability</text>
+        <text x="592" y="374">エージェント監査ログ → ⑤</text>
+      </g>
+      <!-- provided systems -->
+      <rect x="720" y="255" width="220" height="80" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.8"/>
+      <text x="830" y="281" font-size="13" font-weight="800" fill="#16324f" text-anchor="middle">提供システム基盤</text>
+      <text x="830" y="302" font-size="11" fill="#42556c" text-anchor="middle">EC2 ／ ECS ／ Lambda ／ RDS …</text>
+      <text x="830" y="320" font-size="11" fill="#42556c" text-anchor="middle">（50システムの本番環境）</text>
+      <!-- CloudWatch / AI SRE -->
+      <rect x="720" y="355" width="220" height="115" rx="10" fill="#e8f7f4" stroke="#0e9f8a" stroke-width="1.8"/>
+      <text x="830" y="381" font-size="12.5" font-weight="800" fill="#0b7f6e" text-anchor="middle">CloudWatch ／ X-Ray</text>
+      <text x="830" y="400" font-size="11" fill="#0b7f6e" text-anchor="middle">テレメトリ・アラート</text>
+      <text x="830" y="426" font-size="12.5" font-weight="800" fill="#0b7f6e" text-anchor="middle">⑥ AI SRE</text>
+      <text x="830" y="444" font-size="11" fill="#0b7f6e" text-anchor="middle">AWS DevOps Agent 第一候補</text>
+      <text x="830" y="459" font-size="11" fill="#0b7f6e" text-anchor="middle">（内製Claude Code案とC-4で比較）</text>
+      <!-- Databricks -->
+      <rect x="30" y="530" width="940" height="85" rx="12" fill="#e8f7f4" stroke="#0e9f8a" stroke-width="2"/>
+      <text x="500" y="560" font-size="14" font-weight="800" fill="#0b7f6e" text-anchor="middle">Databricks（on AWS・既存契約）</text>
+      <text x="500" y="584" font-size="12" fill="#0b7f6e" text-anchor="middle">③ ナレッジ基盤 ／ ④ データ系MCP（managed MCP） ／ ⑤ ダッシュボード基盤 ／ ⑧ APIゲートウェイ（Unity AI GW） ／ 業務エージェント（Genie・Agent Bricks）</text>
+      <!-- arrows -->
+      <line x1="195" y1="155" x2="440" y2="90" stroke="#2f6fed" stroke-width="2" marker-end="url(#arI)"/>
+      <text x="300" y="140" font-size="10.5" fill="#64748b">push / PR</text>
+      <line x1="275" y1="155" x2="185" y2="252" stroke="#2f6fed" stroke-width="2" marker-end="url(#arI)"/>
+      <text x="255" y="195" font-size="10.5" fill="#64748b">モデル呼び出し（域内）</text>
+      <line x1="827" y1="155" x2="600" y2="252" stroke="#2f6fed" stroke-width="2" marker-end="url(#arI)"/>
+      <text x="760" y="195" font-size="10.5" fill="#64748b">クラウド実行はAgentCoreへ</text>
+      <line x1="690" y1="316" x2="717" y2="300" stroke="#2f6fed" stroke-width="2" marker-end="url(#arI)"/>
+      <line x1="510" y1="395" x2="510" y2="527" stroke="#2f6fed" stroke-width="2" marker-end="url(#arI)"/>
+      <text x="560" y="465" font-size="10.5" fill="#64748b">Gateway経由でナレッジ・データへ</text>
+      <line x1="830" y1="335" x2="830" y2="352" stroke="#0e9f8a" stroke-width="2"/>
+    </svg>
+    <figcaption>図4: 実行基盤のAWS構成 — エージェント実行・接続統制はBedrock／AgentCoreのマネージドサービスを第一候補に</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div class="card" style="padding:14px 18px;">
+      <h4 style="margin-top:0;">Claudeの調達はBedrock経由が有力（→ D-2）</h4>
+      <p style="font-size:13px;">Claude CodeはBedrock接続をサポート。<strong>プロンプト・コードがAWSアカウント外に出ない</strong>（学習不使用）、請求がAWSに一元化、IAMで権限管理 — 「学習しない環境なら投入可」というセキュリティ前提を最も強く満たす<sup><a href="#refs">[21]</a></sup>。</p>
+    </div>
+    <div class="card" style="padding:14px 18px;">
+      <h4 style="margin-top:0;">④MCPゲートウェイは自社開発しない（接続先の所在で使い分け）</h4>
+      <p style="font-size:13px;">データ系ツールは<strong>Databricks managed MCP＋Unity AI Gateway</strong>（設定でMCP化・Unity Catalog権限が透過）、AWS上のAPI・Lambda系は<strong>AgentCore Gateway</strong>（Identityで同一権限・Observabilityで監査）。実行系統は2つでも、レジストリと監査の管理は一元に保つ（検討項目E-4）<sup><a href="#refs">[21]</a></sup>。</p>
+    </div>
+    <div class="card" style="padding:14px 18px;">
+      <h4 style="margin-top:0;">自律ループの実行場所は2択（→ D-3）</h4>
+      <p style="font-size:13px;"><strong>GitHub Actions</strong>（コードに近い・導入容易・CI資産流用）か、<strong>AgentCore Runtime</strong>（セッション分離microVM・最長8時間・複数エージェント並行）か。Phase 3までに実測して決定。</p>
+    </div>
+    <div class="card" style="padding:14px 18px;">
+      <h4 style="margin-top:0;">AI SREはAWSネイティブが第一候補（→ C-4）</h4>
+      <p style="font-size:13px;">提供システムがAWS上のため、CloudWatch等のテレメトリに直結する<strong>AWS DevOps Agent</strong>を第一候補とし、内製（Claude Code＋MCP）とPhase 1末に比較評価する。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5 UPLIFT ================= -->
+<section id="uplift">
+  <div class="sec-head"><div class="sec-num">5</div><h2>最先端引き上げ戦略</h2></div>
+  <p class="sec-lead">「人を教育して追いつかせる」は構造的に不可能。原則は「型に乗せる」×「追従を仕組み化する」</p>
+
+  <h3>前提の用語整理 — 「ループ」には3つの階層がある（広義と狭義）</h3>
+  <figure>
+    <svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <!-- outer: broad -->
+      <rect x="20" y="20" width="700" height="400" rx="16" fill="#fef3e6" stroke="#f08c2e" stroke-width="2.5"/>
+      <text x="45" y="52" font-size="15" font-weight="800" fill="#c26a10">③ 組織の学習ループ（広義のループ）</text>
+      <text x="45" y="74" font-size="12" fill="#c26a10">組織として「回り続ける仕組み」全般。人とAIが混在する</text>
+      <!-- middle: narrow loop engineering -->
+      <rect x="60" y="95" width="620" height="300" rx="14" fill="#eef4ff" stroke="#2f6fed" stroke-width="2.5"/>
+      <text x="85" y="127" font-size="15" font-weight="800" fill="#2455c4">② 外側ループ ＝ 狭義のループエンジニアリング</text>
+      <text x="85" y="149" font-size="12" fill="#2455c4">スケジュール／イベント駆動でエージェントを人手なしに起動し続ける制御層（Addy Osmani提唱）</text>
+      <!-- inner -->
+      <rect x="110" y="170" width="520" height="195" rx="12" fill="#16324f"/>
+      <text x="370" y="204" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">① 内側ループ（エージェント自身）</text>
+      <g font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">
+        <rect x="140" y="230" width="100" height="44" rx="10" fill="#2f6fed"/><text x="190" y="257">計画</text>
+        <text x="255" y="257" font-size="16">→</text>
+        <rect x="270" y="230" width="100" height="44" rx="10" fill="#2f6fed"/><text x="320" y="257">実装</text>
+        <text x="385" y="257" font-size="16">→</text>
+        <rect x="400" y="230" width="100" height="44" rx="10" fill="#2f6fed"/><text x="450" y="257">検証</text>
+        <text x="515" y="257" font-size="16">→</text>
+        <rect x="530" y="230" width="70" height="44" rx="10" fill="#2f6fed"/><text x="565" y="257">修正</text>
+      </g>
+      <path d="M 565 278 C 565 320 190 320 190 280" fill="none" stroke="#7ea4e8" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="370" y="335" font-size="11.5" fill="#bcd2ee" text-anchor="middle">1タスクが完了するまで自走 — これを支えるのが「ハーネス」（②標準テンプレート）</text>
+      <!-- right mapping -->
+      <g font-size="12.5" fill="#42556c">
+        <text x="745" y="52" font-size="13" font-weight="800" fill="#16324f">本企画での対応</text>
+        <rect x="740" y="70" width="240" height="86" rx="10" fill="#fff" stroke="#f08c2e" stroke-width="1.5"/>
+        <text x="755" y="94" font-weight="700" fill="#c26a10">広義 → L2基盤そのもの</text>
+        <text x="755" y="114" font-size="11.5">③ナレッジ蓄積→活用ループ</text>
+        <text x="755" y="131" font-size="11.5">⑤測定→改善ループ</text>
+        <text x="755" y="148" font-size="11.5">⑦フロンティアウォッチループ</text>
+        <rect x="740" y="170" width="240" height="80" rx="10" fill="#fff" stroke="#2f6fed" stroke-width="1.5"/>
+        <text x="755" y="194" font-weight="700" fill="#2455c4">狭義 → Phase 3「自律ループ」</text>
+        <text x="755" y="214" font-size="11.5">夜間テスト補強・依存更新・</text>
+        <text x="755" y="231" font-size="11.5">文書鮮度維持（Actions／AgentCore）</text>
+        <rect x="740" y="264" width="240" height="80" rx="10" fill="#fff" stroke="#16324f" stroke-width="1.5"/>
+        <text x="755" y="288" font-weight="700" fill="#16324f">内側 → ②ハーネスが支える</text>
+        <text x="755" y="308" font-size="11.5">AGENTS.md・CI不変条件・</text>
+        <text x="755" y="325" font-size="11.5">評価エージェントが検証を担保</text>
+        <text x="745" y="385" font-size="11.5" font-weight="700" fill="#64748b">用語ルール: 本書で「自律ループ」と</text>
+        <text x="745" y="403" font-size="11.5" font-weight="700" fill="#64748b">書いたら狭義（②の階層）を指す</text>
+      </g>
+    </svg>
+    <figcaption>図5: ループの3階層 — 内側ループはハーネスが支え、狭義のループはその上の制御層、広義はL2基盤全体<sup><a href="#refs">[19]</a></sup></figcaption>
+  </figure>
+  <p style="font-size:13.5px;">この整理により本企画の位置づけが明確になる:
+  <strong>Phase 1〜2はハーネス（内側ループを安定させる投資）、Phase 3で狭義のループへ進み、⑦③⑤の広義のループはPhase 1から並行稼働</strong>させる。
+  「ハーネスなしにループなし」— 内側が不安定なまま外側を自動化すると失敗が量産されるため、この順序は崩さない。
+  6つの構成要素・自律ティア・停止条件・最初に回す3本のループ設計は<a href="05_loop-engineering.html">ループエンジニアリング詳説</a>を参照。</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4><span class="pill navy">原則 1</span>&nbsp; 型に乗せる</h4>
+      <p style="font-size:13.5px;">最先端の実践（計画/生成/評価の分離、CI不変条件、スキル分割）を<strong>ハーネステンプレートに焼き込んで配布</strong>。
+      開発者はテンプレートで作業するだけで最先端の型を「実行」する。<strong>知識移転ではなく、資産で行動を規定する</strong> —
+      文書標準が浸透しなかった組織で唯一機能するアプローチ。</p>
+    </div>
+    <div class="card">
+      <h4><span class="pill navy">原則 2</span>&nbsp; 追従を仕組み化する</h4>
+      <p style="font-size:13.5px;">⑦フロンティアウォッチループが最新動向の収集・評価・展開を自動化。
+      <strong>個人が世の中を追う負担を、組織の仕組みに転換</strong>する。全員はテンプレート更新に追従するだけで最新の型を維持できる。</p>
+    </div>
+  </div>
+
+  <h3>3階層の人材ラダー（100名の配分）</h3>
+  <figure>
+    <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <!-- L3 top -->
+      <polygon points="380,30 620,30 660,120 340,120" fill="#f08c2e" opacity="0.92"/>
+      <text x="500" y="65" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">L3 ハーネス／ループ設計</text>
+      <text x="500" y="88" font-size="12.5" fill="#fff" text-anchor="middle">12〜15名（チャンピオン＋CoE）</text>
+      <text x="500" y="108" font-size="11.5" fill="#fff" text-anchor="middle">ハーネス設計・自律ループ構築・フロンティアウォッチ参加</text>
+      <!-- L2 mid -->
+      <polygon points="340,130 660,130 710,220 290,220" fill="#2f6fed" opacity="0.92"/>
+      <text x="500" y="165" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">L2 エージェント実践</text>
+      <text x="500" y="188" font-size="12.5" fill="#fff" text-anchor="middle">60〜70名（開発者の大半）</text>
+      <text x="500" y="208" font-size="11.5" fill="#fff" text-anchor="middle">ハーネス整備済みリポジトリでのエージェント駆動開発・スキル作成</text>
+      <!-- L1 base -->
+      <polygon points="290,230 710,230 760,320 240,320" fill="#5a7089" opacity="0.92"/>
+      <text x="500" y="265" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">L1 リテラシー</text>
+      <text x="500" y="288" font-size="12.5" fill="#fff" text-anchor="middle">100名 全員</text>
+      <text x="500" y="308" font-size="11.5" fill="#fff" text-anchor="middle">承認ツールで日常業務を効率化。エージェントに仕事を「依頼」できる</text>
+      <!-- right annotations -->
+      <g font-size="12" fill="#42556c">
+        <text x="770" y="70" font-weight="700">施策: CoE伴走・外部コミュニティ</text>
+        <text x="790" y="170" font-weight="700">施策: 灯台チームOJT・CoP・</text>
+        <text x="790" y="188" font-weight="700">社内スキルコンテスト</text>
+        <text x="800" y="270" font-weight="700">施策: eラーニング＋</text>
+        <text x="800" y="288" font-weight="700">ハンズオン半日</text>
+      </g>
+      <!-- left arrows -->
+      <g font-size="12" fill="#c26a10" font-weight="700">
+        <text x="60" y="170" >「伴走連鎖」で</text>
+        <text x="60" y="188">L3層を計画的に増やす</text>
+        <path d="M 150 220 C 190 200 220 170 260 150" fill="none" stroke="#f08c2e" stroke-width="2.5" marker-end="url(#arU)"/>
+      </g>
+      <defs><marker id="arU" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#f08c2e"/></marker></defs>
+    </svg>
+    <figcaption>図6: 人材ラダー — 全員を底上げしつつ、L3層を「伴走連鎖」で計画的に育成</figcaption>
+  </figure>
+
+  <h3>灯台チーム方式の実地移転（伴走連鎖）</h3>
+  <div class="flow">
+    <div class="step"><b>CoEが灯台チームに伴走</b>数週間の埋め込みでハーネス構築を実地移転</div><div class="arr">→</div>
+    <div class="step"><b>灯台チームのチャンピオンが次の伴走に参加</b>「教えることで定着」</div><div class="arr">→</div>
+    <div class="step teal"><b>Phase 2で10チームを一巡</b>属人化を構造的に解消</div>
+  </div>
+
+  <div class="callout point"><span class="ttl">技術選定原則 — 振り回されないために</span>
+    可搬性のある抽象に投資する: <strong>スキル（Markdown資産）／MCP（業界標準プロトコル）／AGENTS.md（ツール非依存）</strong>はツールを乗り換えても持ち運べる。
+    特定ツールの独自機能への深い依存は避け、四半期ごとにポートフォリオを再評価。
+  </div>
+</section>
+
+<!-- ================= 6 ROADMAP ================= -->
+<section id="roadmap">
+  <div class="sec-head"><div class="sec-num">6</div><h2>ロードマップ（18ヶ月＋）</h2></div>
+  <p class="sec-lead">小さく速く始め、灯台チームの成功を型にして横展開する</p>
+
+  <div class="phases">
+    <div class="phase-card">
+      <div class="ph-head p0">Phase 0 アセスメント<span class="ph-term">〜2ヶ月</span></div>
+      <ul>
+        <li>10チームの活用実態・スキル調査</li>
+        <li>50システム棚卸しと文書化優先度付け<br><span style="color:var(--muted);font-size:12px;">変更頻度×障害頻度×有識者残存性でスコアリング</span></li>
+        <li>DX Core 4ベースライン測定開始</li>
+        <li>L1ガバナンス初版・調達手続き</li>
+        <li>⑧Fast-Track前倒し稼働<br><span style="color:var(--muted);font-size:12px;">申請3問＋ゲートウェイPoC。現在のAPI要望を第1号灯台案件に</span></li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="ph-head p1">Phase 1 基盤＋灯台<span class="ph-term">3〜6ヶ月</span></div>
+      <ul>
+        <li>①マーケットプレイス＋②テンプレートv1＋⑤ダッシュボード</li>
+        <li>灯台2〜3チームでパイロット<br><span style="color:var(--muted);font-size:12px;">A: レガシー文書化（上位3〜5システム）<br>B: エージェント駆動開発</span></li>
+        <li>L1教育を全員に実施</li>
+        <li>⑦フロンティアウォッチ稼働開始</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="ph-head p2">Phase 2 横展開＋運用AI<span class="ph-term">6〜12ヶ月</span></div>
+      <ul>
+        <li>伴走連鎖で残り7〜8チームへ展開</li>
+        <li>文書化10システム完了→次の15へ</li>
+        <li>⑥AI SRE導入（一次調査・報告）</li>
+        <li>③ナレッジ自動蓄積パイプライン稼働</li>
+        <li>L2教育（開発者の大半を実践レベルへ）</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="ph-head p3">Phase 3 自律化<span class="ph-term">12ヶ月〜</span></div>
+      <ul>
+        <li>夜間・イベント駆動の自律ループを標準装備化</li>
+        <li>AI SREをリカバリ支援まで拡大</li>
+        <li>ナレッジの蓄積→活用の完全ループ</li>
+        <li>効果報告と投資再配分。残り25システムの文書化</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout point"><span class="ttl">POINT</span>
+    パイロット第1弾は<strong>レガシー文書化が本命</strong>。効果を数字で示しやすく（先行事例: 工数−97%<sup><a href="#refs">[13]</a></sup>）、
+    Copilot未利用層にも価値が見え、生成した設計書はそのままハーネス（②）の材料になる — 一石三鳥。
+  </div>
+</section>
+
+<!-- ================= 7 ORG ================= -->
+<section id="org">
+  <div class="sec-head"><div class="sec-num">7</div><h2>推進体制</h2></div>
+  <p class="sec-lead">前提: この取り組みはDX部門内で完結する（別組織の「情シス」は存在しない）。推進チームの主務は統制ではなく「イネーブルメント＝現場ができるようにする支援」</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs><marker id="arO" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5a7089"/></marker></defs>
+      <!-- sponsor -->
+      <rect x="380" y="14" width="240" height="48" rx="10" fill="#16324f"/>
+      <text x="500" y="44" font-size="14.5" font-weight="800" fill="#fff" text-anchor="middle">DX部門長（経営スポンサー）</text>
+      <line x1="500" y1="62" x2="500" y2="94" stroke="#5a7089" stroke-width="2" marker-end="url(#arO)"/>
+      <!-- CoE -->
+      <rect x="230" y="98" width="540" height="140" rx="12" fill="#eef4ff" stroke="#2f6fed" stroke-width="2"/>
+      <text x="500" y="126" font-size="15.5" font-weight="800" fill="#2455c4" text-anchor="middle">AI推進チーム ＝ CoE（専任 3〜5名）</text>
+      <g font-size="12.5" text-anchor="middle" fill="#1f2937">
+        <rect x="252" y="142" width="152" height="78" rx="8" fill="#fff" stroke="#b9cdf5"/>
+        <text x="328" y="166" font-weight="700" fill="#16324f">リード（1）</text>
+        <text x="328" y="186" font-size="11.5">戦略・ガバナンス</text>
+        <text x="328" y="203" font-size="11.5">ウォッチ判定</text>
+        <rect x="424" y="142" width="152" height="78" rx="8" fill="#fff" stroke="#b9cdf5"/>
+        <text x="500" y="166" font-weight="700" fill="#16324f">プラットフォーム（1〜2）</text>
+        <text x="500" y="186" font-size="11.5">基盤②〜⑥の</text>
+        <text x="500" y="203" font-size="11.5">構築・運用</text>
+        <rect x="596" y="142" width="152" height="78" rx="8" fill="#fff" stroke="#b9cdf5"/>
+        <text x="672" y="166" font-weight="700" fill="#16324f">イネーブルメント（1〜2）</text>
+        <text x="672" y="186" font-size="11.5">教育・伴走・</text>
+        <text x="672" y="203" font-size="11.5">スキル収集</text>
+      </g>
+      <line x1="500" y1="238" x2="500" y2="270" stroke="#5a7089" stroke-width="2" marker-end="url(#arO)"/>
+      <!-- champions -->
+      <rect x="150" y="274" width="700" height="60" rx="12" fill="#e8f7f4" stroke="#0e9f8a" stroke-width="2"/>
+      <text x="500" y="299" font-size="14.5" font-weight="800" fill="#0b7f6e" text-anchor="middle">チームチャンピオン（各チーム1名 × 10、兼務20%目安）</text>
+      <text x="500" y="321" font-size="12" fill="#0b7f6e" text-anchor="middle">L3（チーム固有スキル・ハーネス）の整備 ／ Community of Practice（隔週）の中核</text>
+      <!-- virtual members -->
+      <rect x="810" y="112" width="170" height="112" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="5 4"/>
+      <text x="895" y="138" font-size="12" font-weight="700" fill="#42556c" text-anchor="middle">バーチャルメンバー</text>
+      <text x="895" y="160" font-size="11.5" fill="#42556c" text-anchor="middle">全社セキュリティ機能</text>
+      <text x="895" y="180" font-size="11.5" fill="#42556c" text-anchor="middle">Databricks運用チーム</text>
+      <text x="895" y="204" font-size="11" fill="#94a3b8" text-anchor="middle">（月次レビュー参加）</text>
+      <!-- bottom note -->
+      <rect x="150" y="352" width="700" height="38" rx="8" fill="#fef3e6"/>
+      <text x="500" y="376" font-size="12.5" font-weight="700" fill="#c26a10" text-anchor="middle">初期のハーネス知見の属人化は、テンプレート化＋伴走連鎖＋ウォッチ複数名運営で早期に解消（体制設計に明記）</text>
+    </svg>
+    <figcaption>図7: 推進体制 — DX部門内の専任チーム＋兼務チャンピオン×10。専任3名でも開始可能</figcaption>
+  </figure>
+
+  <h3>各ロールの具体的な役割</h3>
+  <table>
+    <thead><tr><th style="width:17%;">ロール</th><th style="width:33%;">ミッション・責任範囲</th><th style="width:32%;">典型的な1週間</th><th>人物像・稼働</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="em">DX部門長<br><span class="pill gray">スポンサー</span></td>
+        <td>投資判断、障害の除去（調達・他部門調整・人繰り）、方針の最終承認</td>
+        <td>月次: ⑤の1枚レポートで進捗確認。四半期: 投資再配分の判断</td>
+        <td>役員。稼働は月2〜3時間</td>
+      </tr>
+      <tr>
+        <td class="em">リード（1名）</td>
+        <td>L1方針の起案・改訂、ツールポートフォリオ判断、検討項目A〜Dの関係者調整、部門長への報告</td>
+        <td>金曜: ⑦ウォッチ判定（15分）を主宰。週次: 灯台チームの進捗確認、優先度判断。月次: 経営報告</td>
+        <td>ハーネス実践経験者（現フロントランナーが最有力候補）。<strong>初日からテンプレ化・複数名運営で自身への依存を減らすことが最重要ミッション</strong></td>
+      </tr>
+      <tr>
+        <td class="em">プラットフォーム<br>（1〜2名）</td>
+        <td>①②④⑤の構築・運用: テンプレート開発、managed settings配布、ゲートウェイ・レジストリ、計測パイプライン</td>
+        <td>テンプレ更新PRの作成・配布、④の接続申請対応（SLA 5営業日）、⑤の異常アラート対応、ループの停止条件整備</td>
+        <td>インフラ・CI/CDに強い開発者。AWS（Bedrock/AgentCore）とDatabricksを触れること</td>
+      </tr>
+      <tr>
+        <td class="em">イネーブルメント<br>（1〜2名）</td>
+        <td>教育（L1/L2/L3ラダー）、灯台チームへの埋め込み伴走、CoP運営、スキル昇格レビュー</td>
+        <td>灯台チームに週3日常駐（伴走期）、隔週CoPの運営、チャンピオン相談枠（週2時間）、月次のスキル昇格レビュー</td>
+        <td>教えるのが得意な中堅。伴走連鎖の起点として自らもハーネスを書ける必要あり</td>
+      </tr>
+      <tr>
+        <td class="em">チャンピオン<br>（各チーム1名×10）</td>
+        <td>自チームのL3資産（システム固有ハーネス・スキル）の整備、チーム内の日常支援、良い工夫の昇格推薦</td>
+        <td>ハーネス導入作業（担当システム）、チームメンバーの「これAIでできる?」への即応、CoP参加、四半期サーベイの回収</td>
+        <td>兼務20%（週1日目安）。任命は「AIに前向きな中堅」— 役職者である必要はない。評価目標に組み込む（検討項目C-5）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout point"><span class="ttl">最初の90日（体制の立ち上げ順）</span>
+    ①リード任命（部門長と週次1on1を固定）→ ②プラットフォーム1名＋イネーブルメント1名を確保し3名で開始 →
+    ③灯台チーム2つを選定しチャンピオン先行任命 → ④残り8チームのチャンピオンはPhase 1の成果を見せてから募集（志願制が理想）。
+  </div>
+
+  <div class="callout case"><span class="ttl">事例</span>
+    メルカリのAI導入はCTO直轄の専任部隊が「1人で開始→約20名に拡大」という経路をたどった<sup><a href="#refs">[7]</a></sup>。
+    小さく始めて成果で体制を拡大するモデルは本企画と同型。DORAも「CoP＋イネーブルメント」を成功要因に挙げる<sup><a href="#refs">[16]</a></sup>。
+  </div>
+</section>
+
+<!-- ================= 8 KPI ================= -->
+<section id="kpi">
+  <div class="sec-head"><div class="sec-num">8</div><h2>狙う効果・KPI</h2></div>
+  <p class="sec-lead">「利用率だけ測ると失敗する」が業界の教訓。アウトカムとセットで測定する（DX Core 4準拠）</p>
+
+  <div class="grid4">
+    <div class="stat good"><div class="num">+19%〜</div><div class="lbl">生産性向上</div><div class="src">業界平均+19.3%・節約3.6h/週/人 ≒ 100人で年1.8万時間<sup><a href="#refs">[1]</a></sup></div></div>
+    <div class="stat good"><div class="num">−30%</div><div class="lbl">MTTR（平均復旧時間）</div><div class="src">先進事例レンジは30〜70%削減<sup><a href="#refs">[17]</a></sup></div></div>
+    <div class="stat good"><div class="num">−90%</div><div class="lbl">レガシー文書化工数</div><div class="src">先行事例は−97%。カバレッジ10→25→50システム<sup><a href="#refs">[13]</a></sup></div></div>
+    <div class="stat"><div class="num">70%</div><div class="lbl">AI生成コード比率の上限イメージ</div><div class="src">メルカリ実績（開発量+64%）<sup><a href="#refs">[7]</a></sup></div></div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:18%;">カテゴリ</th><th>指標</th><th style="width:30%;">目標の考え方</th></tr></thead>
+    <tbody>
+      <tr><td class="em">開発生産性</td><td>変更リードタイム、デプロイ頻度、節約時間/週</td><td>Phase 0ベースライン比で改善。業界平均+19.3%を最低線に</td></tr>
+      <tr><td class="em">品質</td><td>変更失敗率、AI起因不具合率</td><td><strong>悪化させないことが第一目標</strong>（速度と品質のトレードオフを監視）</td></tr>
+      <tr><td class="em">運用</td><td>MTTR、障害報告書作成時間</td><td>−30% ／ −80%</td></tr>
+      <tr><td class="em">レガシー</td><td>設計書カバレッジ、解析リードタイム</td><td>50システム中 10（Phase 2）→ 25 → 50（Phase 3）</td></tr>
+      <tr><td class="em">組織能力</td><td>L2到達者数、スキル再利用数、ハーネス導入数、テンプレート追従率</td><td>L2到達 60名以上、ハーネス導入は進捗KPIそのもの</td></tr>
+      <tr><td class="em">コスト</td><td>AI支出/開発者、成果あたりコスト（¥/PR、¥/障害対応）</td><td>上限アラート運用。2年目の配賦移行判断の材料に</td></tr>
+    </tbody>
+  </table>
+
+  <h3>KPIの取得方法 — 実例ベースの要点（詳細は<a href="04_5_dashboard.html">⑤詳細ページ</a>）</h3>
+  <table>
+    <thead><tr><th style="width:26%;">データソース</th><th>取れるもの・使い方</th></tr></thead>
+    <tbody>
+      <tr><td class="em">Copilot Metrics API<br><span class="pill gray">2026年2月GA</span></td><td>利用量・premium request消費をチーム別に取得。<code style="font-size:12px;">ai_adoption_phase</code>（直近28日の利用から自動分類、2026年5月追加）が<strong>人材ラダーL1/L2/L3の進捗測定にそのまま使える</strong><sup><a href="#refs">[22]</a></sup></td></tr>
+      <tr><td class="em">Claude Code<br>OpenTelemetry</td><td>トークン・コスト・ツール実行を公式OTelエクスポートで自動収集（managed settingsで全端末に配布）。スキル利用回数もここから<sup><a href="#refs">[22]</a></sup></td></tr>
+      <tr><td class="em">GitHub／CI<br>（DORA系）</td><td>変更リードタイム・変更失敗率・MTTR。<strong>AI関与PRと非関与PRの比較</strong>（co-author署名等で自動判定）が「AIは効いているか」への最も直接的な回答になる<sup><a href="#refs">[23]</a></sup></td></tr>
+      <tr><td class="em">四半期サーベイ<br>（体感）</td><td>節約時間の自己申告・信頼度。実例: 120人中80人展開をDX Core 4で2ヶ月計測→2.4h/週/人・満足度+9pt<sup><a href="#refs">[23]</a></sup></td></tr>
+      <tr><td class="em">Bedrock／Databricks</td><td>自律ループ・AI SRE・ナレッジ基盤のコスト（タグ付け→⑤で成果あたりコストの分母に）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn"><span class="ttl">測定の最重要注意（METRの教訓）</span>
+    開発者の体感と実測は真逆になり得る（体感+20%／実測−19%<sup><a href="#refs">[23]</a></sup>）。<strong>サーベイ単独で効果を主張しない</strong>こと、
+    行数・コミット数のようなAIで無限に増える指標を目標にしないこと、集計はチーム単位を最小粒度とし個人を測らないこと — の3点をL1方針に明記する。
+  </div>
+</section>
+
+<!-- ================= 9 OPTIONS ================= -->
+<section id="options">
+  <div class="sec-head"><div class="sec-num">9</div><h2>検討項目（関係者で決める論点）</h2></div>
+  <p class="sec-lead">企画としては選択肢と判断基準を提示し、関係者ディスカッションで決定する</p>
+
+  <h3>検討項目A: ナレッジ基盤の置き場（Databricksの守備範囲）</h3>
+  <div class="grid3">
+    <div class="opt">
+      <h4>A-1 Databricks集約</h4>
+      <p style="font-size:12.8px;">開発ナレッジも業務データもGenie Ontology / Lakebaseに集約</p>
+      <div class="pm">
+        <div class="p">ガバナンス一元化（Unity Catalog）</div>
+        <div class="p">データ系ナレッジと横断・既存投資活用</div>
+        <div class="m">開発ツールチェーン（GitHub）から遠い</div>
+        <div class="m">DBUコスト増</div>
+      </div>
+    </div>
+    <div class="opt">
+      <h4>A-2 分離</h4>
+      <p style="font-size:12.8px;">開発ナレッジはGitHub近接（リポジトリ内docs＋RAG）、業務・データ系はDatabricks</p>
+      <div class="pm">
+        <div class="p">ハーネスから直接参照。開発者体験が良い</div>
+        <div class="p">文書がコードと同じレビューフローに乗る</div>
+        <div class="m">二重管理・横断検索が弱い</div>
+      </div>
+    </div>
+    <div class="opt rec"><span class="rec-badge">推奨候補</span>
+      <h4>A-3 フェデレーション</h4>
+      <p style="font-size:12.8px;">ソースオブトゥルースは「使う場所の近く」に置き、<strong>MCPで相互接続</strong>して横断検索</p>
+      <div class="pm">
+        <div class="p">2026年の業界標準構成<sup><a href="#refs">[15]</a></sup></div>
+        <div class="p">各系の開発者体験を損なわず段階導入できる</div>
+        <div class="m">④の権限透過の設計が必要</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px; color:var(--muted); margin-top:10px;">
+    判断基準: ①主な利用者（コーディングエージェント vs 業務エージェント） ②更新頻度と更新者 ③権限モデルの透過性 ④ランニングコスト。
+    推奨の方向性: A-3を基本に、Phase 1はコード系から開始、Phase 2でDatabricksとMCP接続。Databricks運用チームとの役割分担協議が前提。</p>
+
+  <h3>検討項目B: コスト予算モデル</h3>
+  <div class="grid3">
+    <div class="opt">
+      <h4>B-1 CoE一括</h4>
+      <p style="font-size:12.8px;">全AI費用をCoE予算で負担</p>
+      <div class="pm">
+        <div class="p">活用促進期に「使い控え」が起きない</div>
+        <div class="m">部門のコスト意識が育たない</div>
+      </div>
+    </div>
+    <div class="opt">
+      <h4>B-2 部門配賦</h4>
+      <p style="font-size:12.8px;">利用実績で各チームに配賦</p>
+      <div class="pm">
+        <div class="p">コスト意識・受益者負担</div>
+        <div class="m">従量課金への萎縮 → <strong>「最先端重視」方針と矛盾</strong>。初期には不適</div>
+      </div>
+    </div>
+    <div class="opt rec"><span class="rec-badge">推奨候補</span>
+      <h4>B-3 段階移行</h4>
+      <p style="font-size:12.8px;">初年度はCoE一括＋チーム別上限アラート。効果測定が成熟した2年目から配賦へ</p>
+      <div class="pm">
+        <div class="p">促進と統制の両立</div>
+        <div class="p">移行時に「効果あたりコスト」で語れる</div>
+        <div class="m">初年度予算の確保が必要</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>検討項目C: その他（企画書「今後の検討事項」章に記載）</h3>
+  <table>
+    <tbody>
+      <tr><td class="em" style="width:6%;">C-1</td><td>パイロット（灯台）チームの選定基準と候補</td></tr>
+      <tr><td class="em">C-2</td><td>50システムの文書化優先度スコアリングの重み付け（変更頻度×障害頻度×有識者残存性）</td></tr>
+      <tr><td class="em">C-3</td><td>Claude調達形態（Team / Enterprise / API直）とシート初期値（目安 20〜30: L3層＋灯台チーム）</td></tr>
+      <tr><td class="em">C-4</td><td>AI SREの内製（Claude Code＋MCP）／製品導入の比較評価（Phase 1末）</td></tr>
+      <tr><td class="em">C-5</td><td>評価制度・目標設定へのAI活用度の組み込み（チャンピオンのインセンティブ）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>検討項目D: v0.3で追加された論点（ツール・基盤・展開）</h3>
+  <table>
+    <thead><tr><th style="width:6%;">#</th><th style="width:30%;">論点</th><th>検討の観点</th></tr></thead>
+    <tbody>
+      <tr><td class="em">D-1</td><td>ツール使い分け軸の確定</td><td>Copilot coding agent（Issue→PR）の適用範囲をどこまで広げるか。premium request（複雑タスクで10〜30件/回<sup><a href="#refs">[20]</a></sup>）の予算枠と⑤での監視方法</td></tr>
+      <tr><td class="em">D-2</td><td>Claudeの調達経路</td><td><span class="em">Anthropic直契約</span>（Team/Enterprise: 管理機能・最新機能が早い） vs <span class="em">Amazon Bedrock経由</span>（データがAWS域内・請求一元化・AgentCoreと親和<sup><a href="#refs">[21]</a></sup>）。ハイブリッド（端末は直契約、自律ループはBedrock）も選択肢</td></tr>
+      <tr><td class="em">D-3</td><td>エージェント実行環境の統制</td><td>ローカル端末／GitHub Actions／AgentCore Runtimeのどこまで許可するか。自律ループ（狭義）はクラウド実行が前提のため、Phase 3までに要決定</td></tr>
+      <tr><td class="em">D-4</td><td>効果測定の実装方式</td><td>Databricks上で自作（既存資産・柔軟） vs 開発者生産性製品の導入（早い・実績）。Phase 0のベースライン測定は簡易自作で先行</td></tr>
+      <tr><td class="em">D-5</td><td>監査・説明責任の水準</td><td>エージェント操作ログ（④のObservability）の保存期間・粒度。AI事業者ガイドライン1.2版・EU AI Act（2026/8執行）への対応度の宣言レベル</td></tr>
+      <tr><td class="em">D-6</td><td>非開発職への展開範囲</td><td>DX部門内のPM・QA・企画職をL2教育（エージェント実践）の対象にいつから含めるか。Copilot/Claudeのシート配布基準</td></tr>
+      <tr><td class="em">D-7</td><td>外部パートナー活用</td><td>初期構築（基盤・教育コンテンツ）の外注範囲と、Phase 2までの内製化計画。伴走連鎖との整合</td></tr>
+    </tbody>
+  </table>
+
+  <h3>検討項目E: 共通APIゲートウェイとFast-Track運用（v0.5で追加）</h3>
+  <table>
+    <thead><tr><th style="width:6%;">#</th><th style="width:30%;">論点</th><th>検討の観点</th></tr></thead>
+    <tbody>
+      <tr><td class="em">E-1</td><td>ゲートウェイの実装方式</td><td><span class="em">原則: Unity AI Gateway</span>（既存契約。純LLM利用も外部モデルEPを設定で立てるだけで、レート制限・権限・コスト配賦・ログに加え<strong>部門×用途の組み込み利用ダッシュボード</strong>が最初から付く。土台のModel ServingはSLA付き本番グレード）。<span class="em">例外条件でBedrock直</span>: ①閉域要件×PrivateLink未GA ②ミリ秒級レイテンシ ③IAM権限統一必須 ④可用性分離要件。OSS自前ホストは控え。PoCはレイテンシ等の数値確認に限定 → <a href="08_fast-track-api.html">⑧詳細の比較表</a></td></tr>
+      <tr><td class="em">E-2</td><td>Fast-Trackの権限設計</td><td>低リスク即日承認の判定を誰が担うか（AI推進チーム専決の範囲）。例外審査（分類C）の合議体。90日レビューの判定基準</td></tr>
+      <tr><td class="em">E-3</td><td>本番組込みのSLAとワークロード分離</td><td>業務システムに組み込む場合の可用性・レイテンシ・フォールバック要件と、例外条件（E-1参照）の該当判定基準。<strong>本番サービス利用と社内利用は実行資源を分離</strong>する（Unity AI GW: エンドポイント／ワークスペース分離＋本番はプロビジョンドスループット、Bedrock: アカウント分離＝クォータ独立）— 社内利用の障害・過負荷を本番に波及させないことを設計要件とする</td></tr>
+      <tr><td class="em">E-4</td><td>MCP提供の実装方式</td><td>データ系ツール→<span class="em">Databricks managed MCP</span>（UC関数・SQL・Genie・Vector Searchを設定で提供、Unity Catalog権限が透過）／社内API・Lambda系→<span class="em">AgentCore Gateway</span>（④と同一基盤）／特殊要件のみ自作。いずれも④レジストリ登録を必須とし、<strong>暫定登録レーン（読み取り専用＋ログ必須で即日）</strong>で整備を待たせない → <a href="08_fast-track-api.html">⑧詳細の3類型表</a></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= 10 RISK ================= -->
+<section id="risk">
+  <div class="sec-head"><div class="sec-num">10</div><h2>リスクと対策</h2></div>
+  <table>
+    <thead><tr><th style="width:34%;">リスク</th><th>対策</th></tr></thead>
+    <tbody>
+      <tr><td class="em">知見の属人化（企画者・CoEリード依存）</td><td>ハーネスのテンプレート化、伴走連鎖、フロンティアウォッチの複数名運営</td></tr>
+      <tr><td class="em">「型」の押し付けによる現場反発</td><td>L3は部門所有を堅持。共通化は「全員が速くなるものだけ」原則。CoPで現場発の改善を吸い上げ</td></tr>
+      <tr><td class="em">AI出力の品質事故</td><td>Human-in-the-Loop基準（L1）、CI不変条件（②）、AI起因不具合率の測定（⑤）</td></tr>
+      <tr><td class="em">コスト超過</td><td>ダッシュボード＋チーム別上限アラート（B-3）</td></tr>
+      <tr><td class="em">ツール陳腐化・乗り換え</td><td>可搬性のある抽象（スキル／MCP／AGENTS.md）への投資原則。四半期ポートフォリオ再評価</td></tr>
+      <tr><td class="em">底上げの停滞（L1止まり層の固定化）</td><td>教育を「ツール操作」でなく「仕事の依頼の仕方」に焦点化。チャンピオンの日常支援</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= REFS ================= -->
+<section id="refs">
+  <div class="sec-head"><div class="sec-num">※</div><h2>参考事例・出典</h2></div>
+  <div class="card refs">
+    <ol>
+      <li>[1] <a href="https://www.gartner.com/en/articles/enterprise-ai-coding-agent-market">Gartner: Enterprise AI Coding Agent Market</a> — 生産性+19.3%、節約3.6h/週/人、信頼29%</li>
+      <li>[2] <a href="https://www.faros.ai/blog/enterprise-ai-coding-assistant-adoption-scaling-guide">Faros.ai: Enterprise AI Coding Assistant Adoption</a></li>
+      <li>[3] <a href="https://northflank.com/blog/enterprise-ai-coding-agent-deployment">Northflank: エージェントパイロットの88%が本番未達（基盤欠如）</a></li>
+      <li>[4] <a href="https://www.thoughtworks.com/en-us/radar/tools/claude-code-plugin-marketplace">Thoughtworks Technology Radar: Claude Code plugin marketplace</a></li>
+      <li>[5] <a href="https://github.com/wshobson/agents">マルチハーネス対応プラグインマーケットプレイス（OSS）</a></li>
+      <li>[6] <a href="https://www.hexabase.com/column/ai-learns-business-claude-skills">Claude Skillsによる業務スキル化の国内事例（50本超、15分→2分）</a></li>
+      <li>[7] <a href="https://type.jp/et/feature/29359/">メルカリ「Project Double」— AI利用率95%・AI生成コード比率70%・開発量+64%</a></li>
+      <li>[8] <a href="https://arxiv.org/html/2602.14690v5">Harness Engineering for Agentic AI Coding Tools（OpenAI Codexチームの実践を含む調査）</a></li>
+      <li>[9] <a href="https://www.infoq.com/news/2026/04/anthropic-three-agent-harness-ai/">Anthropic 3エージェントハーネス（InfoQ）</a></li>
+      <li>[10] <a href="https://blog.cloudnative.co.jp/articles/claude-code-enterprise-starter-kit-best-practices/">Claude Code企業配布設計（managed settings＋Starter Kit）</a></li>
+      <li>[11] <a href="https://keerok.tech/en/blog/enterprise-rag-building-an-ai-knowledge-base-in-2026/">Enterprise RAG 2026</a> ／ <a href="https://nstarxinc.com/blog/the-next-frontier-of-rag-how-enterprise-knowledge-systems-will-evolve-2026-2030/">知識ランタイムへの進化（NStarX）</a></li>
+      <li>[12] <a href="https://www.databricks.com/blog/agent-bricks-dais-2026">Databricks Agent Bricks（DAIS 2026）</a> ／ <a href="https://www.databricks.com/company/newsroom/press-releases/databricks-launches-genie-one-all-new-agentic-coworker-every-team">Genie One発表</a></li>
+      <li>[13] <a href="https://global.fujitsu/en-global/pr/news/2026/03/30-01">富士通: ソースコードからの設計書自動生成SaaS（工数約97%削減）</a></li>
+      <li>[14] <a href="https://konghq.com/blog/learning-center/what-is-a-mcp-gateway">MCPゲートウェイとは（Kong）</a> ／ <a href="https://composio.dev/content/what-is-mcp-gateway-and-why-your-enterprise-need-it">Composio解説</a></li>
+      <li>[15] <a href="https://aaif.io/blog/mcp-is-now-enterprise-infrastructure-everything-that-happened-at-mcp-dev-summit-north-america-2026/">MCP Dev Summit NA 2026（Uber・Blockの事例、SDK月間9,700万DL）</a> ／ <a href="https://www.forbes.com/sites/janakirammsv/2026/07/05/agent-gateways-are-becoming-the-control-plane-for-enterprise-ai/">Forbes: Agent Gateways</a></li>
+      <li>[16] <a href="https://dora.dev/dora-report-2025/">DORA 2025: State of AI-assisted Software Development</a> ／ <a href="https://getdx.com/blog/dora-metrics/">DX Core 4 / DORAメトリクス</a></li>
+      <li>[17] <a href="https://rootly.com/ai-sre-guide">Rootly AI SREガイド（MTTR 30〜70%削減）</a> ／ <a href="https://aws.amazon.com/blogs/devops/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/">AWS DevOps Agent</a></li>
+      <li>[18] <a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps for AI（FinOps Foundation）</a> ／ <a href="https://www.datadoghq.com/blog/monitor-openai-cost-datadog-cloud-cost-management-llm-observability/">Datadog LLMコスト監視</a></li>
+      <li>[19] <a href="https://www.ai-souken.com/article/what-is-loop-engineering">ループエンジニアリング解説（AI総合研究所）</a> ／ <a href="https://jp.findy-team.io/blog/ai-casestudy/harness-engineering/">ハーネスエンジニアリング（Findy）</a> ／ <a href="https://atmarkit.itmedia.co.jp/ait/articles/2607/03/news016.html">内側ループと外側ループ入門（@IT）</a></li>
+      <li>[20] <a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent">GitHub Docs: Copilot cloud (coding) agent</a> ／ <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">GitHub Blog: coding agent発表</a> — 2026年3月GA。premium request＋Actions分を消費（複雑タスクで10〜30件/回）</li>
+      <li>[21] <a href="https://aws.amazon.com/bedrock/agentcore/">Amazon Bedrock AgentCore</a> ／ <a href="https://aws.amazon.com/blogs/machine-learning/its-safe-to-close-your-laptop-now-hosting-coding-agents-on-amazon-bedrock-agentcore/">AWS Blog: AgentCoreでのコーディングエージェント実行（分離microVM・最長8時間）</a> ／ <a href="https://aws.amazon.com/bedrock/anthropic/">Claude on Amazon Bedrock</a></li>
+      <li>[22] <a href="https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics">GitHub Copilot usage metrics（2026年2月GA）</a> ／ <a href="https://github.blog/changelog/2026-05-29-copilot-usage-metrics-api-adds-cohorts-for-ai-adoption/">ai_adoption_phaseコホート追加</a> ／ <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Monitoring（OpenTelemetry公式）</a> ／ <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans">Claude Analytics API</a></li>
+      <li>[23] <a href="https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html">METR研究: 体感+20%／実測−19%（InfoWorld）</a> ／ <a href="https://zylos.ai/research/2026-02-07-developer-productivity-metrics/">歪む指標とAI Usage Diff Mapping（Zylos）</a> ／ <a href="https://www.buildmvpfast.com/blog/dx-core-4-developer-productivity-measurement-ai-impact-2026">DX Core 4計測の実例（80/120人・2.4h/週）</a></li>
+      <li>[24] 国内成果事例: <a href="https://service.is-c.jpn.panasonic.com/column/generative_ai">パナソニック コネクト（年18.6万時間削減）</a> ／ <a href="https://www.nikkei.com/article/DGXZQOUC254OB0V21C25A2000000/">NTTデータ AIネイティブ開発（日経）</a> — 失敗・警鐘データ含む詳細は<a href="06_case-studies.html">事例集</a>参照</li>
+      <li>[25] 個人実践者の勉強会記事5本（ハーネス/ループ実践知）の検証結果 — <a href="07_source-review.html">参考資料の検証レポート（内部用）</a>。裏付けの取れた要点は②・ループ詳説に反映済み</li>
+      <li>[26] v0.5追加分: <a href="https://www.databricks.com/product/artificial-intelligence/unity-ai-gateway">Databricks Unity AI Gateway</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">同 公式Docs</a> ／ <a href="https://www.truefoundry.com/blog/a-definitive-guide-to-ai-gateways-in-2026-competitive-landscape-comparison">AI Gateways 2026 競合比較</a> ／ <a href="https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/">GitHub Changelog: Claude/CodexがCopilot Business/Proで利用可能に</a> ／ <a href="https://dora.dev/capabilities/platform-engineering/">DORA: Platform Engineering（Paved Road）</a></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  生成AIによる開発プロセス変革 企画書ドラフト v0.5 ／ 2026-07-20 ／ 関係者ディスカッション用<br>
+  詳細シリーズ: ①〜⑦（04_*.html）／⑧ API/Fast-Track（08）／ループ詳説（05）／事例集（06）／検証レポート（07）<br>
+  出典データは2026年7月時点の公開情報に基づく
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>① 社内スキル／プラグイン・マーケットプレイス — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (1/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html" class="cur">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ①</span>
+  <h1>社内スキル／プラグイン・マーケットプレイス</h1>
+  <p class="lead">各チーム・各個人の工夫を「1回作れば100人が使える資産」に変える配布チャネル。実体は社内Gitリポジトリ1つ — 最も安く、最初に作るもの。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか</h2>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">個人止まり</div><div class="lbl">良いプロンプト・スキルが個人のメモやチャット履歴に埋もれている</div></div>
+    <div class="stat warn"><div class="num">車輪の再発明</div><div class="lbl">10チームが同じ「レビュー観点」「設計書生成」を別々に作っている</div></div>
+    <div class="stat good"><div class="num">数日</div><div class="lbl">マーケットプレイス経由なら、良い工夫が全チームに届くまでの時間</div></div>
+  </div>
+  <div class="callout point"><span class="ttl">設計上の位置づけ</span>
+    最先端の型（②ハーネス、⑦ウォッチの成果）を全員に配る<strong>配布インフラ</strong>でもある。①がないと、②⑦は「作ったが届かない」で止まる。
+  </div>
+</section>
+
+<section>
+  <h2>2. 技術構成</h2>
+  <h3>2-1. リポジトリ構造（これだけで成立する）</h3>
+  <pre class="code"><span class="c"># 社内Git: github.com/&lt;org&gt;/ai-marketplace （リポジトリ1つ）</span>
+ai-marketplace/
+├── .claude-plugin/
+│   └── marketplace.json        <span class="c"># カタログ定義（下記）</span>
+├── plugins/
+│   ├── common-dev/             <span class="c"># 共通開発（AI推進チーム管理）</span>
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── skills/
+│   │   │   ├── review-checklist/SKILL.md    <span class="c"># レビュー観点</span>
+│   │   │   ├── gen-design-doc/SKILL.md      <span class="c"># 設計書生成</span>
+│   │   │   └── impact-analysis/SKILL.md     <span class="c"># 影響調査</span>
+│   │   ├── agents/refactor-planner.md       <span class="c"># サブエージェント定義</span>
+│   │   ├── commands/                        <span class="c"># /コマンド</span>
+│   │   └── hooks/hooks.json                 <span class="c"># コミット前チェック等</span>
+│   ├── legacy-doc/             <span class="c"># レガシー文書化（Phase 1の主役）</span>
+│   ├── ops-incident/           <span class="c"># 障害対応（⑥と連動）</span>
+│   └── team-payment/           <span class="c"># チーム固有（L3・各チーム所有）</span>
+└── CONTRIBUTING.md             <span class="c"># 公開手順・昇格基準</span></pre>
+
+  <pre class="code"><span class="c">// .claude-plugin/marketplace.json（最小構成）</span>
+{
+  <span class="k">"name"</span>: <span class="s">"company-ai-marketplace"</span>,
+  <span class="k">"owner"</span>: { <span class="k">"name"</span>: <span class="s">"AI推進チーム"</span> },
+  <span class="k">"plugins"</span>: [
+    { <span class="k">"name"</span>: <span class="s">"common-dev"</span>,  <span class="k">"source"</span>: <span class="s">"./plugins/common-dev"</span>,
+      <span class="k">"description"</span>: <span class="s">"共通開発スキル: レビュー・設計書・影響調査"</span> },
+    { <span class="k">"name"</span>: <span class="s">"legacy-doc"</span>,  <span class="k">"source"</span>: <span class="s">"./plugins/legacy-doc"</span>,
+      <span class="k">"description"</span>: <span class="s">"レガシー文書化: コード→設計書リバース生成"</span> }
+  ]
+}</pre>
+  <p>利用者側は1コマンドで導入・同期:</p>
+  <pre class="code">claude plugin marketplace add github.com/&lt;org&gt;/ai-marketplace
+claude plugin install common-dev   <span class="c"># 以後 git pull で自動的に最新化</span></pre>
+
+  <h3>2-2. ツール非依存に保つ（乗り換え耐性）</h3>
+  <table>
+    <thead><tr><th style="width:26%;">資産</th><th style="width:34%;">置き方</th><th>各ツールからの利用</th></tr></thead>
+    <tbody>
+      <tr><td class="em">スキル本体</td><td>Markdown（SKILL.md）— 手順・知識・例を記述</td><td>Claude Code: そのまま ／ Copilot: instructionsファイルへ変換 ／ Gemini CLI: 拡張として読込</td></tr>
+      <tr><td class="em">ツール別アダプタ</td><td>薄い変換層のみ（自動生成スクリプト）</td><td>マルチハーネス対応のOSS実装が参考になる<sup><a href="#refs">[2]</a></sup></td></tr>
+      <tr><td class="em">MCPサーバー定義</td><td>plugin内の mcp.json（接続先は④のレジストリ準拠）</td><td>MCP対応ツールすべて共通</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn"><span class="ttl">原則</span>
+    知識・手順は<strong>Markdownに書く（ツール中立）</strong>。特定ツールの独自形式に直接書くのは変換層だけ。これでツール乗り換え時も資産が生き残る。
+  </div>
+</section>
+
+<section>
+  <h2>3. 運用 — スキルのライフサイクル</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>1. 作る</b>個人が業務の中でスキル化。テンプレは common-dev/skill-template</div><div class="arr">→</div>
+    <div class="step"><b>2. チーム公開</b>team-* プラグインに置くだけ。<strong>審査なし・即日</strong></div><div class="arr">→</div>
+    <div class="step"><b>3. 昇格申請</b>他チームでも使えそうなものをチャンピオンが推薦</div><div class="arr">→</div>
+    <div class="step"><b>4. レビュー</b>AI推進チームが品質ゲート（下記チェックリスト）</div><div class="arr">→</div>
+    <div class="step"><b>5. 共通配布</b>common-* へ移動 → 全チームに数日で自動同期</div>
+  </div>
+  <p class="anim-note">※ ステップをクリックで固定表示（ホバーで一時停止）</p>
+
+  <details class="acc"><summary>昇格レビューのチェックリスト（品質ゲートはここだけ）</summary>
+    <div class="acc-body"><ul class="plain">
+      <li><strong>汎用性</strong>: チーム固有の前提（システム名・パス）が除去またはパラメータ化されているか</li>
+      <li><strong>安全性</strong>: 破壊的操作を含む場合、確認ステップ・denylistがあるか</li>
+      <li><strong>検証可能性</strong>: 期待する出力の例（正解サンプル）が添付されているか — ⑦の評価シナリオに転用</li>
+      <li><strong>説明</strong>: description 1行で「いつ使うか」が判るか（発見性）</li>
+      <li><strong>重複</strong>: 既存共通スキルと統合できないか</li>
+    </ul></div>
+  </details>
+  <details class="acc"><summary>週次・月次・四半期の運用カレンダー</summary>
+    <div class="acc-body">
+      <div class="ops">
+        <div class="op"><div class="when">随時（自動）</div><div class="what">スキル利用回数を⑤に送信（OTelイベント）。壊れたスキルはIssue自動起票</div></div>
+        <div class="op"><div class="when">月次（30分・AI推進チーム）</div><div class="what">昇格申請のレビュー、非推奨化（3ヶ月利用ゼロは deprecated タグ）</div></div>
+        <div class="op"><div class="when">四半期（CoP内）</div><div class="what">利用数ランキング公表・作者表彰。スキルコンテスト（お題つき）</div></div>
+      </div>
+    </div>
+  </details>
+
+  <h3>初期コンテンツ（Phase 1着手時に用意する12本）</h3>
+  <table>
+    <thead><tr><th style="width:22%;">プラグイン</th><th>初期スキル</th></tr></thead>
+    <tbody>
+      <tr><td class="em">common-dev</td><td>レビュー観点 ／ テスト作成 ／ 影響調査 ／ PR説明文生成 ／ コミット規約</td></tr>
+      <tr><td class="em">legacy-doc</td><td>コード→設計書リバース生成 ／ 依存関係マップ ／ ビジネスルール抽出 ／ AGENTS.mdドラフト生成</td></tr>
+      <tr><td class="em">ops-incident</td><td>障害状況サマリ ／ タイムライン整理 ／ 報告書ドラフト</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px; color:var(--muted);">※ 企画者の既存ハーネス資産を核に、灯台チームの実務で磨いてから共通化する。</p>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:36%;">取得方法</th><th style="width:22%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>共通スキル数／チームスキル数</td><td>リポジトリの集計（CIで自動）</td><td>6ヶ月で30本／50本</td></tr>
+      <tr><td>スキル利用回数・利用チーム数</td><td>Claude CodeのOTelイベント（ツール実行ログ）→⑤へ<sup><a href="#refs">[3]</a></sup></td><td>再利用率（2チーム以上で利用）50%</td></tr>
+      <tr><td>時間短縮</td><td>スキル化前後の作業時間をチャンピオンがサンプル計測（対象作業3つ/四半期）</td><td>対象作業で1/5（先行事例: 15分→2分<sup><a href="#refs">[4]</a></sup>）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    Thoughtworks Technology Radarが社内Git配布モデルを評価<sup><a href="#refs">[1]</a></sup>。国内では50本超のスキル運用（見積書15分→2分）事例<sup><a href="#refs">[4]</a></sup>。
+    メルカリは専任部隊が標準を全社展開し利用率95%を達成<sup><a href="#refs">[5]</a></sup> — 「作る人」と「届ける仕組み」の両輪が成功要因。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>審査を厳しくしすぎて投稿が止まる</strong>（チーム内公開は無審査を貫く）／
+    <strong>類似スキルの乱立</strong>（月次の統合レビューで対処）／
+    <strong>作りっぱなしの陳腐化</strong>（利用ゼロ3ヶ月で自動deprecated。壊れたら自動Issue）／
+    <strong>野良MCPサーバーの混入</strong>（接続先は④の承認済みレジストリに限定 — L1ルール）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://www.thoughtworks.com/en-us/radar/tools/claude-code-plugin-marketplace">Thoughtworks Radar: Claude Code plugin marketplace</a> ／ <a href="https://code.claude.com/docs/en/plugins">公式Docs: Create plugins</a></li>
+    <li>[2] <a href="https://github.com/wshobson/agents">マルチハーネス対応マーケットプレイス（OSS）</a> — Claude Code/Copilot/Gemini CLI等で共用</li>
+    <li>[3] <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Docs: Monitoring（OpenTelemetry）</a></li>
+    <li>[4] <a href="https://www.hexabase.com/column/ai-learns-business-claude-skills">Claude Skills業務スキル化の国内事例</a></li>
+    <li>[5] <a href="https://type.jp/et/feature/29359/">メルカリ Project Double（エンジニアtype）</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="03_proposal.html"><span class="dir">← 戻る</span><div class="t">企画書本体</div></a>
+  <a class="next" href="04_2_harness.html"><span class="dir">次 →</span><div class="t">② 標準ハーネステンプレート</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ① ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

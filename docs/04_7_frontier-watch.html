@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑦ フロンティアウォッチループ — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (7/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html" class="cur">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ⑦</span>
+  <h1>フロンティアウォッチループ — 「追いつく」の仕組み化</h1>
+  <p class="lead">最新動向の収集・評価・展開を自律ループにする。「世の中が速すぎて個人では追いきれない」を、週15分の判定業務に変える。部門初のループエンジニアリング実装。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか</h2>
+  <p>活用パラダイムは数ヶ月単位で更新される（ハーネス→ループ、coding agent GA、AgentCore登場…すべてこの1年の出来事）。
+  現状は<strong>追従できる個人（フロントランナー）に依存</strong>しており、その個人でさえ「追いきれない」と感じている。
+  これは根性の問題ではなく構造の問題 — <strong>収集と一次評価を機械化し、人間は判定だけに絞る</strong>。</p>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">属人</div><div class="lbl">最新知識が特定個人に依存。休暇・異動で部門の目が止まる</div></div>
+    <div class="stat good"><div class="num">週15分</div><div class="lbl">仕組み化後にAI推進チームが使う判定時間</div></div>
+    <div class="stat good"><div class="num">数週間</div><div class="lbl">世の中の発表 → 全チームのテンプレ反映までのリードタイム</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>2. ループの構成</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>収集（週次・自動）</b>公式changelog・ブログRSS・arXiv・実践記事を巡回エージェントが要約</div><div class="arr">→</div>
+    <div class="step"><b>スコアリング（自動）</b>影響度×当社関連度で採点し「今週の5件」を絞り込み</div><div class="arr">→</div>
+    <div class="step"><b>判定（人・15分）</b>AI推進チームが 試す／見送る／即展開 を判定（下記ルーブリック）</div><div class="arr">→</div>
+    <div class="step"><b>検証（月次）</b>評価用サンドボックスで実測 — 評価リポジトリ＋評価シナリオ＝社内ミニベンチマーク</div><div class="arr">→</div>
+    <div class="step"><b>展開（自動）</b>有効ならテンプレ（②）・スキル（①）を更新PR → 全チームに同期</div><div class="arr">→</div>
+    <div class="step"><b>記録</b>見送り理由と再評価条件を③に記録（同じ議論を繰り返さない）</div>
+  </div>
+
+  <h3>2-1. 情報源リスト（初期セット）</h3>
+  <table>
+    <thead><tr><th style="width:26%;">カテゴリ</th><th>ソース例</th><th style="width:16%;">頻度</th></tr></thead>
+    <tbody>
+      <tr><td class="em">利用ツールの公式</td><td>Claude Code changelog／GitHub Copilot changelog／AWS What's New（Bedrock・AgentCore）／Databricksリリースノート</td><td>週次</td></tr>
+      <tr><td class="em">実践知</td><td>DORA・DXブログ、主要テックブログ、国内実践記事（Findy等）</td><td>週次</td></tr>
+      <tr><td class="em">研究</td><td>arXiv（agent／SWE系。要約のみ）</td><td>週次</td></tr>
+      <tr><td class="em">規制・ガバナンス</td><td>AI事業者ガイドライン改訂、EU AI Act動向</td><td>月次</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px; color:var(--muted);">ソースは<strong>厳選20本以内</strong>を維持（多いほどノイズが増え判定が形骸化する）。四半期で入れ替え。</p>
+
+  <h3>2-2. 判定ルーブリック（属人化させない）</h3>
+  <table>
+    <thead><tr><th style="width:16%;">判定</th><th>基準</th><th style="width:30%;">その後</th></tr></thead>
+    <tbody>
+      <tr><td class="em">即展開</td><td>リスクなしの改善（例: ツールの設定改善、コスト削減設定）</td><td>テンプレ更新PRを当週内に配布</td></tr>
+      <tr><td class="em">試す</td><td>効果が大きそうだが検証が必要（例: 新しいエージェント機能、新モデル）</td><td>翌月のサンドボックス検証へ。検証観点を明記</td></tr>
+      <tr><td class="em">見送る</td><td>当社前提に合わない／成熟待ち／可搬性が低い（特定ツール深依存）</td><td>理由と再評価条件（例: GA後・事例3件以上）を③に記録</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2-3. サンドボックス検証（社内ミニベンチマーク）</h3>
+  <ul class="plain">
+    <li><strong>評価リポジトリ</strong>: 当社の典型コード（レガシー含む）を模した検証用リポジトリ2〜3本</li>
+    <li><strong>評価シナリオ</strong>: 定型タスク10本（バグ修正・機能追加・文書生成・調査）— スキル昇格時の「正解サンプル」（①）を流用</li>
+    <li><strong>測るもの</strong>: 成功率・所要時間・トークンコスト・出力品質（Checkerエージェントが採点）</li>
+    <li>これにより「新しいツール/手法が当社で効くか」を<strong>感想ではなく数字</strong>で判定できる</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 運用と実装</h2>
+  <div class="ops">
+    <div class="op"><div class="when">実装</div><div class="what">収集エージェント＝スケジュール実行（cron）のClaude Code／Agent。要約→スコア→チャネル投稿まで無人。<strong>これ自体が自律ループの練習台</strong>（停止条件・コスト上限を実装して<a href="05_loop-engineering.html">ループ詳説</a>の型を検証する）</div></div>
+    <div class="op"><div class="when">週次金曜 15分</div><div class="what">AI推進チーム全員で判定（リードだけに依存させない — 複数名運営が属人化対策）</div></div>
+    <div class="op"><div class="when">月次</div><div class="what">サンドボックス検証（1〜3件）。結果をCoPで共有し、テンプレ更新の背景を現場に説明</div></div>
+    <div class="op"><div class="when">四半期</div><div class="what">ツールポートフォリオ再評価（乗り換え・追加・廃止の判断）。情報源リストの入れ替え</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:42%;">取得方法</th><th style="width:18%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>評価件数／採用率</td><td>判定記録（③）の集計</td><td>週5件評価・採用率2〜3割</td></tr>
+      <tr><td>展開リードタイム</td><td>世の中の発表日→テンプレ配布日</td><td>即展開1週間・検証経由6週間</td></tr>
+      <tr><td>判定の複数名化</td><td>判定参加者数（属人化の監視）</td><td>常時3名以上</td></tr>
+      <tr><td>ループ自体のコスト</td><td>⑤で計測（収集・検証のトークン費）</td><td>上限額を設定</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 落とし穴</h2>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>ノイズ過多</strong>（ソースを増やすほど「今週の5件」の質が落ちる。厳選リストを守る）／
+    <strong>判定の形骸化</strong>（全部「試す」にすると検証が詰まる。月の検証枠は3件まで）／
+    <strong>新しもの好きの暴走</strong>（可搬性原則 — スキル/MCP/AGENTS.mdに乗らない深依存は原則見送り）／
+    <strong>見送り記録の省略</strong>（記録がないと同じ議論を毎月繰り返す）。
+  </div>
+</section>
+
+<div class="pn">
+  <a href="04_6_ai-sre.html"><span class="dir">← 前</span><div class="t">⑥ AI SRE</div></a>
+  <a class="next" href="05_loop-engineering.html"><span class="dir">次 →</span><div class="t">ループエンジニアリング詳説</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ⑦ ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

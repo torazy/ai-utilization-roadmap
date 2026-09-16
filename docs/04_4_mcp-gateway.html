@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>④ MCPゲートウェイ — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (4/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html" class="cur">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ④ ＝ 統制点その1</span>
+  <h1>MCPゲートウェイ — エージェントの社内アクセスを一元統制</h1>
+  <p class="lead">エージェントが社内システムに触る経路をここに集約し、認証・権限（利用者と同一）・監査・レート制御を担保する。「自由に使わせるための、たった1つの関所」。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか</h2>
+  <p>エージェントに社内システム（チケット・監視・Wiki・DB）を触らせた瞬間、セキュリティの論点が爆発する。ツールごと・チームごとに個別接続を許すと、
+  <strong>権限の把握不能・監査不能・野良サーバーの混入</strong>が必ず起きる。ゲートウェイはこれを構造的に解決する2026年の標準構成<sup><a href="#refs">[1]</a></sup>。</p>
+  <div class="grid3">
+    <div class="stat"><div class="num">1点</div><div class="lbl">セキュリティレビューの対象がツール個別→ゲートウェイ1点に集約</div></div>
+    <div class="stat good"><div class="num">週6万回</div><div class="lbl">Uberがゲートウェイ＋レジストリ構成で統制下運用するエージェント実行数</div><div class="src">MCP Dev Summit 2026<sup><a href="#refs">[2]</a></sup></div></div>
+    <div class="stat good"><div class="num"><span class="cnt" data-to="98.7" data-suf="%">0</span></div><div class="lbl">Blockが既定MCP整備等で削減した全社トークン消費 — 統制がコスト削減そのものになる</div><div class="src">同上<sup><a href="#refs">[2]</a></sup></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>2. リクエストの流れ（統制の実体）</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>1. 呼び出し</b>エージェント（Claude Code／coding agent／AI SRE／自律ループ）がツールを要求</div><div class="arr">→</div>
+    <div class="step"><b>2. 認証</b>SSO連携。「誰の代理か」を特定（AgentCore Identity）</div><div class="arr">→</div>
+    <div class="step"><b>3. 認可</b>利用者と同一権限にマッピング。範囲外は拒否</div><div class="arr">→</div>
+    <div class="step"><b>4. 実行</b>承認済みレジストリのツールのみ呼び出し（レート制御つき）</div><div class="arr">→</div>
+    <div class="step"><b>5. 監査</b>誰が・何を・いつ読み書きしたかを記録 → コスト帰属を⑤へ</div>
+  </div>
+
+  <h3>2-1. 実装 — 自社開発しない（AWSマネージド第一）</h3>
+  <table>
+    <thead><tr><th style="width:22%;">段階</th><th style="width:34%;">実装</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td class="em">Phase 1<br><span class="pill gray">レジストリのみ</span></td><td>承認済みMCPサーバー一覧（JSON）＋ managed settingsで配布</td><td>接続可能なサーバーをリストで統制。ゲートウェイ実体はまだ作らない — 軽く始める</td></tr>
+      <tr><td class="em">Phase 2<br><span class="pill teal">データ系ツール</span></td><td><strong>Databricks managed MCP ＋ Unity AI Gateway</strong><sup><a href="#refs">[4]</a></sup></td><td>テーブル・UC関数・SQL・Genie・Vector Searchは<strong>設定だけでMCPツール化</strong>でき、Unity Catalog権限がそのまま透過する。外部MCPサーバーへのアクセス統制とトラフィック可視化もUnity AI Gatewayが提供</td></tr>
+      <tr><td class="em">Phase 2<br><span class="pill blue">API・Lambda系ツール</span></td><td><strong>Amazon Bedrock AgentCore Gateway</strong><sup><a href="#refs">[3]</a></sup></td><td>AWS上の社内REST API・LambdaをMCPツールに自動変換（semantic routing）。Identityで権限透過、Observabilityで監査。<strong>接続先追加＝Lambda1本</strong>になる</td></tr>
+      <tr><td class="em">代替候補</td><td>Kong・Composio等のMCPゲートウェイ製品／OSS<sup><a href="#refs">[1]</a></sup></td><td>上記2系統で不足が出た場合の比較対象（マルチクラウド要件等）</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;">使い分けの基準は<strong>接続先の所在と権限体系</strong> — Unity Catalog配下のデータ資産か、AWS上のAPI・運用ツールか。実行系統が2つになっても、<strong>レジストリ（承認済み一覧）と監査・可視化（⑤）の管理は1つに保つ</strong>。実装方式の確定は検討項目E-4（→ <a href="08_fast-track-api.html">⑧の3類型表</a>）で行う。</p>
+
+  <h3>2-2. 初期に接続するMCPサーバー（承認済みレジストリ v1）</h3>
+  <table>
+    <thead><tr><th style="width:28%;">接続先</th><th>エージェントができること</th><th style="width:18%;">主な利用者</th></tr></thead>
+    <tbody>
+      <tr><td class="em">GitHub</td><td>Issue/PR/コード検索・作成</td><td>開発全般</td></tr>
+      <tr><td class="em">チケット・Wiki</td><td>起票・検索・更新</td><td>開発・運用</td></tr>
+      <tr><td class="em">CloudWatch／ログ基盤</td><td>メトリクス・ログ・アラーム照会（読み取り専用から）</td><td>⑥ AI SRE</td></tr>
+      <tr><td class="em">ナレッジ検索（③）</td><td>横断検索ツール1本（Databricks＋リポジトリdocs）</td><td>全エージェント</td></tr>
+      <tr><td class="em">Databricks（Genie）</td><td>データ照会・分析実行</td><td>業務・データ系</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px; color:var(--muted);">Blockの既定構成（Snowflake・GitHub・Jira・Slack・Drive）と同型<sup><a href="#refs">[2]</a></sup>。「全員が毎日使う5本」から始める。</p>
+</section>
+
+<section>
+  <h2>3. 運用</h2>
+  <div class="ops">
+    <div class="op"><div class="when">新規サーバー追加時</div><div class="what">申請（用途・データ分類・権限範囲）→ AI推進チーム＋セキュリティ担当が審査（1週間SLA）→ レジストリ登録 → 全エージェントから利用可</div></div>
+    <div class="op"><div class="when">週次（自動）</div><div class="what">異常パターン検知: 権限拒否の多発・深夜の大量読み出し・未知サーバーへの接続試行をアラート</div></div>
+    <div class="op"><div class="when">月次</div><div class="what">監査ログレビュー（セキュリティ担当）。利用ゼロのサーバー棚卸し</div></div>
+    <div class="op"><div class="when">四半期</div><div class="what">権限マッピングの見直し（組織変更・システム追加への追従）</div></div>
+  </div>
+  <div class="callout warn"><span class="ttl">L1ルールとの接続</span>
+    「エージェントの社内接続は④経由のみ。レジストリ外の野良MCPサーバー接続は禁止」をL1ルールに明記。managed settings（②）のdenyで技術的にも強制する。
+  </div>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:42%;">取得方法</th><th style="width:18%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>接続ツール数／利用エージェント実行数</td><td>ゲートウェイのログ（AgentCore Observability／Unity AI Gatewayの利用テーブル）</td><td>利用の伸びで基盤価値を示す</td></tr>
+      <tr><td>権限拒否・ブロック件数</td><td>同上 — 「柵が機能している」証跡として報告</td><td>傾向監視</td></tr>
+      <tr><td>接続先追加のリードタイム</td><td>申請→利用可能までの日数</td><td>5営業日以内</td></tr>
+      <tr><td>セキュリティインシデント（エージェント起因）</td><td>インシデント管理と紐付け</td><td>0件</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    Uber: ゲートウェイ＋レジストリで社内1万サービスの統制利用（月間アクティブエージェント1,500）<sup><a href="#refs">[2]</a></sup>。
+    Block: 既定MCPサーバー整備で全社トークン-98.7%<sup><a href="#refs">[2]</a></sup>。
+    ゲートウェイは「エンタープライズAIのコントロールプレーン」と位置づけ（Forbes）<sup><a href="#refs">[1]</a></sup>。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>野良MCPサーバー</strong>（サプライチェーン攻撃の入口。レジストリ制＋deny設定で遮断）／
+    <strong>トークン素通し（token passthrough）</strong>（ゲートウェイが権限を確認せず認証情報を転送すると権限昇格の穴になる — ゲートウェイ側での再認可を必須に）／
+    <strong>最初から重厚に作る</strong>（Phase 1はリストだけ。統制を先に完成させると活用が死ぬ）／
+    <strong>読み書き同時開放</strong>（新規接続は読み取り専用から始め、書き込みは実績を見て開放）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://konghq.com/blog/learning-center/what-is-a-mcp-gateway">MCPゲートウェイとは（Kong）</a> ／ <a href="https://composio.dev/content/what-is-mcp-gateway-and-why-your-enterprise-need-it">Composio解説</a> ／ <a href="https://www.forbes.com/sites/janakirammsv/2026/07/05/agent-gateways-are-becoming-the-control-plane-for-enterprise-ai/">Forbes: Agent Gateways</a></li>
+    <li>[2] <a href="https://aaif.io/blog/mcp-is-now-enterprise-infrastructure-everything-that-happened-at-mcp-dev-summit-north-america-2026/">MCP Dev Summit NA 2026（Uber・Block事例）</a></li>
+    <li>[3] <a href="https://aws.amazon.com/bedrock/agentcore/">Amazon Bedrock AgentCore（Gateway／Identity／Observability）</a></li>
+    <li>[4] <a href="https://www.databricks.com/blog/accelerate-ai-development-databricks-discover-govern-and-build-mcp-and-agent-bricks">Databricks managed MCPサーバー（UC関数・SQL・Genie・Vector Search）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">Unity AI Gateway（外部MCPアクセスの統制）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/usage-tracking-beta">利用トラッキング（外部MCPトラフィックの可視化）</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_3_knowledge.html"><span class="dir">← 前</span><div class="t">③ ナレッジ基盤</div></a>
+  <a class="next" href="04_5_dashboard.html"><span class="dir">次 →</span><div class="t">⑤ コスト・効果ダッシュボード</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ④ ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

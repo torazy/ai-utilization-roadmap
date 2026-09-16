@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事例集 — 成功事例と反面教師</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .case-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+    box-shadow:0 2px 8px rgba(22,50,79,.05); border-top:4px solid var(--teal);}
+  .case-card.ng{border-top-color:var(--red);}
+  .case-card .who{font-size:15px; font-weight:800; color:var(--navy);}
+  .case-card .metric{font-size:22px; font-weight:800; color:var(--teal); margin:4px 0;}
+  .case-card.ng .metric{color:var(--red);}
+  .case-card .desc{font-size:13px;}
+  .case-card .lesson{margin-top:10px; padding:8px 12px; background:#f8fafc; border-radius:8px; font-size:12.5px;}
+  .case-card .lesson b{color:var(--navy);}
+  .case-card a{color:var(--blue); text-decoration:none; font-size:12px;}
+</style>
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› 事例集</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html" class="cur">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">参考資料 — 2026年7月時点の公開情報</span>
+  <h1>事例集 — 結果を出した企業と、反面教師</h1>
+  <p class="lead">成功事例は「何が効いたか」を、失敗・警鐘データは「本企画のどの施策が防ぐか」を対応づけて整理する。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 成功事例 — 結果を出している企業</h2>
+  <div class="grid2">
+    <div class="case-card">
+      <div class="who">メルカリ「Project Double」<span class="pill teal">国内・組織変革</span></div>
+      <div class="metric">AI生成コード比率70%・開発量+64%</div>
+      <p class="desc">CTO直轄の専任部隊（1人で開始→約20名）が「Agent Spec駆動開発」を社内標準化して全社展開。社内AIツール利用率95%。</p>
+      <div class="lesson"><b>効いたもの:</b> 経営直轄の専任チーム＋機械可読な社内標準。本企画の「AI推進チーム＋②ハーネス」と同型。<a href="https://type.jp/et/feature/29359/">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">Block（Square）<span class="pill teal">基盤整備</span></div>
+      <div class="metric">全社トークン消費 −98.7%</div>
+      <p class="desc">社内エージェントgooseの既定MCPサーバー（Snowflake・GitHub・Jira・Slack等）と共通基盤を整備し、無駄な文脈読み込みを排除。</p>
+      <div class="lesson"><b>効いたもの:</b> 接続の標準化がコスト削減そのものになる。本企画の④に対応。<a href="https://aaif.io/blog/mcp-is-now-enterprise-infrastructure-everything-that-happened-at-mcp-dev-summit-north-america-2026/">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">Uber<span class="pill teal">統制と規模</span></div>
+      <div class="metric">週6万回のエージェント実行を統制下運用</div>
+      <p class="desc">MCPゲートウェイ＋レジストリで社内1万超のサービスを自動ツール化。月間アクティブエージェント1,500。</p>
+      <div class="lesson"><b>効いたもの:</b> 統制点の一元化が、むしろ大規模活用を可能にした。④の先行例。<a href="https://aaif.io/blog/mcp-is-now-enterprise-infrastructure-everything-that-happened-at-mcp-dev-summit-north-america-2026/">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">富士通<span class="pill teal">レガシー</span></div>
+      <div class="metric">設計書作成工数 −97%</div>
+      <p class="desc">COBOL等のソースコードを解析し設計書を自動生成するSaaSを2026年3月に国内提供開始。</p>
+      <div class="lesson"><b>効いたもの:</b> 「設計書がないレガシー」はAIの最高のROI領域。Phase 1のトラックA（レガシー文書化）の根拠。<a href="https://global.fujitsu/en-global/pr/news/2026/03/30-01">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">パナソニック コネクト<span class="pill teal">国内・全社展開</span></div>
+      <div class="metric">年間18.6万時間削減</div>
+      <p class="desc">全社員向けAIアシスタント「ConnectAI」。プロンプト添削・引用元表示で精度と信頼性を高めつつ、社員のAIスキル育成も並行。</p>
+      <div class="lesson"><b>効いたもの:</b> 経営に伝わる「時間」での効果報告と、底上げ教育の並走。⑤のKPI設計・L1教育の参考。<a href="https://service.is-c.jpn.panasonic.com/column/generative_ai">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">NTTデータ「AIネイティブ開発」<span class="pill teal">国内・プロセス変革</span></div>
+      <div class="metric">開発工程をAI前提に再設計</div>
+      <p class="desc">2026年度中にシステム開発の大半を生成AIが担う手法を導入。開発工程そのものをAIに適した形に変える——ツール導入ではなくプロセス変革として位置づけ。</p>
+      <div class="lesson"><b>効いたもの:</b> 「人の工程にAIを足す」のでなく「AIの工程に人を配置する」発想。本企画の目指す姿と同方向。<a href="https://www.nikkei.com/article/DGXZQOUC254OB0V21C25A2000000/">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">DX Core 4計測の実践企業<span class="pill teal">効果測定</span></div>
+      <div class="metric">2.4時間/週/人（月768時間）を2ヶ月で実証</div>
+      <p class="desc">120人中80人へのCopilot展開をDX Core 4で計測。満足度+9pt。システム指標と自己申告を併記して投資判断に使用。</p>
+      <div class="lesson"><b>効いたもの:</b> 小さく配って測ってから広げる。⑤の測定方法の実例。<a href="https://www.buildmvpfast.com/blog/dx-core-4-developer-productivity-measurement-ai-impact-2026">出典</a></div>
+    </div>
+    <div class="case-card">
+      <div class="who">AI SRE導入企業（Rootly等の顧客実績）<span class="pill teal">運用</span></div>
+      <div class="metric">MTTR −30〜70%</div>
+      <p class="desc">アラート発火と同時にAIが調査を開始し、数分で根本原因候補と類似事例を提示。AWS/AzureのSREエージェントも2026年3月GA。</p>
+      <div class="lesson"><b>効いたもの:</b> 「調査の初動」への集中適用。⑥のStep 1設計の根拠。<a href="https://rootly.com/ai-sre-guide">出典</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>2. 反面教師 — 失敗と警鐘のデータ</h2>
+  <div class="grid2">
+    <div class="case-card ng">
+      <div class="who">METR実験（2025年7月）<span class="pill red">生産性の錯覚</span></div>
+      <div class="metric">体感+20% ／ 実測−19%</div>
+      <p class="desc">経験豊富なOSS開発者16名のRCT実験。AI利用で「速くなった」と感じながら、実際は19%遅くなっていた。原因は信頼できない出力の全行確認・修正。実験後も69%が利用を継続。</p>
+      <div class="lesson"><b>本企画の対応:</b> ②ハーネス（文脈供給＋検証の機械化）が遅延要因を直接解消。⑤で体感と実測を併走監視。<a href="https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html">出典</a></div>
+    </div>
+    <div class="case-card ng">
+      <div class="who">DORA 2025<span class="pill red">品質の劣化</span></div>
+      <div class="metric">AI比率+25ppごとに安定性−7.2%</div>
+      <p class="desc">AIコード比率が上がるほど変更失敗率系の指標が悪化。「AIは増幅器 — 未整備の開発システムでは摩擦と欠陥が増幅される」。</p>
+      <div class="lesson"><b>本企画の対応:</b> ②CI不変条件＋⑤品質ガードKPI（変更失敗率を悪化させないことを合格条件に）。<a href="https://dora.dev/dora-report-2025/">出典</a></div>
+    </div>
+    <div class="case-card ng">
+      <div class="who">エージェント導入企業の大多数<span class="pill red">本番化の壁</span></div>
+      <div class="metric">パイロットの88%が本番に到達せず</div>
+      <p class="desc">失敗要因はエージェント性能ではなく、分離環境・ガバナンス・コンプライアンス統制・データ管理の欠如。MITの調査でも95%のGenAIパイロットが事業成果に未到達。</p>
+      <div class="lesson"><b>本企画の対応:</b> L2基盤（特に④統制と②分離環境）を先に作る、が本企画の中心命題そのもの。<a href="https://northflank.com/blog/enterprise-ai-coding-agent-deployment">出典</a></div>
+    </div>
+    <div class="case-card ng">
+      <div class="who">開発者の信頼低下（業界全体）<span class="pill red">信頼の毀損</span></div>
+      <div class="metric">利用84% ／ 信頼33%</div>
+      <p class="desc">利用率は上がり続ける一方、出力を信頼する割合は低下（リーダー層でも40%→29%）。「使っているが信じていない」状態は検証コストを増やし、METR型の遅延を生む。</p>
+      <div class="lesson"><b>本企画の対応:</b> 検証の機械化（②）と的中率・品質の可視化（⑤⑥）で「信頼できる範囲」を数字で広げる。<a href="https://www.technologyreview.com/2025/12/15/1128352/rise-of-ai-coding-developers-2026/">出典</a></div>
+    </div>
+    <div class="case-card ng">
+      <div class="who">AI生成コードの品質データ（GitClear等）<span class="pill red">技術的負債</span></div>
+      <div class="metric">コピペ増・リファクタ減の傾向</div>
+      <p class="desc">AI補完の普及期に、コードの重複増加・リファクタリング減少・「書いてすぐ直す」率の上昇が観測されている。放置すれば保守コストとして跳ね返る。</p>
+      <div class="lesson"><b>本企画の対応:</b> ②の重複検出・アーキテクチャ柵、ループ詳説の週次ウォークスルー（理解の喪失防止）。<a href="https://loomai.io/research/ai-code-quality-2026.html">出典</a></div>
+    </div>
+    <div class="case-card ng">
+      <div class="who">ループ運用の先行失敗パターン<span class="pill red">コスト暴走ほか</span></div>
+      <div class="metric">トークン消費 5〜30倍</div>
+      <p class="desc">ループ化エージェントのコスト暴走、Maker=Checker兼任による検証形骸化、生成コードがレビューされず「何が動いているか分からない」組織の発生。</p>
+      <div class="lesson"><b>本企画の対応:</b> 停止条件4点の必須化・Checker独立・週次レビュー枠（<a href="05_loop-engineering.html">ループ詳説</a>§3〜6）。<a href="https://www.ai-souken.com/article/what-is-loop-engineering">出典</a></div>
+    </div>
+  </div>
+
+  <div class="callout point" style="margin-top:20px;"><span class="ttl">総括 — 成功と失敗を分けたもの</span>
+    成功例はいずれも「<strong>基盤・標準・測定を先に作り、その上でツールを配った</strong>」。失敗・警鐘データはいずれも「<strong>ツールだけ配って基盤と検証を欠いた</strong>」状態で発生している。
+    本企画の投資対象がツールではなくL2基盤である理由は、この対比に尽きる。
+  </div>
+</section>
+
+<div class="pn">
+  <a href="05_loop-engineering.html"><span class="dir">← 前</span><div class="t">ループエンジニアリング詳説</div></a>
+  <a class="next" href="03_proposal.html"><span class="dir">戻る →</span><div class="t">企画書本体</div></a>
+</div>
+</main>
+<footer>事例集 ／ v1.0 ／ 2026-07-07 ／ 出典は各カード内リンク参照</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

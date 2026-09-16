@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑥ AI SRE — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (6/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html" class="cur">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ⑥</span>
+  <h1>AI SRE — 障害対応の調査・整理・報告をAIへ</h1>
+  <p class="lead">アラート発火と同時に調査を開始し、数分で「状況＋原因仮説＋類似事例」を提示。人間は判断に集中する。対応記録は③に自動蓄積され、対応するほど賢くなる。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか</h2>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">深夜の30分</div><div class="lbl">オンコール担当がログ・メトリクス・デプロイ履歴をかき集める初動時間</div></div>
+    <div class="stat warn"><div class="num">属人</div><div class="lbl">「あの人しか直せない」— 50システムの障害知識が有識者依存</div></div>
+    <div class="stat good"><div class="num">30〜70%</div><div class="lbl">AI SRE導入企業のMTTR削減実績レンジ</div><div class="src">Rootly等<sup><a href="#refs">[1]</a></sup></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>2. アーキテクチャと段階導入</h2>
+  <h3>2-1. 障害発生時の流れ（Step 1: 一次調査アシスト）</h3>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>アラート発火</b>CloudWatch alarm → EventBridge</div><div class="arr">→</div>
+    <div class="step"><b>調査エージェント起動</b>④経由で メトリクス／ログ／直近デプロイ／構成変更 を横断照会（読み取り専用）</div><div class="arr">→</div>
+    <div class="step"><b>類似事例検索</b>③のナレッジから過去の同型障害・ランブックを取得</div><div class="arr">→</div>
+    <div class="step"><b>5分以内に投稿</b>障害チャネルへ「状況サマリ＋原因仮説（確度つき）＋類似事例＋次に見るべき場所」</div><div class="arr">→</div>
+    <div class="step"><b>人間が判断</b>仮説を検証し対処。エージェントは追加調査の指示を受け続ける</div>
+  </div>
+
+  <h3>2-2. 3段階の導入と昇格基準</h3>
+  <table>
+    <thead><tr><th style="width:20%;">段階</th><th style="width:36%;">できること</th><th>次へ進む基準</th></tr></thead>
+    <tbody>
+      <tr><td class="em">Step 1<br><span class="pill blue">一次調査</span></td><td>読み取り専用の調査・仮説提示・類似事例提示</td><td>原因仮説の的中率60%以上を3ヶ月継続（対応者が投稿に「役立った/外れた」をワンクリック記録）</td></tr>
+      <tr><td class="em">Step 2<br><span class="pill teal">報告自動化</span></td><td>対応ログからタイムライン・報告書ドラフト・再発防止案を生成 → 人間レビューで確定 → ③へ自動蓄積</td><td>報告書の修正率が軽微（構成の手直し不要）になること</td></tr>
+      <tr><td class="em">Step 3<br><span class="pill orange">リカバリ支援</span></td><td>ランブック化された定型対処（再起動・切り戻し・スケール変更）を<strong>人間承認付き</strong>で実行</td><td>対象操作はdenylist外・ランブック整備済みに限定。Phase 3で開始</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2-3. 実装の2案（Phase 1末に比較評価 — 検討項目C-4）</h3>
+  <table>
+    <thead><tr><th style="width:24%;"></th><th>案A: AWS DevOps Agent（第一候補）</th><th>案B: 内製（Claude Code＋MCP）</th></tr></thead>
+    <tbody>
+      <tr><td class="em">強み</td><td>提供システムがAWS上のためテレメトリ直結。2026年3月GA、マネージド<sup><a href="#refs">[2]</a></sup></td><td>②④の資産を流用。ランブック・報告書テンプレを自社流に作り込める。ヘッドレス実行＋MCPで構成</td></tr>
+      <tr><td class="em">弱み</td><td>カスタマイズの自由度、非AWS要素（Databricks等）の扱い</td><td>構築・保守の工数。停止条件等の作り込み責任</td></tr>
+      <tr><td class="em">評価方法</td><td colspan="2">同一の過去障害10件を両者に再現調査させ、仮説精度・調査時間・コストを比較（③に記録が溜まってから実施）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>3. 運用</h2>
+  <div class="ops">
+    <div class="op"><div class="when">導入時</div><div class="what">対象は障害頻度の高い上位5システムから（ハーネス②・設計書③整備済みが条件 — 文脈がないと調査精度が出ない）</div></div>
+    <div class="op"><div class="when">障害のたび</div><div class="what">対応者が「役立った/外れた」を記録（的中率KPIの源泉）。確定した報告書は③へ自動蓄積</div></div>
+    <div class="op"><div class="when">月次</div><div class="what">外れた仮説のレビュー → 調査手順スキル（ops-incidentプラグイン①）を改善。アラートのノイズ源も棚卸し</div></div>
+    <div class="op"><div class="when">四半期</div><div class="what">対象システムの拡大判断。Step昇格の判定</div></div>
+  </div>
+  <div class="callout warn"><span class="ttl">Human-in-the-Loopの線引き（L1基準）</span>
+    本番への<strong>書き込み操作は常に人間承認付き</strong>（Step 3でも変わらない）。エージェントの提案と実行ログはすべて監査対象（④）。
+    「AIが勝手に本番を直す」は目指さない — 目指すのは<strong>人間の判断時間を最大化する</strong>こと。
+  </div>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:42%;">取得方法</th><th style="width:18%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>MTTR（平均復旧時間）</td><td>インシデント管理の起票→解決時刻（⑤と共通。AI時代に最も歪みにくい指標）</td><td>−30%〜</td></tr>
+      <tr><td>一次調査カバー率</td><td>アラートのうちエージェント調査が走った割合</td><td>対象システムで95%+</td></tr>
+      <tr><td>原因仮説の的中率</td><td>対応者のワンクリック記録（役立った/外れた）</td><td>60%でStep 2へ</td></tr>
+      <tr><td>報告書作成時間</td><td>障害クローズ→報告書確定の時間</td><td>−80%</td></tr>
+      <tr><td>調査あたりコスト</td><td>④⑤のログ（¥/障害調査）</td><td>人件費換算と比較提示</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    AWS DevOps Agent／Azure SRE Agent 2026年3月GA（テレメトリ・コード・デプロイ履歴の横断分析）<sup><a href="#refs">[2]</a></sup>。
+    Rootly等の専業はアラート発火と同時に調査を開始し数分で根本原因候補を提示、MTTR 30〜70%削減の実績<sup><a href="#refs">[1]</a></sup>。
+    AIOpsは2026年に「異常検知」から「自律的エージェント運用」へ移行<sup><a href="#refs">[3]</a></sup>。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>自動化バイアス</strong>（もっともらしい誤診断を人間が鵜呑みにする — 仮説には必ず確度と根拠リンクを付けさせ、的中率を公開する）／
+    <strong>アラート洪水への直結</strong>（ノイズアラートのたびにエージェントが走るとコストが溶ける。重複排除・重要度フィルタを前段に）／
+    <strong>文脈なしで対象拡大</strong>（②③未整備のシステムでは精度が出ず信頼を失う。整備済みから広げる）／
+    <strong>書き込み権限の先行付与</strong>（Step 1は読み取り専用を厳守）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://rootly.com/ai-sre-guide">Rootly: AI SRE Guide 2026</a> ／ <a href="https://incident.io/blog/5-best-ai-powered-incident-management-platforms-2026">incident.io: AI incident管理プラットフォーム比較</a></li>
+    <li>[2] <a href="https://aws.amazon.com/blogs/devops/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/">AWS DevOps Agent（AWSブログ）</a></li>
+    <li>[3] <a href="https://www.augmentcode.com/guides/what-is-aiops">What Is AIOps in 2026（Augment Code）</a> ／ <a href="https://openobserve.ai/blog/top-10-aiops-platforms/">AIOpsプラットフォーム2026</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_5_dashboard.html"><span class="dir">← 前</span><div class="t">⑤ コスト・効果ダッシュボード</div></a>
+  <a class="next" href="04_7_frontier-watch.html"><span class="dir">次 →</span><div class="t">⑦ フロンティアウォッチループ</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ⑥ ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

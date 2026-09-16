@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>③ ナレッジ基盤 — L2詳細</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› L2共通イネーブルメント基盤 詳細シリーズ (3/7)</span></div></div>
+<div class="series"><div class="inner">
+  <a href="04_1_marketplace.html">① マーケットプレイス</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_3_knowledge.html" class="cur">③ ナレッジ</a>
+  <a href="04_4_mcp-gateway.html">④ MCPゲートウェイ</a>
+  <a href="04_5_dashboard.html">⑤ コスト・効果</a>
+  <a href="04_6_ai-sre.html">⑥ AI SRE</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="06_case-studies.html">事例集</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">L2 共通基盤 詳細 ③</span>
+  <h1>ナレッジ基盤 — 蓄積もAI・活用もAI</h1>
+  <p class="lead">障害対応・設計判断・レビュー知見を、発生した瞬間にAIが構造化して蓄積し、次のAI実行のコンテキストとして自動供給する。人がナレッジを「書く」「探す」をやめる。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 何を解決するか</h2>
+  <div class="grid3">
+    <div class="stat warn"><div class="num">消える</div><div class="lbl">障害対応の知見がチャットログと個人の記憶に埋没</div></div>
+    <div class="stat warn"><div class="num">50システム</div><div class="lbl">暗黙知が有識者個人に集中。異動・退職で保守不能リスク</div></div>
+    <div class="stat good"><div class="num"><span class="cnt" data-to="97" data-suf="%">0</span></div><div class="lbl">AIリバース文書化による工数削減の先行事例</div><div class="src">富士通 2026/3 SaaS<sup><a href="#refs">[1]</a></sup></div></div>
+  </div>
+  <div class="callout point"><span class="ttl">設計原則</span>
+    「人にナレッジを書かせる」施策は歴史的に失敗してきた。本基盤は<strong>人の追加作業ゼロ</strong>を原則とする — 蓄積はイベント駆動でAIが行い、活用はエージェントが検索する。人は「確定レビュー」だけ。
+  </div>
+</section>
+
+<section>
+  <h2>2. アーキテクチャ — 蓄積と活用の2つの面</h2>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>発生</b>障害対応チャネル／PRマージ／ADR追加／定例議事録</div><div class="arr">→</div>
+    <div class="step"><b>収集</b>Webhook・イベントで収集エージェント起動（人は何もしない）</div><div class="arr">→</div>
+    <div class="step"><b>構造化</b>要約・タグ付け・関連付け。定型スキーマに変換（下記）</div><div class="arr">→</div>
+    <div class="step"><b>確定</b>作成者が2分でレビュー（Slackのボタン承認）→ 格納</div><div class="arr">→</div>
+    <div class="step"><b>活用</b>開発エージェント／AI SRE／Genieが④経由で検索・参照</div><div class="arr">→</div>
+    <div class="step"><b>鮮度維持</b>コードとの差分を夜間検出→更新PR自動起票（Phase 3）</div>
+  </div>
+
+  <h3>2-1. 置き場の設計（フェデレーション構成 — 検討項目A-3）</h3>
+  <table>
+    <thead><tr><th style="width:24%;">ナレッジ種別</th><th style="width:30%;">ソースオブトゥルース</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td class="em">設計文書・ADR・規約</td><td>各リポジトリ docs/（Git管理）</td><td>コードと同じレビューフロー・同じPRで更新。ハーネス（②）から直接参照</td></tr>
+      <tr><td class="em">障害記録・ポストモーテム</td><td>Databricks（Deltaテーブル＋Vector Search）</td><td>システム横断で検索される。AI SRE（⑥）の主参照先</td></tr>
+      <tr><td class="em">横断ナレッジ（用語・業務知識・判断集）</td><td>Databricks（Genie Ontology<sup><a href="#refs">[2]</a></sup>）</td><td>業務エージェントと共用。自己改善するコンテキスト層</td></tr>
+      <tr><td class="em">検索の入口</td><td colspan="2">どちらも<strong>④MCPゲートウェイ経由の検索ツール1本</strong>に統合 — 利用者と同一権限で横断検索</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2-2. 構造化スキーマ（障害ナレッジの例）</h3>
+  <pre class="code"><span class="c"># incident-knowledge スキーマ（収集エージェントが自動生成 → 担当が2分レビュー）</span>
+id: INC-2026-0142
+system: payment-batch          <span class="c"># 50システムのカタログIDに紐付け</span>
+symptom: <span class="s">"夜間バッチが02:00頃タイムアウト"</span>
+root_cause: <span class="s">"結線プールの枯渇（先月の設定変更 #PR-881 が誘因）"</span>
+detection: CloudWatch alarm → 調査エージェントが類似事例 INC-2025-089 を提示
+resolution: <span class="s">"プールサイズ復元＋リトライ設定追加"</span>
+prevention: <span class="s">"設定変更PRにレビュー観点『接続数影響』を追加（→①スキル更新済み）"</span>
+links: [PR-881, runbook/payment-batch.md]
+embedding: 自動付与（Vector Search同期）</pre>
+  <p style="font-size:12.5px; color:var(--muted);">肝は <code class="inline">prevention</code> がスキル（①）やハーネス（②）の更新に接続されること — ナレッジが「読む物」でなく「仕組みの改善」に変わる。</p>
+
+  <h3>2-3. 検索の技術構成</h3>
+  <table>
+    <thead><tr><th style="width:26%;">層</th><th>実装</th></tr></thead>
+    <tbody>
+      <tr><td class="em">ハイブリッド検索</td><td>Databricks Vector Search（ベクトル）＋ キーワード（BM25）。純ベクトルは専門領域で15〜20%外すため必須<sup><a href="#refs">[3]</a></sup></td></tr>
+      <tr><td class="em">リランカー</td><td>上位候補をLLMで再順位付け（Agent Bricksの文書検索サブエージェント活用<sup><a href="#refs">[2]</a></sup>）</td></tr>
+      <tr><td class="em">アクセス制御</td><td>Unity Catalogの行・列レベル権限。エージェントは<strong>代行するユーザーと同一権限</strong>（④のIdentityで担保）</td></tr>
+      <tr><td class="em">監査</td><td>誰の（どのエージェントの）検索が何を参照したかをログ（→⑤・D-5）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>3. 運用</h2>
+  <div class="ops">
+    <div class="op"><div class="when">Phase 1</div><div class="what">コード系から開始: legacy-docスキル（①）で優先3〜5システムの設計書をリバース生成し docs/design/ に格納。障害記録の構造化テンプレを手動運用で試行</div></div>
+    <div class="op"><div class="when">Phase 2</div><div class="what">収集エージェント稼働（障害チャネル・PR・ADRのWebhook連携）。Databricks側にVector Search索引、④経由の検索ツール公開</div></div>
+    <div class="op"><div class="when">Phase 3</div><div class="what">鮮度ループ（夜間差分検出→更新PR）稼働。Genie Ontologyと接続し業務側と相互参照</div></div>
+    <div class="op"><div class="when">月次</div><div class="what">品質サンプリング: ランダム10件を有識者が採点（誤り・古さ）。低品質ソースは収集対象から外す</div></div>
+  </div>
+  <div class="callout warn"><span class="ttl">運用の分担（Databricks運用チームと）</span>
+    索引・テーブル・権限の管理はDatabricks運用チーム、収集エージェントとスキーマはAI推進チーム、内容の正しさは各チーム（確定レビュー）— 三者の役割を検討項目Aの協議で確定する。
+  </div>
+</section>
+
+<section>
+  <h2>4. KPIと計測方法</h2>
+  <table class="fx">
+    <thead><tr><th>指標</th><th style="width:42%;">取得方法</th><th style="width:18%;">目安</th></tr></thead>
+    <tbody>
+      <tr><td>設計書カバレッジ</td><td>50システム中、docs/design/整備済みの数（②の認定と連動）</td><td>10→25→50</td></tr>
+      <tr><td>ナレッジ参照率</td><td>エージェント実行のうちナレッジ検索ツールを使った割合（④のログ）</td><td>障害調査で80%+</td></tr>
+      <tr><td>類似事例ヒット率</td><td>障害対応時に過去事例が提示され「役立った」とマークされた率（⑥のフィードバックボタン）</td><td>50%+</td></tr>
+      <tr><td>鮮度</td><td>設計書の最終更新からの日数分布／コード差分検出の未解消数</td><td>90日以内90%</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. 事例と落とし穴</h2>
+  <div class="callout case"><span class="ttl">事例</span>
+    富士通: コード→設計書の自動生成SaaSで工数97%削減<sup><a href="#refs">[1]</a></sup>。
+    Databricks Genie Ontology: 組織ナレッジの自己改善コンテキスト層＋Lakebaseエージェントメモリ<sup><a href="#refs">[2]</a></sup>。
+    エンタープライズRAGは検索・検証・権限・監査を統合した「知識ランタイム」へ<sup><a href="#refs">[3]</a></sup>。
+  </div>
+  <div class="callout fail"><span class="ttl">落とし穴（反面教師）</span>
+    <strong>ゴミの自動蓄積</strong>（構造化の品質ゲートなしに溜めると検索が汚染される → 2分確定レビューと月次サンプリングを外さない）／
+    <strong>権限の平坦化</strong>（「全部見えるRAG」は情報漏洩装置になる。Unity Catalog権限の透過を最初から）／
+    <strong>ベクトル検索単独</strong>（専門用語・型番・エラーコードで外す → ハイブリッド必須<sup><a href="#refs">[3]</a></sup>）／
+    <strong>「書く文化」への逆戻り</strong>（人手入力の項目を増やした瞬間に止まる。入力はAI、人は承認のみ）。
+  </div>
+</section>
+
+<section id="refs">
+  <h2>参考</h2>
+  <div class="card refs"><ol>
+    <li>[1] <a href="https://global.fujitsu/en-global/pr/news/2026/03/30-01">富士通: 設計書自動生成SaaS（工数約97%削減）</a> ／ <a href="https://arxiv.org/html/2605.18684">Reversa: リバースドキュメンテーション研究</a></li>
+    <li>[2] <a href="https://www.databricks.com/company/newsroom/press-releases/databricks-launches-genie-one-all-new-agentic-coworker-every-team">Databricks Genie One / Genie Ontology</a> ／ <a href="https://www.databricks.com/blog/agent-bricks-dais-2026">Agent Bricks（DAIS 2026）</a></li>
+    <li>[3] <a href="https://keerok.tech/en/blog/enterprise-rag-building-an-ai-knowledge-base-in-2026/">Enterprise RAG 2026（ハイブリッド検索の実測）</a> ／ <a href="https://nstarxinc.com/blog/the-next-frontier-of-rag-how-enterprise-knowledge-systems-will-evolve-2026-2030/">知識ランタイムへの進化</a></li>
+  </ol></div>
+</section>
+
+<div class="pn">
+  <a href="04_2_harness.html"><span class="dir">← 前</span><div class="t">② 標準ハーネステンプレート</div></a>
+  <a class="next" href="04_4_mcp-gateway.html"><span class="dir">次 →</span><div class="t">④ MCPゲートウェイ</div></a>
+</div>
+</main>
+<footer>L2共通イネーブルメント基盤 詳細シリーズ ③ ／ v1.0 ／ 2026-07-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>
