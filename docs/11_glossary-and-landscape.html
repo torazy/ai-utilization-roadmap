@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用語・モデル・最新機能ガイド — AI駆動開発の共通言語</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .layer{display:grid; grid-template-columns:150px 1fr; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; margin:14px 0;}
+  .layer > div{padding:12px 16px; border-top:1px solid var(--line); font-size:13.5px;}
+  .layer > div:nth-child(1), .layer > div:nth-child(2){border-top:none;}
+  .layer .k{background:var(--navy); color:#fff; font-weight:800; font-size:13px; line-height:1.5;}
+  .layer .k small{display:block; font-weight:600; color:#bcd2ee; font-size:11px;}
+  .layer .k.l1{background:#8fa3bd;} .layer .k.l2{background:#5f7fa5;} .layer .k.l3{background:#2f6fed;} .layer .k.l4{background:#1e4976;} .layer .k.l5{background:#16324f;}
+  .term{border:1px solid var(--line); border-radius:12px; background:#fff; padding:14px 16px; box-shadow:0 2px 8px rgba(22,50,79,.05);}
+  .term h4{margin:0 0 6px; font-size:14.5px; color:var(--navy);}
+  .term h4 small{font-weight:600; color:var(--muted); font-size:11.5px; margin-left:6px;}
+  .term p{font-size:13.5px; margin:4px 0;}
+  .term .ex{font-size:12.5px; color:var(--muted); border-top:1px dashed var(--line); margin-top:8px; padding-top:6px;}
+  .term .ex b{color:var(--navy2);}
+  .tl{border-left:3px solid var(--blue); margin:14px 0 14px 8px; padding-left:18px;}
+  .tl .ev{position:relative; margin:0 0 12px; font-size:13.5px;}
+  .tl .ev::before{content:""; position:absolute; left:-25px; top:6px; width:11px; height:11px; border-radius:50%; background:var(--blue); border:2px solid #fff; box-shadow:0 0 0 2px var(--blue);}
+  .tl .ev .d{font-size:11.5px; font-weight:800; color:var(--blue); letter-spacing:.05em; margin-right:8px;}
+  .tl .ev .who{display:inline-block; font-size:11px; font-weight:700; padding:1px 8px; border-radius:999px; background:#eef1f5; color:var(--muted); margin-right:6px;}
+  .muted{color:var(--muted); font-size:12.5px;}
+  table.cmp td:first-child{white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="crumb"><div class="inner"><a href="03_proposal.html">← 企画書本体</a> <span>› 参考資料 › 用語・モデル・最新機能ガイド</span></div></div>
+<div class="series"><div class="inner">
+  <a href="03_proposal.html">企画書本体</a>
+  <a href="04_2_harness.html">② ハーネス</a>
+  <a href="04_7_frontier-watch.html">⑦ ウォッチ</a>
+  <a href="05_loop-engineering.html">ループ詳説</a>
+  <a href="10_ai-driven-development-operating-model.html">運営モデル</a>
+  <a href="11_glossary-and-landscape.html" class="cur">用語・モデル・最新機能</a>
+</div></div>
+
+<div class="hero"><div class="inner">
+  <span class="tag">参考資料 ／ 共通言語</span>
+  <h1>用語・モデル・最新機能ガイド — AI駆動開発の共通言語</h1>
+  <p class="lead">企画書・詳細シリーズで使う用語（ハーネス、スキル、フック、コンテキスト、トークン、〜エンジニアリング）を製品に依存しない形で説明し、2026年10月時点の主要モデルと主要ツールの機能を同じ尺度で並べる。初めて読む関係者が、製品名を知らなくても議論に参加できる状態になることを目的とする。</p>
+  <p class="lead" style="margin-top:6px;">調査基準日: 2026年10月7日 ／ 製品情報は更新型のため、導入判断時に一次資料で再確認する。</p>
+</div></div>
+
+<main>
+
+<section>
+  <h2>1. 全体像 — 設計の対象が「依頼文」から「仕組み」へ広がった</h2>
+  <p>生成AIの活用は、<strong>何を書くか（プロンプト）</strong>から、<strong>AIが何を見るか（コンテキスト）</strong>、<strong>AIが働く環境（ハーネス）</strong>、<strong>AIを動かし続ける仕組み（ループ）</strong>、<strong>複数のループの連携（グラフ）</strong>へと、設計の対象が一段ずつ外側に広がってきた。この進化はどのベンダーの製品を使っても同じで、各層は内側の層を含む。業務の多くはハーネスとループの層で十分な成果が出る。</p>
+  <div class="anim-flow" data-anim>
+    <div class="step"><b>① プロンプト</b>依頼文の書き方。1回の指示の精度</div><div class="arr">→</div>
+    <div class="step"><b>② コンテキスト</b>AIに見せる情報の選び方。文書・履歴・ツール定義</div><div class="arr">→</div>
+    <div class="step"><b>③ ハーネス</b>AIが働く環境。ツール・権限・検証・記憶</div><div class="arr">→</div>
+    <div class="step"><b>④ ループ</b>AIを自動で回す仕組み。トリガー・停止条件・評価</div><div class="arr">→</div>
+    <div class="step"><b>⑤ グラフ</b>役割の異なる複数ループの連携。受け渡し・分岐</div>
+  </div>
+  <p class="anim-note">設計対象が外側へ広がる順。各層は内側を含む</p>
+
+  <div class="layer">
+    <div class="k l1">① プロンプト<br>エンジニアリング<small>2022〜</small></div><div><strong>設計するもの:</strong> 指示文の構造・言い回し・例示。<strong>限界:</strong> 指示が完璧でも、AIが見ている資料が違えば結果は違う。<strong>当社の対応:</strong> L1教育（<a href="03_proposal.html">企画書</a>5章）。</div>
+    <div class="k l2">② コンテキスト<br>エンジニアリング<small>2025〜</small></div><div><strong>設計するもの:</strong> コンテキストウィンドウに入る全情報の構成。システム指示・設計書・会話履歴・ツール定義・取得データ。<strong>原則:</strong> 入れるトークン一つひとつに目的がある状態を保つ。<strong>当社の対応:</strong> ②ハーネスの作業指示書、③ナレッジ基盤。</div>
+    <div class="k l3">③ ハーネス<br>エンジニアリング<small>2026〜</small></div><div><strong>設計するもの:</strong> モデルを包む環境。ツール、実行環境、権限、検証（テスト・CI）、記憶、観測。「エージェント＝モデル＋ハーネス」。<strong>特徴:</strong> モデルやツールを入れ替えても資産として残る。<strong>当社の対応:</strong> <a href="04_2_harness.html">②標準ハーネステンプレート</a>。</div>
+    <div class="k l4">④ ループ<br>エンジニアリング<small>2026〜</small></div><div><strong>設計するもの:</strong> 人が毎回指示する代わりに、AIを起動し続ける仕組み。トリガー、指示の自動生成、評価、停止条件、コスト上限。<strong>当社の対応:</strong> <a href="05_loop-engineering.html">ループ詳説</a>、<a href="04_7_frontier-watch.html">⑦ウォッチループ</a>。</div>
+    <div class="k l5">⑤ グラフ<br>エンジニアリング<small>2026〜</small></div><div><strong>設計するもの:</strong> 役割の異なるエージェント・ツール・人の判断を、ノードと辺で明示した実行グラフ。受け渡し規約と分岐。<strong>注意:</strong> 大半の業務は単一のループで足りる。<strong>当社の対応:</strong> Phase 3以降の検討対象（自律ループの連結）。</div>
+  </div>
+  <div class="callout point"><span class="ttl">POINT</span>
+    企画書の「ハーネス→ループ」という方針は、この進化の③と④に投資するという意味である。モデル（AI本体）とツール（エージェント製品）の選定は①〜⑤とは別の意思決定で、<strong>ハーネスとループは、モデルやツールを入れ替えても残る組織資産</strong>になる。
+  </div>
+</section>
+
+<section>
+  <h2>2. 基本用語 — まずこの12語</h2>
+  <p class="muted">各用語の「製品での呼び名」は、GitHub Copilot／OpenAI Codex／Anthropic Claude Code／Google Antigravityの順に示す。4製品とも概念はほぼ共通で、名称と設定ファイルの置き場所が異なる。</p>
+  <div class="grid2">
+    <div class="term"><h4>AI駆動開発<small>AI-driven development</small></h4>
+      <p>AIエージェントが調査・実装・テスト・文書化を実行し、人は<strong>目的の設定、環境の整備、成果の検収</strong>を担う開発の進め方。「AIに補完してもらう」段階と区別する。</p>
+      <div class="ex"><b>当社では:</b> 「エージェントと対話する人」から「ループを設計し、成果を検収する人」へ（企画書2章）。</div></div>
+    <div class="term"><h4>エージェント<small>agent</small></h4>
+      <p>目的に応じて情報を読み、ツールを使い、複数の処理を自律的に進めるAIの実行主体。<strong>エージェント＝モデル＋ハーネス</strong>。同じモデルでもハーネスが違えば別のエージェントになる。</p>
+      <div class="ex"><b>製品例:</b> Copilot coding agent／Codex／Claude Code／Antigravity。いずれも複数社のモデルを切り替えられる製品が増えた。</div></div>
+    <div class="term"><h4>モデル<small>model / LLM</small></h4>
+      <p>文章やコードを生成するAI本体。各社が能力・速度・価格の異なる複数の種類（ティア）を提供し、タスクに応じて選ぶ（5章）。モデルとエージェント製品は別の選択。</p>
+      <div class="ex"><b>例:</b> GPT-6 Sol／Claude Opus 5.5／Gemini 3.5 Flash／DeepSeek V4（オープンウェイト）。</div></div>
+    <div class="term"><h4>トークン<small>token</small></h4>
+      <p>モデルが文章を扱う最小単位。日本語はおおむね1〜2文字で1トークン、英語は1単語が1〜2トークン。<strong>利用料金は入力トークン数と出力トークン数で決まる</strong>。各社とも「100万トークン（MTok）あたりの単価」で表示する。</p>
+      <div class="ex"><b>目安:</b> 1Mトークン ≒ 英語50〜75万語。設計書1冊が数万トークン。トークナイザーは各社・各世代で異なる。</div></div>
+    <div class="term"><h4>コンテキスト（ウィンドウ）<small>context window</small></h4>
+      <p>モデルが1回の推論で参照できる情報の総量（トークン数の上限）。システム指示、会話履歴、読み込んだファイル、ツールの定義と結果がすべてここに入る。</p>
+      <div class="ex"><b>現在:</b> 主要各社のフロンティアモデルは1Mトークン前後が標準。<b>注意:</b> 上限まで入れると性能が落ちる（次項）。</div></div>
+    <div class="term"><h4>コンテキスト劣化<small>context rot</small></h4>
+      <p>コンテキストに入れる情報が増えるほど、必要な情報を正確に取り出す力が下がる現象。上限のはるか手前から非線形に悪化する（各社18モデルで実測）。</p>
+      <div class="ex"><b>対策:</b> 必要時取得（just-in-time）、圧縮（compaction）、外部メモ、サブエージェントによる分離。</div></div>
+    <div class="term"><h4>圧縮<small>compaction</small></h4>
+      <p>長い会話を要約して置き換え、コンテキストを空ける操作。主要なエージェント製品は自動で行い、各社のAPIにも会話途中の圧縮機能が入り始めた。</p>
+      <div class="ex"><b>設計:</b> まず取りこぼしを無くし（再現率）、次に不要情報を削る（精度）。</div></div>
+    <div class="term"><h4>作業指示書<small>AGENTS.md ほか</small></h4>
+      <p>リポジトリに置く、エージェント向けの常時読み込み指示。ビルド・テストのコマンド、規約、触ってよい領域、完了条件。<strong>短く保ち</strong>（目安200行以内）、詳細はスキルや領域別ルールへ分ける。</p>
+      <div class="ex"><b>製品での呼び名:</b> AGENTS.md（Codex・Copilot・Antigravityが読む共通形式）／copilot-instructions.md（Copilot）／CLAUDE.md（Claude Code）。AGENTS.mdの採用数がCLAUDE.mdを上回った（2026年9月調査）。</div></div>
+    <div class="term"><h4>スキル<small>skill</small></h4>
+      <p>再利用できる手順・知識・参照資料をMarkdownで束ねたもの。必要なときだけ読み込まれ（遅延ロード）、人が名前で呼ぶか、AIが説明文から判断して使う。</p>
+      <div class="ex"><b>現在:</b> Agent Skillsとして公開標準化（SKILL.md形式、2025年12月）。Copilot、Codex、Claude Code、Antigravity、Cursorなど30以上のツールが同じ形式を読む。</div></div>
+    <div class="term"><h4>フック<small>hook</small></h4>
+      <p>エージェントのライフサイクル上の決まった時点（ツール実行の前後、セッション開始・終了、圧縮前など）で、<strong>必ず実行される</strong>スクリプトや外部呼び出し。AIの判断を介さない。</p>
+      <div class="ex"><b>使い分け:</b> 「毎回必ず」はフック、「判断を伴う手順」はスキル。<b>製品:</b> 4製品すべてにある（Copilot Hooks／Codex Hooks／Claude Code hooks／Antigravity Hooks）。</div></div>
+    <div class="term"><h4>サブエージェント<small>subagent</small></h4>
+      <p>親エージェントが起動する、独立したコンテキストを持つ作業者。大量のファイルを読む調査や、生成と評価の分離に使う。親には要約だけが戻る。</p>
+      <div class="ex"><b>製品:</b> Copilot subagents／Codex subagents（.codex/agents）／Claude Code subagents／Antigravity subagents。発展形として複数エージェントの協調（Agent Teams、動的ワークフロー、Symphony）。</div></div>
+    <div class="term"><h4>MCP<small>Model Context Protocol</small></h4>
+      <p>エージェントが外部サービス（DB、チケット、監視、社内API）のツールやデータを使うための業界標準プロトコル。サーバーを1本立てると、対応する全エージェントから使える。</p>
+      <div class="ex"><b>当社では:</b> <a href="04_4_mcp-gateway.html">④MCPゲートウェイ</a>で接続先を統制。最新仕様は2026-07-28版で、AWS・Databricks・各エージェント製品が対応済み。</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>3. 仕組みの使い分け早見表 — どれを足すか迷ったら</h2>
+  <p>4製品の公式ガイドに共通する整理。<strong>「いつ足すか」の引き金</strong>を決めておくと、設定が肥大しない。</p>
+  <table>
+    <thead><tr><th style="width:17%;">仕組み</th><th style="width:30%;">何をするか</th><th style="width:28%;">足す引き金</th><th>コンテキスト負荷</th></tr></thead>
+    <tbody>
+      <tr><td class="em">作業指示書</td><td>毎セッション必ず読む前提知識・規約</td><td>同じ規約の間違いが2回起きた</td><td>毎回（だから短く保つ）</td></tr>
+      <tr><td class="em">領域別ルール</td><td>特定ディレクトリ・言語にだけ効く規約（パス指定の指示ファイル）</td><td>作業指示書が200行を超えそう</td><td>該当ファイルを扱うときだけ</td></tr>
+      <tr><td class="em">スキル</td><td>手順書・参照資料・名前で呼ぶ定型作業</td><td>同じ手順を3回チャットに貼った</td><td>説明文のみ常駐。本文は使用時</td></tr>
+      <tr><td class="em">フック</td><td>イベント時に必ず走る処理（検証・拒否・通知）</td><td>「毎回必ず」やってほしい</td><td>ゼロ（出力を返す場合のみ）</td></tr>
+      <tr><td class="em">サブエージェント</td><td>独立コンテキストでの調査・評価・並列作業</td><td>副次的な調査で会話が埋まる</td><td>親からは分離</td></tr>
+      <tr><td class="em">カスタムエージェント</td><td>役割・ツール制限・指示を固定した専門家（レビュアー、SRE調査役など）</td><td>同じ役割を繰り返し使う</td><td>その役割の指示のみ</td></tr>
+      <tr><td class="em">マルチエージェント実行</td><td>多数のエージェントを並列・連携で動かす（チーム、スクリプト駆動のワークフロー、監督役）</td><td>数個のサブエージェントでは足りない規模の監査・移行</td><td>親からは分離</td></tr>
+      <tr><td class="em">MCPサーバー</td><td>外部システムの接続</td><td>ブラウザからのコピペが続く</td><td>ツール名のみ常駐。定義は使用時</td></tr>
+      <tr><td class="em">プラグイン</td><td>上記をまとめて配布する単位</td><td>2つ目のリポジトリで同じ設定が必要</td><td>中身に依存</td></tr>
+      <tr><td class="em">定期・イベント実行</td><td>クラウド上でスケジュール・API・リポジトリイベントを引き金に無人実行</td><td>人が起動しなくても回したい</td><td>別セッション</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3-1. 製品別の対応表（同じ概念の呼び名）</h3>
+  <table class="cmp">
+    <thead><tr><th>概念</th><th>GitHub Copilot</th><th>OpenAI Codex</th><th>Claude Code</th><th>Google Antigravity</th></tr></thead>
+    <tbody>
+      <tr><td class="em">作業指示書</td><td>copilot-instructions.md／AGENTS.md</td><td>AGENTS.md</td><td>CLAUDE.md（AGENTS.mdも可）</td><td>AGENTS.md</td></tr>
+      <tr><td class="em">領域別ルール</td><td>*.instructions.md（applyTo）</td><td>ネストしたAGENTS.md</td><td>.claude/rules/（paths）</td><td>ネストしたAGENTS.md</td></tr>
+      <tr><td class="em">スキル</td><td>Agent skills（SKILL.md）</td><td>Skills（SKILL.md）</td><td>Skills（SKILL.md）</td><td>Agent Skills（SKILL.md）</td></tr>
+      <tr><td class="em">フック</td><td>Hooks</td><td>Codex Hooks</td><td>Hooks</td><td>Hooks</td></tr>
+      <tr><td class="em">サブエージェント／カスタムエージェント</td><td>Subagents／Custom agents</td><td>Subagents（.codex/agents）</td><td>Subagents／Agent Teams</td><td>Subagents</td></tr>
+      <tr><td class="em">マルチエージェント実行</td><td>Agent HQ（複数社エージェントの並走）</td><td>Symphony（監督役オーケストレータ）</td><td>動的ワークフロー（ultracode）</td><td>Antigravity 2.0 の並列エージェント</td></tr>
+      <tr><td class="em">配布単位</td><td>Plugins／awesome-copilot</td><td>Plugins</td><td>Plugins／Marketplace</td><td>Antigravity plugins（旧Extensions）</td></tr>
+      <tr><td class="em">定期・イベント実行</td><td>定期実行タスク（時間・日・週）、coding agent（Issue→PR）</td><td>Automations（cadence＋Triage inbox）</td><td>Routines（cron・API・GitHubイベント）</td><td>Jules（常駐エージェント）</td></tr>
+      <tr><td class="em">外部接続</td><td colspan="4" style="text-align:center;">MCP（4製品共通）</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn"><span class="ttl">原則</span>
+    <strong>守らせたい規則はフックとCIに置く。</strong> 作業指示書やスキルの指示は「お願い」で、確率的に守られる。ツール実行前フックによる拒否は「強制」で、構造的に再発しない。<a href="04_2_harness.html">②ハーネス</a>の「失敗の昇格ラダー」（口頭→指示書→スクリプト→フック／CI）と同じ考え方で、どの製品でも成立する。
+  </div>
+</section>
+
+<section>
+  <h2>4. 「〜エンジニアリング」5語の意味と、当社での実体</h2>
+  <table>
+    <thead><tr><th style="width:17%;">用語</th><th style="width:33%;">一言でいうと</th><th style="width:28%;">代表的な実践</th><th>当社の実体</th></tr></thead>
+    <tbody>
+      <tr><td class="em">プロンプト<br>エンジニアリング</td><td>1回の依頼文を良くする</td><td>役割指定、例示、出力形式の指定</td><td>L1教育</td></tr>
+      <tr><td class="em">コンテキスト<br>エンジニアリング</td><td>AIに見せる情報の構成を良くする。「どの指示」ではなく「どの状態のコンテキストが望む振る舞いを生むか」</td><td>必要時取得、圧縮、外部メモ、サブエージェント分離、ツール定義の絞り込み（ツールを8割減らして成功率80%→100%の事例）</td><td>作業指示書の「1枚メモ＋リンク」構造、③ナレッジ基盤のMCP供給</td></tr>
+      <tr><td class="em">ハーネス<br>エンジニアリング</td><td>AIが働く環境を設計する。モデルを変えても残る部分</td><td>作業指示書、実行可能な防護柵（Lint・CI・フック）、権限、サブエージェント、評価、観測、アプリを実際に動かす検証</td><td>②標準ハーネステンプレート（7点セット）</td></tr>
+      <tr><td class="em">ループ<br>エンジニアリング</td><td>人が指示する代わりに、AIを起動し続ける仕組みを設計する</td><td>トリガー（cron・イベント）、指示の自動生成、Maker/Checker分離、停止条件、コスト上限、状態の外部保存</td><td><a href="05_loop-engineering.html">自律ループ6要素</a>、⑦ウォッチループ、夜間テスト補強</td></tr>
+      <tr><td class="em">グラフ<br>エンジニアリング</td><td>複数のループ・ツール・人の判断を、ノードと辺で明示した流れとして設計する</td><td>状態・ノード・辺で実行を定義（LangGraph型）、役割別エージェントの受け渡し規約、分岐・並列・人の承認ノード</td><td>Phase 3以降。ループが2本以上つながる段階で検討</td></tr>
+    </tbody>
+  </table>
+  <div class="callout case"><span class="ttl">2026年の実測から得られた教訓（公開ハーネス391本の調査・各社研究）</span>
+    <ul class="plain">
+      <li><strong>効くもの:</strong> 規則の肯定・否定両方のテスト、ツール数の削減、実アプリを起動しての検証、ハーネスの利用実測。</li>
+      <li><strong>効きにくいもの:</strong> 強いモデルに対する固定のレビュアーエージェント（成功率が下がる場合がある）、事前に書き切った許可規則（行為ごとの承認より劣る）、人が書いていない作業指示書（無い方がまし）。</li>
+      <li><strong>現状の弱点:</strong> ハーネスのうちテストと評価を両方持つものは少数。「指示書だけあって強制が無い」状態が多い。</li>
+    </ul>
+    企画書の「三エージェント構成は候補であって全社標準ではない」（<a href="09_revised-ai-adoption-roadmap.html">ロードマップ</a>）は、この実測と整合する。
+  </div>
+</section>
+
+<section>
+  <h2>5. モデルの種類 — 2026年10月時点の主要モデルを同じ尺度で</h2>
+  <p>各社とも<strong>「最上位（高価・遅い・最も賢い）／標準（主力）／軽量（安い・速い）」の3〜4ティア</strong>を持つ。選び方は共通で、<strong>標準ティアを既定にし、評価が届かない作業だけ最上位へ、採点・分類・大量処理は軽量へ</strong>寄せる。コンテキストは各社とも1Mトークン前後が標準になった。</p>
+  <table class="cmp">
+    <thead><tr><th>提供元</th><th>モデル</th><th>ティア</th><th>コンテキスト／出力</th><th>価格（入力/出力, $/MTok）</th><th>公開</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td class="em">OpenAI</td><td>GPT-6 Sol</td><td>標準（主力）</td><td>1.05M／128K</td><td>2 / 10</td><td>2026-09-22</td><td>コーディング・エージェント向け。推論の深さは none〜max で指定。前世代比で半額</td></tr>
+      <tr><td class="em">OpenAI</td><td>GPT-6.1 Sol</td><td>標準（長時間向け）</td><td>1.05M／128K</td><td>—（要確認）</td><td>2026-09下旬</td><td>反復・長時間作業向け</td></tr>
+      <tr><td class="em">OpenAI</td><td>GPT-6 Luna</td><td>軽量</td><td>1.05M／128K</td><td>0.10 / 0.50</td><td>2026-09-22</td><td>大量処理（抽出・要約・分類）</td></tr>
+      <tr><td class="em">Anthropic</td><td>Claude Fable 5.1</td><td>最上位</td><td>1M／128K</td><td>10 / 50</td><td>2026-09-01</td><td>長時間の自律作業・高度な推論。同仕様の Mythos 5.1 は招待制</td></tr>
+      <tr><td class="em">Anthropic</td><td>Claude Opus 5.5</td><td>標準（主力）</td><td>1M／128K</td><td>4 / 20</td><td>2026-09-22</td><td>多くの作業で最上位と同等。思考の深さは effort（low〜max）で指定</td></tr>
+      <tr><td class="em">Anthropic</td><td>Claude Sonnet 5.5</td><td>標準（高速）</td><td>1M／128K</td><td>2 / 10</td><td>2026-09-28</td><td>日常のコーディング・文書作業、サブエージェントの作業者</td></tr>
+      <tr><td class="em">Anthropic</td><td>Claude Haiku 4.5</td><td>軽量</td><td>200K／64K</td><td>1 / 5</td><td>2025-10</td><td>採点・分類。Haiku 5.5 が近く公開予定</td></tr>
+      <tr><td class="em">Google</td><td>Gemini 3.5 Pro</td><td>最上位</td><td>2M（予定）</td><td>—（GA時に確定）</td><td>2026-05 発表</td><td>Deep Think統合。プレビュー段階</td></tr>
+      <tr><td class="em">Google</td><td>Gemini 3.5 Flash</td><td>標準（高速）</td><td>1.05M／66K</td><td>1.50 / 9.00</td><td>2026-05-19</td><td>3.1 Proを上回り4倍高速。Antigravityの既定。Workspace（Gemini）は当社の非開発業務の入口</td></tr>
+      <tr><td class="em">xAI</td><td>Grok 4.7</td><td>標準</td><td>—</td><td>—</td><td>2026-09-21</td><td>Copilotのモデル選択肢に含まれる</td></tr>
+      <tr><td class="em">オープンウェイト</td><td>DeepSeek V4（MIT）／Kimi K3／GLM-5.x／Qwen 3.x（Apache 2.0）</td><td>標準〜軽量</td><td>モデル毎</td><td>自社ホスト費 or 低価格API</td><td>2026上期〜</td><td>自社ホストで閉域運用が可能。エージェント作業で商用に接近。コスト最適化・閉域要件の選択肢</td></tr>
+    </tbody>
+  </table>
+  <ul class="plain">
+    <li><strong>適応的推論:</strong> 各社の主力モデルは「必要な分だけ考える」方式になり、深さをパラメータ（OpenAIは reasoning.effort、Anthropicは effort）で指定する。深く考えるほど出力トークンが増え費用が上がる。</li>
+    <li><strong>コスト削減の3本柱（各社共通）:</strong> プロンプトキャッシュ（繰り返し入力は1/10〜1/40）、バッチAPI（50%引き）、ティアの使い分け（採点や分類は軽量モデル）。</li>
+    <li><strong>調達経路:</strong> 各社の直接API に加え、クラウド経由（Amazon Bedrock、Google Vertex AI、Microsoft Foundry）とゲートウェイ経由（Databricks Unity Gateway、GitHub Copilot のモデル選択）がある。当社は閉域・統制の観点で Bedrock と Unity Gateway を主経路とする（企画書4章・⑧）。</li>
+    <li><strong>廃止の速さ:</strong> 各社とも旧世代を1年前後で退役させる（例: GPT-5.5 は2026-10-14にChatGPT・Codexから退役、Claude Sonnet 4.5 は2026-11-30退役、Copilotは2026-10-19に6モデル廃止）。<strong>モデルIDの固定と四半期ごとの乗り換え評価</strong>を運用に組み込む。</li>
+    <li><strong>更新頻度:</strong> 新しいフロンティアモデルはおおむね数週間に1本出る（Databricksは「約5日に1本」と表現）。企画書の「標準は製品名ではなく選定方法と交換契約」（ロードマップ11章）のとおり、同一タスクでの評価と撤退可能性を基準に入れ替える。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>6. 主要ツールの最新機能 — 2026年2月〜10月の主な動き</h2>
+  <p>企画書の前提（2026年7〜9月時点）以降に追加・確定した機能を、提供元ごとに同じ観点（エージェント実行、無人実行、統制・観測、モデル）で整理する。</p>
+
+  <h3>6-1. 提供元別の到達点（2026年10月時点）</h3>
+  <table class="cmp">
+    <thead><tr><th>観点</th><th>GitHub Copilot</th><th>OpenAI Codex</th><th>Claude Code</th><th>Google Antigravity</th><th>AWS／Databricks（基盤）</th></tr></thead>
+    <tbody>
+      <tr><td class="em">エージェント実行</td><td>agent mode、coding agent（Issue→PR、Actions上）、Agent HQ で Claude／Codex を選択可、Agent merge（レビュー指摘・CI失敗・コンフリクトまで処理）</td><td>CLI／IDE／ChatGPTデスクトップ統合（7月）、Goal Mode GA、Record & Replay（実演のスキル化）</td><td>CLI／IDE／Web、Agent Teams、動的ワークフロー、Code Review（多エージェントPRレビュー）、Security（脆弱性走査）</td><td>デスクトップ・IDE・CLI・SDK の4面で同一ハーネス、並列サブエージェント</td><td>AgentCore harness GA（隔離環境でのエージェント実行）、Agent Bricks</td></tr>
+      <tr><td class="em">無人・定期実行</td><td>定期実行タスク（時間・日・週）</td><td>Automations（cadence＋Triage inbox）、Symphony（Issue駆動のオーケストレータ）</td><td>Routines（cron・API・GitHubイベント）、Managed Agents（ホスト型、予算上限・スケジュール）</td><td>Jules（常駐エージェント、API・並列CLI）</td><td>DevOps Agent のスケジュールSREボット、AgentCore のスケジュール実行</td></tr>
+      <tr><td class="em">統制・観測</td><td>Metrics API、AI Credits（6月〜）、組織のエージェント権限・監査、Code Quality</td><td>ワークスペース／ローカル／API の管理境界、実行履歴</td><td>管理ダッシュボード（PR数・受け入れ行数・スキル採用率・コミット当たりコスト）、OpenTelemetry、Compliance API、Inference Hooks（Enterprise）</td><td>Workspace 管理設定、Code Assist Enterprise</td><td>AgentCore Identity／Observability／Evaluations、Unity Gateway（モデル・ツール・支出の一元統制）＋ Unity Gateway CLI</td></tr>
+      <tr><td class="em">モデル</td><td>複数社から選択。コスト・品質の優先度を指定した自動選択（9月〜）</td><td>GPT-6 Sol／Luna、GPT-6.1 Sol</td><td>Claude 4ティア</td><td>Gemini 3.5 シリーズ</td><td>Bedrock: Claude・各社モデル／Unity Gateway: 各社モデルを設定で追加</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6-2. 時系列</h3>
+  <div class="tl">
+    <div class="ev"><span class="d">2026-02</span><span class="who">各社</span>主要コーディングツールが同じ2週間で<strong>マルチエージェント機能</strong>を出揃える（Claude Code Agent Teams、Copilot Agent HQ など）。</div>
+    <div class="ev"><span class="d">2026-02</span><span class="who">GitHub</span><strong>Agent HQ</strong>: GitHub上でClaudeとCodexをエージェントとして選択可能（公開プレビュー。2/4にEnterprise・Pro+、2/26にBusiness・Pro）。JetBrains対応は6月。</div>
+    <div class="ev"><span class="d">2026-02〜03</span><span class="who">Anthropic</span>Claude Code <strong>Security</strong>（脆弱性走査、2/20）と <strong>Code Review</strong>（多エージェントPRレビュー、3/9）。</div>
+    <div class="ev"><span class="d">2026-03</span><span class="who">AWS</span><strong>AgentCore Evaluations GA</strong>（各社エージェントSDK製のエージェントを評価）、<strong>AWS DevOps Agent GA</strong>（3/31）。</div>
+    <div class="ev"><span class="d">2026-04</span><span class="who">OpenAI／Anthropic／Databricks</span>OpenAI <strong>Symphony</strong> 仕様公開（Issue駆動オーケストレータ）。Anthropic <strong>Managed Agents</strong>（4/8、ホスト型）と <strong>Routines</strong>（4/14、クラウド定期実行）。Databricks <strong>Unity AI Gateway</strong> 発表。</div>
+    <div class="ev"><span class="d">2026-04-23</span><span class="who">OpenAI</span><strong>GPT-5.5</strong> 公開（2026-10-14にChatGPT・Codexから退役）。</div>
+    <div class="ev"><span class="d">2026-05</span><span class="who">Google／OpenAI／Anthropic</span>Google I/O で <strong>Gemini 3.5</strong>、<strong>Antigravity 2.0</strong>、WebMCP。Codex <strong>Goal Mode GA</strong>。Claude Code <strong>動的ワークフロー</strong>（5/28、スクリプト駆動の多数並列）。</div>
+    <div class="ev"><span class="d">2026-06</span><span class="who">GitHub／Google／AWS</span>Copilot <strong>AI Credits</strong>（6/1、premium request廃止、席料金に含有分あり）。<strong>Antigravity CLI が Gemini CLI を置換</strong>（6/18、Code Assist Standard/Enterprise契約は継続）。<strong>AgentCore harness GA</strong>（6/18）。DevOps Agent にスケジュールSREボットとMCP/A2A接続。</div>
+    <div class="ev"><span class="d">2026-07</span><span class="who">OpenAI／Anthropic／各社</span><strong>CodexがChatGPTデスクトップに統合</strong>（7/9）。Claude <strong>Opus 5</strong>（7/24）。Claude Code 管理ダッシュボード拡充。MCP仕様 <strong>2026-07-28版</strong>。</div>
+    <div class="ev"><span class="d">2026-08</span><span class="who">Databricks／Anthropic</span><strong>managed MCP が Unity Gateway の統制下に</strong>（8/6、ベータ）。Anthropic の AI-native SDLC ガイド。各社APIでコンピュータ操作・ブラウザ操作ツールが正式化。</div>
+    <div class="ev"><span class="d">2026-09</span><span class="who">各社</span>モデル更新が集中: <strong>Claude Fable 5.1</strong>（9/1）、<strong>Copilot のコスト・品質優先度つき自動モデル選択</strong>（9/14）、<strong>Grok 4.7</strong>（9/21）、<strong>GPT-6 Sol／Luna と Claude Opus 5.5</strong>（同日 9/22）、<strong>Databricks Unity Gateway CLI</strong>（9/24、1コマンドでClaude Code／Codexをゲートウェイ経由に）、<strong>Claude Sonnet 5.5</strong>（9/28）。Copilot <strong>Agent merge</strong> と定期実行タスク。</div>
+    <div class="ev"><span class="d">2026-10</span><span class="who">各社</span>Claude Code <strong>Mods</strong>（10/1、プラグインがツール判定・画面描画まで介入）。Copilot が旧モデル6本を廃止（10/19）。Codex 0.160（エージェント指令センターの履歴）。</div>
+  </div>
+</section>
+
+<section>
+  <h2>7. 当社企画への含意 — 変わらない軸と、更新する部分</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0;">変わらない軸</h3>
+      <ul class="plain">
+        <li><strong>可搬性のある抽象への投資:</strong> スキル（SKILL.md公開標準）、MCP（業界標準）、AGENTS.md（ツール横断）は、この半年でさらに標準化が進み、4製品すべてが読む。</li>
+        <li><strong>モデルとハーネスの分離:</strong> Copilot・Databricks・AWSのいずれも「モデルは選択式、統制は基盤側」の構造になった。製品側も他社モデルを載せる。</li>
+        <li><strong>守らせたい規則はフックとCIへ:</strong> 実測でも「指示書だけ」のハーネスは効果が薄い。4製品すべてにフックがある。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">更新する部分</h3>
+      <ul class="plain">
+        <li><strong>ループの実行基盤</strong>の選択肢が増えた: Copilot定期実行、Codex Automations／Symphony、Claude Code Routines／Managed Agents、AgentCore harness。検討項目D-3で同じ軸（実行場所、予算上限、イベント起動、閉域）で比較する。</li>
+        <li><strong>コストの前提:</strong> Copilotは「AI Credits（席料金に含有分あり）」、API利用は「標準ティアの値下がり」「キャッシュ・バッチ・ティア分け」で見積もる。</li>
+        <li><strong>ゲートウェイの実装:</strong> Unity Gateway CLI により、開発者端末のエージェント（Claude Code／Codex）を統制経路に乗せる手順が標準化された。</li>
+        <li><strong>観測:</strong> 各製品の管理ダッシュボードが充実したため、⑤ダッシュボードの自作範囲は「ツール横断の統合」に絞る。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="refs">
+  <h2>出典</h2>
+  <ol>
+    <li>設計層の整理: Marmelab, <a href="https://marmelab.com/blog/2026/09/24/the-state-of-ai-harness-engineering-2026.html">The State of AI Harness Engineering 2026</a>（2026-09-24） ／ Sarthak AI, <a href="https://sarthakai.substack.com/p/harness-graph-and-loop-engineering">Harness, Graph, and Loop Engineering</a> ／ Analytics Vidhya, <a href="https://www.analyticsvidhya.com/blog/2026/07/graph-engineering/">Graph Engineering for AI Agents</a> ／ Anthropic, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a></li>
+    <li>各製品のカスタマイズ仕様: GitHub, <a href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">Copilot customization cheat sheet</a> ／ <a href="https://github.blog/changelog/2026-06-23-copilot-coding-agent-now-supports-agents-md-custom-instructions/">coding agent の AGENTS.md 対応</a> ／ OpenAI, <a href="https://learn.chatgpt.com/docs/changelog">ChatGPT & Codex changelog</a> ／ Anthropic, <a href="https://code.claude.com/docs/en/features-overview">Extend Claude Code</a>・<a href="https://code.claude.com/docs/en/changelog">changelog</a>・<a href="https://code.claude.com/docs/en/routines.md">Routines</a> ／ Google, <a href="https://www.analyticsvidhya.com/blog/2026/05/google-antigravity-2-0/">Antigravity 2.0 developer guide</a></li>
+    <li>Agent Skills 公開標準: <a href="https://the-decoder.com/anthropic-publishes-agent-skills-as-an-open-standard-for-ai-platforms/">The Decoder</a> ／ <a href="https://www.noqta.tn/en/news/skill-md-open-standard-30-ai-coding-tools-adoption-2026">30ツール採用</a></li>
+    <li>モデル仕様・価格: OpenAI GPT-6 Sol/Luna: <a href="https://datanorth.ai/news/openai-launches-gpt-6-sol-and-luna">DataNorth</a>・<a href="https://www.orcarouter.ai/blog/gpt-6-sol">仕様解説</a> ／ Anthropic, <a href="https://platform.claude.com/docs/en/about-claude/models/overview">Models overview</a>・<a href="https://platform.claude.com/docs/en/release-notes/overview">release notes</a> ／ Google Gemini 3.5: <a href="https://ppc.land/gemini-3-5-and-antigravity-2-0-headline-google-i-o-2026-reveal/">I/O 2026</a>・<a href="https://anotherwrapper.com/tools/llm-pricing/gemini-3.5-flash">Flash 価格</a> ／ オープンウェイト: <a href="https://www.cloudrift.ai/blog/state-of-open-coding-models-2026">State of Open Coding Models（2026-07）</a></li>
+    <li>GitHub: <a href="https://github.blog/changelog/2026-02-04-claude-and-codex-are-now-available-in-public-preview-on-github/">Claude and Codex on GitHub（2026-02-04）</a> ／ <a href="https://github.blog/changelog/2026-10-01-github-copilot-in-vs-code-september-2026-releases/">September 2026 releases</a> ／ <a href="https://github.blog/changelog/2025-09-25-copilot-coding-agent-is-now-generally-available/">coding agent GA（2025-09-25）</a> ／ AI Credits: <a href="https://fireup.pro/news/github-copilot-ai-credits-billing-agent-mode-cost-2026">解説</a></li>
+    <li>OpenAI: <a href="https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf">How OpenAI uses Codex</a>（ハーネスエンジニアリングの原典） ／ Google: <a href="https://www.theregister.com/ai-ml/2026/05/20/bye-bye-gemini-cli-google-nudges-devs-toward-antigravity/5243605">Gemini CLI → Antigravity CLI</a>・<a href="https://developers.googleblog.com/jules-gemini-3/">Jules</a></li>
+    <li>AWS: <a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html">AgentCore release notes</a> ／ <a href="https://aws.amazon.com/blogs/machine-learning/icymi-what-landed-for-ai-builders-in-august-2026/">What landed in August 2026</a> ／ Databricks: <a href="https://docs.databricks.com/gcp/ja/release-notes/unity-gateway/">Unity Gateway release notes</a>・<a href="https://docs.databricks.com/aws/en/ai-gateway/coding-agent-claude">Unity Gateway CLI と Claude Code</a>・<a href="https://docs.databricks.com/generative-ai/mcp/managed-mcp/">Managed MCP</a></li>
+    <li>Anthropic エージェント基盤: <a href="https://hatchworks.com/blog/claude/claude-agent-sdk-and-managed-agents/">Agent SDK と Managed Agents</a> ／ Code Review・Security: <a href="https://www.vktr.com/ai-news/anthropic-launches-multi-agent-code-review-for-claude-code/">VKTR</a></li>
+  </ol>
+  <p class="muted">本資料の製品情報は2026年10月7日時点の公開情報に基づく。価格・提供状況は変わるため、調達・導入の判断時に一次資料で再確認する。「—」は一次資料で確認できなかった値。</p>
+</section>
+
+<div class="pn">
+  <a href="10_ai-driven-development-operating-model.html"><span class="dir">← 前</span><div class="t">AI駆動開発の運営モデル</div></a>
+  <a class="next" href="03_proposal.html"><span class="dir">企画書へ →</span><div class="t">企画書本体</div></a>
+</div>
+</main>
+<footer>参考資料 ／ 用語・モデル・最新機能ガイド v1.1 ／ 2026-10-07</footer>
+<script src="assets/detail.js"></script>
+</body>
+</html>

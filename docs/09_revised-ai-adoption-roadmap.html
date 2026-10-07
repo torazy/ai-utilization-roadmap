@@ -487,10 +487,10 @@
     <div class="section-head"><div class="section-no">11</div><h2>製品・モデル戦略 — 標準は製品名ではなく、選定方法と交換契約</h2><p class="section-lead">2026年8月時点の候補を持ちつつ、同一タスク評価・データ条件・撤退可能性で採否を更新する</p></div>
     <div class="tool-grid" role="table" aria-label="製品カテゴリ別の評価方針">
       <div class="head">カテゴリ</div><div class="head">現時点の候補例</div><div class="head">選定基準</div><div class="head">更新トリガー</div>
-      <div class="class">Coding agent</div><div>Claude Code / Codex / GitHub Copilot / Gemini系<small>主用途別に複数候補を評価</small></div><div>代表タスク成功、修正時間、隔離、管理、総コスト</div><div>主要モデル更新、価格・権限変更</div>
+      <div class="class">Coding agent</div><div>GitHub Copilot / OpenAI Codex / Claude Code / Google Antigravity（旧Gemini CLI）<small>主用途別に複数候補を評価。各製品が他社モデルも選択可</small></div><div>代表タスク成功、修正時間、隔離、管理、総コスト</div><div>主要モデル更新、価格・権限変更</div>
       <div class="class">Model / API</div><div>OpenAI API / Amazon Bedrock / Databricks経由など<small>データ近接と利用機能で使い分け</small></div><div>品質、保持、リージョン、ZDR、可観測性、退出性</div><div>契約、保持条件、新規リージョン</div>
-      <div class="class">MCP / Data</div><div>社内MCP / Databricks Managed MCP等<small>2026-08-17時点でDatabricks Managed MCPはPublic Preview。<sup><a href="#ref-23">[23]</a></sup></small></div><div>ID伝播、scope、監査、更新統制、障害時停止</div><div>GA、仕様変更、脆弱性</div>
-      <div class="class">Operations</div><div>AWS DevOps Agent / 自社ワークフロー<small>AWS DevOps Agentは2026-03-31にGA。<sup><a href="#ref-24">[24]</a></sup></small></div><div>読取調査の有用性、誤誘導、検証時間、環境対応</div><div>実障害結果、書込機能の追加</div>
+      <div class="class">MCP / Data</div><div>社内MCP / Databricks Managed MCP等<small>2026-08-17時点でDatabricks Managed MCPはPublic Preview。2026-08-06からUnity Gatewayの統制下に統合（ベータ）。<sup><a href="#ref-23">[23]</a></sup></small></div><div>ID伝播、scope、監査、更新統制、障害時停止</div><div>GA、仕様変更、脆弱性</div>
+      <div class="class">Operations</div><div>AWS DevOps Agent / 自社ワークフロー<small>AWS DevOps Agentは2026-03-31にGA、2026-06にスケジュール実行とMCP/A2A接続を追加。<sup><a href="#ref-24">[24]</a></sup></small></div><div>読取調査の有用性、誤誘導、検証時間、環境対応</div><div>実障害結果、書込機能の追加</div>
     </div>
     <div class="grid2">
       <div class="callout blue" style="margin:0"><b>価格の扱い</b>GitHub Copilotは2026年6月からAI Creditsによる従量課金が始まったが、Business／Enterpriseは席料金と含有Creditsを持つ。単純な「席課金から全面従量課金へ」ではない。<sup><a href="#ref-19">[19]</a></sup></div>
@@ -577,8 +577,8 @@
         <li id="ref-20"><span class="tag primary">公的標準</span> <a href="https://airc.nist.gov/airmf-resources/airmf/5-sec-core/" target="_blank" rel="noopener">NIST AI RMF Core</a> — Govern、Map、Measure、Manage。</li>
         <li id="ref-21"><span class="tag primary">公的指針</span> <a href="https://www.meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/20260331_report.html" target="_blank" rel="noopener">経済産業省 AI事業者ガイドライン 第1.2版</a> — 本編、チェックリスト、ワークシート。</li>
         <li id="ref-22"><span class="tag primary">公的規制</span> <a href="https://digital-strategy.ec.europa.eu/en/policies/enforcement-ai-act" target="_blank" rel="noopener">European Commission, AI Act Enforcement Framework</a> — 2026〜2028年の段階的適用。</li>
-        <li id="ref-23"><span class="tag primary">公式仕様</span> <a href="https://docs.databricks.com/gcp/en/agents/mcp-tools/managed-mcp" target="_blank" rel="noopener">Databricks Managed MCP Servers</a> — 2026-08-17時点 Public Preview。</li>
-        <li id="ref-24"><span class="tag primary">公式発表</span> <a href="https://aws.amazon.com/blogs/mt/announcing-general-availability-of-aws-devops-agent/" target="_blank" rel="noopener">AWS, Announcing General Availability of AWS DevOps Agent</a> — 2026-03-31 GA。</li>
+        <li id="ref-23"><span class="tag primary">公式仕様</span> <a href="https://docs.databricks.com/gcp/en/agents/mcp-tools/managed-mcp" target="_blank" rel="noopener">Databricks Managed MCP Servers</a> — 2026-08-17時点 Public Preview。 ／ <a href="https://docs.databricks.com/gcp/ja/release-notes/unity-gateway/" target="_blank" rel="noopener">Unity Gateway release notes</a> — managed MCP統合（2026-08-06、ベータ）、Unity Gateway CLI（2026-09-24）。</li>
+        <li id="ref-24"><span class="tag primary">公式発表</span> <a href="https://aws.amazon.com/blogs/mt/announcing-general-availability-of-aws-devops-agent/" target="_blank" rel="noopener">AWS, Announcing General Availability of AWS DevOps Agent</a> — 2026-03-31 GA。 ／ <a href="https://aws.amazon.com/about-aws/whats-new/2026/06/aws-devops-agent-custom-agents.html" target="_blank" rel="noopener">スケジュール実行・MCP/A2A対応</a> — 2026-06。</li>
       </ol>
     </div>
     <div class="source-notes">

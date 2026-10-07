@@ -18,6 +18,7 @@
   <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
   <a href="05_loop-engineering.html">ループ詳説</a>
   <a href="06_case-studies.html">事例集</a>
+  <a href="11_glossary-and-landscape.html">用語ガイド</a>
 </div></div>
 
 <div class="hero"><div class="inner">
@@ -81,7 +82,7 @@ claude plugin install common-dev   <span class="c"># 以後 git pull で自動�
   <table>
     <thead><tr><th style="width:26%;">資産</th><th style="width:34%;">置き方</th><th>各ツールからの利用</th></tr></thead>
     <tbody>
-      <tr><td class="em">スキル本体</td><td>Markdown（SKILL.md）— 手順・知識・例を記述</td><td>Claude Code: そのまま ／ Copilot: instructionsファイルへ変換 ／ Gemini CLI: 拡張として読込</td></tr>
+      <tr><td class="em">スキル本体</td><td>Markdown（SKILL.md）— 手順・知識・例を記述</td><td>SKILL.mdはAgent Skills公開標準（2025年12月〜）で、Copilot・Codex・Claude Code・Antigravity（旧Gemini CLI）など30以上のツールがそのまま読む<sup><a href="#refs">[2]</a></sup></td></tr>
       <tr><td class="em">ツール別アダプタ</td><td>薄い変換層のみ（自動生成スクリプト）</td><td>マルチハーネス対応のOSS実装が参考になる<sup><a href="#refs">[2]</a></sup></td></tr>
       <tr><td class="em">MCPサーバー定義</td><td>plugin内の mcp.json（接続先は④のレジストリ準拠）</td><td>MCP対応ツールすべて共通</td></tr>
     </tbody>
@@ -163,7 +164,7 @@ claude plugin install common-dev   <span class="c"># 以後 git pull で自動�
   <h2>参考</h2>
   <div class="card refs"><ol>
     <li>[1] <a href="https://www.thoughtworks.com/en-us/radar/tools/claude-code-plugin-marketplace">Thoughtworks Radar: Claude Code plugin marketplace</a> ／ <a href="https://code.claude.com/docs/en/plugins">公式Docs: Create plugins</a></li>
-    <li>[2] <a href="https://github.com/wshobson/agents">マルチハーネス対応マーケットプレイス（OSS）</a> — Claude Code/Copilot/Gemini CLI等で共用</li>
+    <li>[2] <a href="https://github.com/wshobson/agents">マルチハーネス対応マーケットプレイス（OSS）</a> — 複数エージェント製品で共用 ／ <a href="https://the-decoder.com/anthropic-publishes-agent-skills-as-an-open-standard-for-ai-platforms/">Agent Skills 公開標準</a> ／ <a href="https://www.noqta.tn/en/news/skill-md-open-standard-30-ai-coding-tools-adoption-2026">SKILL.md 対応30ツール超（2026-04）</a></li>
     <li>[3] <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Docs: Monitoring（OpenTelemetry）</a></li>
     <li>[4] <a href="https://www.hexabase.com/column/ai-learns-business-claude-skills">Claude Skills業務スキル化の国内事例</a></li>
     <li>[5] <a href="https://type.jp/et/feature/29359/">メルカリ Project Double（エンジニアtype）</a></li>

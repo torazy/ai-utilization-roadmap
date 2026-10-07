@@ -18,6 +18,7 @@
   <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
   <a href="05_loop-engineering.html">ループ詳説</a>
   <a href="06_case-studies.html">事例集</a>
+  <a href="11_glossary-and-landscape.html">用語ガイド</a>
 </div></div>
 
 <div class="hero"><div class="inner">
@@ -60,15 +61,16 @@
     <div class="tab-panel on" data-panel="d1">
       <h4>GitHub Copilot Metrics API（2026年2月GA）<sup><a href="#refs">[4]</a></sup></h4>
       <ul class="plain">
-        <li><strong>取れるもの</strong>: アクティブユーザー、補完・チャット・coding agentの利用量、言語・IDE・モデル別内訳、premium request消費</li>
+        <li><strong>取れるもの</strong>: アクティブユーザー、補完・チャット・coding agentの利用量、言語・IDE・モデル別内訳、AI Credits消費（2026年6月にpremium request制から移行）</li>
         <li><strong>チーム別集計</strong>: user-teamsレポート（2026年5月追加）でユーザー×チームを結合し、10チーム別の利用状況を出せる</li>
         <li><strong>成熟度コホート</strong>: <code class="inline">ai_adoption_phase</code> フィールド（2026年5月追加）が直近28日の利用から各ユーザーの採用フェーズを自動分類 — <strong>人材ラダー（L1/L2/L3）の進捗測定にそのまま使える</strong></li>
         <li><strong>実装</strong>: REST APIを日次で取得→Databricksに蓄積。公式の可視化OSS（copilot-metrics-viewer）も参考に</li>
       </ul>
     </div>
     <div class="tab-panel" data-panel="d2">
-      <h4>Claude Code — OpenTelemetry ＋ Analytics API<sup><a href="#refs">[5]</a></sup></h4>
+      <h4>Claude Code — 管理ダッシュボード ＋ OpenTelemetry ＋ Analytics API<sup><a href="#refs">[5]</a></sup></h4>
       <ul class="plain">
+        <li><strong>管理ダッシュボード（2026年7月拡充）</strong>: 週次アクティブ利用者、PR数、受け入れ行数、スキル採用率、コミット当たりコスト、月次・四半期の支出を組織単位で表示。⑤の自作範囲は「ツール横断の統合」に絞れる</li>
         <li><strong>OTelエクスポート（公式サポート）</strong>: トークン消費・推定コスト・ツール実行・セッション情報をOTLPで送信。環境変数を managed settings（②）で全端末に配布すれば計測は自動化される</li>
         <li><strong>送信先</strong>: OTLPコレクタ→Databricks（自作）または Grafana/SigNoz 等。Elastic等でのSIEM連携事例もあり（D-5の監査要件と両取り）</li>
         <li><strong>Analytics API</strong>: Team/Enterpriseプランは利用状況・エンゲージメント指標をAPIで取得可能</li>
@@ -168,7 +170,7 @@ OTEL_RESOURCE_ATTRIBUTES=team=payment,dept=dx   <span class="c"># チーム帰�
     <li>[2] <a href="https://zylos.ai/research/2026-02-07-developer-productivity-metrics/">Developer Productivity Metrics 2026（Zylos）</a> — 歪む指標／MTTRの信頼性／AI Usage Diff Mapping</li>
     <li>[3] <a href="https://www.buildmvpfast.com/blog/dx-core-4-developer-productivity-measurement-ai-impact-2026">DX Core 4によるAI影響測定（80/120人の実測例）</a> ／ <a href="https://getdx.com/blog/dora-metrics/">DORAメトリクス解説（DX）</a></li>
     <li>[4] <a href="https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics">Copilot usage metrics（GitHub Docs）</a> ／ <a href="https://github.blog/changelog/2026-05-29-copilot-usage-metrics-api-adds-cohorts-for-ai-adoption/">adoption_phaseコホート追加</a> ／ <a href="https://github.com/github-copilot-resources/copilot-metrics-viewer">copilot-metrics-viewer（OSS）</a></li>
-    <li>[5] <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Monitoring（公式）</a> ／ <a href="https://signoz.io/blog/claude-code-monitoring-with-opentelemetry/">SigNoz構築例</a> ／ <a href="https://www.elastic.co/security-labs/claude-code-cowork-monitoring-otel-elastic">Elastic（SIEM連携）</a> ／ <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans">Claude Analytics API</a></li>
+    <li>[5] <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Monitoring（公式）</a> ／ <a href="https://signoz.io/blog/claude-code-monitoring-with-opentelemetry/">SigNoz構築例</a> ／ <a href="https://www.elastic.co/security-labs/claude-code-cowork-monitoring-otel-elastic">Elastic（SIEM連携）</a> ／ <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans">Claude Analytics API</a> ／ <a href="https://larridin.com/blog/claude-enterprise-analytics">管理ダッシュボード拡充（2026-07）の解説</a></li>
     <li>[6] <a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps for AI</a> ／ <a href="https://www.datadoghq.com/blog/monitor-openai-cost-datadog-cloud-cost-management-llm-observability/">Datadog LLMコスト監視</a></li>
     <li>[7] <a href="https://service.is-c.jpn.panasonic.com/column/generative_ai">パナソニック コネクト ConnectAI（年18.6万時間削減）</a></li>
   </ol></div>

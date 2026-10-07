@@ -25,6 +25,7 @@
   <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
   <a href="05_loop-engineering.html" class="cur">ループ詳説</a>
   <a href="06_case-studies.html">事例集</a>
+  <a href="11_glossary-and-landscape.html">用語ガイド</a>
 </div></div>
 
 <div class="hero"><div class="inner">
@@ -85,7 +86,7 @@
     <thead><tr><th style="width:20%;">構成要素</th><th style="width:38%;">役割</th><th>当社での実装（L2基盤との対応）</th></tr></thead>
     <tbody>
       <tr><td class="em">1. 自動化トリガー</td><td>GitHubイベント・cronでループを起動</td><td>GitHub Actions schedule／EventBridge（<a href="03_proposal.html#infra">AWS構成</a>）</td></tr>
-      <tr><td class="em">2. 並列隔離</td><td>git worktreeで複数エージェントの競合防止</td><td>②devcontainer＋worktree。クラウド実行はAgentCore Runtime（セッション分離microVM）</td></tr>
+      <tr><td class="em">2. 並列隔離</td><td>git worktreeで複数エージェントの競合防止</td><td>②devcontainer＋worktree。クラウド実行はAgentCore harness（セッション分離microVM）またはベンダー側クラウド（Claude Code Routines等。D-3で選定）</td></tr>
       <tr><td class="em">3. 知識バンドル</td><td>SKILL.mdでプロジェクト固有知識を供給</td><td>①マーケットプレイスのスキル＋②AGENTS.md</td></tr>
       <tr><td class="em">4. 外部連携</td><td>MCPで既存ツールに接続</td><td>④MCPゲートウェイ経由（承認済みレジストリ）</td></tr>
       <tr><td class="em">5. 分業設計</td><td>Maker-Checker分離で生成と検証を独立化</td><td>②の計画/生成/評価サブエージェント＋CI不変条件</td></tr>
@@ -95,10 +96,10 @@
   <div class="callout point"><span class="ttl">含意</span>
     6要素のうち5つはL2基盤①〜④がそのまま部品になる。<strong>ループはゼロから作るものではなく、Phase 1-2で作った基盤の「組み合わせ方」</strong>である。
   </div>
-  <div class="callout case"><span class="ttl">実装部品の最新動向（2026年時点）</span>
-    Claude Code公式の<strong>Agent Teams</strong>（2026年2月・実験的機能）は、リーダー＋2〜16のチームメイトが共有タスクリストとメッセージングで協調する仕組みで、
-    「並列隔離＋分業設計」の公式実装候補になる<sup><a href="#refs">[4]</a></sup>。研究面では<strong>ハーネス自体を外側ループで自動最適化する</strong>Meta-Harness（Stanford）が登場しており<sup><a href="#refs">[4]</a></sup>、
-    ⑦フロンティアウォッチで両者の成熟を追跡する。
+  <div class="callout case"><span class="ttl">実装部品の最新動向（2026年10月時点）</span>
+    <strong>自動化トリガー（要素1）:</strong> 各社が無人実行基盤を製品化した — GitHub Copilot 定期実行タスク（時間・日・週）、OpenAI Codex Automations（cadence＋Triage inbox）とSymphony（Issue駆動オーケストレータ）、Claude Code Routines（cron・API・GitHubイベント起動、2026年4月）、Claude Managed Agents（予算上限・スケジュール実行）、AWS DevOps Agentのスケジュールボット<sup><a href="#refs">[4]</a></sup>。
+    <strong>並列隔離＋分業設計（要素2・5）:</strong> Claude Code Agent Teams（2026年2月）と動的ワークフロー（2026年5月、スクリプト駆動の多数並列）、Codex subagents、Copilot subagents／Agent merge が公式実装候補になる。
+    研究面では<strong>ハーネス自体を外側ループで自動最適化する</strong>Meta-Harness（Stanford）が登場しており<sup><a href="#refs">[4]</a></sup>、⑦フロンティアウォッチで成熟を追跡する。製品別の対応は<a href="11_glossary-and-landscape.html">用語・モデル・最新機能ガイド</a>3-1表。
   </div>
 </section>
 
@@ -229,7 +230,7 @@
     <li>[1] <a href="https://www.ai-souken.com/article/what-is-loop-engineering">ループエンジニアリングとは（AI総合研究所）</a> — 定義・6構成要素・自律ティア・停止条件・落とし穴</li>
     <li>[2] <a href="https://jp.findy-team.io/blogs/loop-engineering/">ループエンジニアリング（Findy Team+）</a> ／ <a href="https://atmarkit.itmedia.co.jp/ait/articles/2607/03/news016.html">内側ループと外側ループ入門（@IT）</a></li>
     <li>[3] <a href="https://aws.amazon.com/blogs/machine-learning/its-safe-to-close-your-laptop-now-hosting-coding-agents-on-amazon-bedrock-agentcore/">AWS: AgentCoreでのコーディングエージェント実行</a> ／ <a href="https://arxiv.org/pdf/2604.25850">Agentic Harness Engineering（観測駆動のハーネス自動進化）</a></li>
-    <li>[4] <a href="https://ghuntley.com/ralph/">Geoffrey Huntley: Ralph（無限リトライループの原型）</a> ／ <a href="https://code.claude.com/docs/en/agent-teams">Claude Code Docs: Agent teams（2026年2月・実験的）</a> ／ <a href="https://code.claude.com/docs/en/skills">Skills: context: fork</a> ／ <a href="https://arxiv.org/abs/2603.28052">Meta-Harness（Stanford・ハーネス自動最適化）</a> ／ <a href="https://www.trychroma.com/research/context-rot">Chroma: Context Rot</a></li>
+    <li>[4] <a href="https://ghuntley.com/ralph/">Geoffrey Huntley: Ralph（無限リトライループの原型）</a> ／ <a href="https://code.claude.com/docs/en/agent-teams">Claude Code Docs: Agent teams（2026年2月）</a> ／ <a href="https://code.claude.com/docs/en/routines.md">Claude Code Routines</a> ／ <a href="https://github.blog/changelog/2026-10-01-github-copilot-in-vs-code-september-2026-releases/">Copilot 定期実行タスク・Agent merge（2026-09）</a> ／ <a href="https://learn.chatgpt.com/docs/changelog">Codex changelog（Automations）</a> ／<a href="https://code.claude.com/docs/en/skills">Skills: context: fork</a> ／ <a href="https://arxiv.org/abs/2603.28052">Meta-Harness（Stanford・ハーネス自動最適化）</a> ／ <a href="https://www.trychroma.com/research/context-rot">Chroma: Context Rot</a></li>
   </ol></div>
 </section>
 

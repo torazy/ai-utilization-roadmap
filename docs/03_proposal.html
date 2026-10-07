@@ -204,6 +204,7 @@
     <a href="#options">9 検討項目</a>
     <a href="#risk">10 リスク</a>
     <a href="06_case-studies.html">事例集↗</a>
+    <a href="11_glossary-and-landscape.html">用語↗</a>
     <a href="#refs">出典</a>
   </div>
 </nav>
@@ -259,7 +260,7 @@
       <tr><td class="em">① バラバラ導入</td><td>各部署が独自に導入。Copilot利用者は一部、Geminiチャット止まりの層も多い</td><td>活用度の格差が固定化。投資が分散し効果が出ない</td></tr>
       <tr><td class="em">② 標準の不在</td><td>浸透する開発標準がなく、現場の方法に依存</td><td>AI出力の品質ばらつき。レビュー負荷の増大</td></tr>
       <tr><td class="em">③ レガシー50システム</td><td>設計書が古い・存在しない。暗黙知が有識者個人に集中</td><td>有識者の異動・退職で保守不能に。AIも活用できない</td></tr>
-      <tr><td class="em">④ コスト圧力</td><td>Copilotの従量課金化（2026/6〜）等、AI費用は青天井化のリスク</td><td>費用対効果を説明できず投資が止まる</td></tr>
+      <tr><td class="em">④ コスト圧力</td><td>CopilotのAI Credits従量制への移行（2026/6〜。席料金に含有分あり、超過分は従量）等、AI費用は青天井化のリスク</td><td>費用対効果を説明できず投資が止まる</td></tr>
       <tr><td class="em">⑤ 技術進化の速度</td><td>ハーネス構築の実践者は部門内に少数。世の中はループエンジニアリングへ</td><td>追従が特定個人に依存（属人化）。差が開き続ける</td></tr>
     </tbody>
   </table>
@@ -339,7 +340,7 @@
   </figure>
 
   <h3>ツール使い分け — 製品名ではなく「3つの軸」で決める（L1方針）</h3>
-  <p style="font-size:14px;">GitHub Copilot にもエージェント機能がある（IDE内で自律的に編集する <strong>agent mode</strong>、Issueを割り当てるとGitHub Actions上で作業しPRを返す <strong>coding agent</strong>＝2026年3月GA<sup><a href="#refs">[20]</a></sup>）。
+  <p style="font-size:14px;">GitHub Copilot にもエージェント機能がある（IDE内で自律的に編集する <strong>agent mode</strong>、Issueを割り当てるとGitHub Actions上で作業しPRを返す <strong>coding agent</strong>＝2025年9月GA<sup><a href="#refs">[20]</a></sup>）。
   したがって「Copilot＝補完、Claude＝エージェント」という<strong>製品での分担は成立しない</strong>。タスクの性質を次の3軸で見て選ぶ。</p>
 
   <div class="grid3">
@@ -396,8 +397,8 @@
 
         <rect x="795" y="85" width="170" height="66" rx="12" fill="#f08c2e"/>
         <text x="880" y="109" font-size="13" font-weight="800" fill="#fff">自律ループ</text>
-        <text x="880" y="127" font-size="11" fill="#fff">Claude Code ＋ Actions／</text>
-        <text x="880" y="141" font-size="11" fill="#fff">AgentCore Runtime（Phase 3）</text>
+        <text x="880" y="127" font-size="11" fill="#fff">定期実行基盤（Routines／Actions／</text>
+        <text x="880" y="141" font-size="11" fill="#fff">AgentCore等。Phase 3・D-3）</text>
 
         <rect x="315" y="130" width="200" height="58" rx="12" fill="#0e9f8a"/>
         <text x="415" y="154" font-size="13" font-weight="800" fill="#fff">Genie ／ Agent Bricks</text>
@@ -423,9 +424,9 @@
     <thead><tr><th style="width:38%;">タスクの性質</th><th style="width:24%;">使うもの</th><th>備考</th></tr></thead>
     <tbody>
       <tr><td>手を動かしながらの補完・小修正（同期・IDE）</td><td class="em">Copilot 補完＋agent mode</td><td>全員配布。最も低単価・低レイテンシ</td></tr>
-      <tr><td>GitHub内で完結する非同期の定型タスク（バグ修正・依存更新・テスト追加のIssue→PR）</td><td class="em">Copilot coding agent</td><td>Actions上で実行。複雑タスクはpremium request 10〜30件/回を消費するため⑤で監視<sup><a href="#refs">[20]</a></sup></td></tr>
+      <tr><td>GitHub内で完結する非同期の定型タスク（バグ修正・依存更新・テスト追加のIssue→PR）</td><td class="em">Copilot coding agent</td><td>Actions上で実行。消費はAI Credits（トークン従量。2026年6月にpremium request制から移行）で、複雑タスクほど増えるため⑤で監視<sup><a href="#refs">[20]</a></sup></td></tr>
       <tr><td>深い文脈・社内横断の作業（レガシー解析、大規模リファクタ、MCP経由で監視・チケット・ナレッジを参照）</td><td class="em">Claude Code</td><td>ハーネス（②）前提。L3層＋灯台チーム20〜30名から</td></tr>
-      <tr><td>常駐・スケジュール駆動の自律ループ（夜間のテスト補強・文書鮮度維持・依存更新）</td><td class="em">Claude Code ＋ Actions／AgentCore Runtime</td><td>狭義のループエンジニアリング領域（Phase 3）。実行場所は検討項目D-3</td></tr>
+      <tr><td>常駐・スケジュール駆動の自律ループ（夜間のテスト補強・文書鮮度維持・依存更新）</td><td class="em">エージェント定期実行基盤（Claude Code Routines／GitHub Actions／AgentCore等）</td><td>狭義のループエンジニアリング領域（Phase 3）。実行基盤は検討項目D-3で4候補から選定</td></tr>
       <tr><td>非開発業務（資料・議事録・メール）</td><td class="em">Gemini (Workspace)</td><td>全社員ライセンス済み。非エンジニアの入口</td></tr>
       <tr><td>データ分析・業務エージェント・ナレッジ</td><td class="em">Databricks (Genie / Agent Bricks)</td><td>既存契約。Unity Catalogでガバナンス統合</td></tr>
       <tr><td>障害調査・報告（イベント駆動）</td><td class="em">AI SRE（AWS DevOps Agent第一候補）</td><td>提供システムがAWS上のため。内製と比較（C-4）</td></tr>
@@ -439,7 +440,7 @@
     境界の細部（coding agentの適用範囲等）は<strong>検討項目D-1</strong>で確定する。
   </div>
   <div class="callout point"><span class="ttl">2026年上期の変化: 「モデル」と「ハーネス」の選択は分離した</span>
-    Copilot Business/Pro内で<strong>ClaudeやCodexをエージェントのモデルとして選択可能</strong>になり（2026年2月〜、JetBrains対応は6〜7月に拡充<sup><a href="#refs">[26]</a></sup>）、
+    Copilot内で<strong>ClaudeやCodexをエージェントとして選択可能</strong>になり（2026年2月4日にEnterprise/Pro+、2月26日にBusiness/Pro。JetBrains対応は6月に拡充<sup><a href="#refs">[26]</a></sup>）、
     「どのモデルを使うか」と「どのハーネス（実行環境・統制・文脈）で使うか」は別の意思決定になった。
     製品名でなく<strong>自律度×実行場所×文脈の3軸</strong>で選ぶ本マトリクスの枠組みは、この変化後も有効に機能する。
   </div>
@@ -551,7 +552,7 @@
     <div class="comp-body">
       <div class="purpose"><strong>目的:</strong> 各チーム・各個人の工夫を「1回作れば100人が使える資産」に変える。最先端の型を全員に配る配布チャネル。</div>
       <p style="font-size:13.5px;">実体は<strong>社内Gitリポジトリ1つ</strong>（カタログ定義ファイルを置くだけ）。利用者は1コマンドで全スキルを同期できる。
-      スキル本体はMarkdown資産としてツール非依存に保ち、Claude Code / Copilot / Gemini CLI から共用する<sup><a href="#refs">[5]</a></sup>。</p>
+      スキル本体はMarkdown資産（SKILL.md、Agent Skills公開標準）としてツール非依存に保ち、Copilot / Codex / Claude Code / Antigravity（旧Gemini CLI）から共用する<sup><a href="#refs">[5]</a><a href="#refs">[27]</a></sup>。</p>
       <h4>スキルの昇格フロー</h4>
       <div class="flow">
         <div class="step"><b>個人の工夫</b>即チーム公開可</div><div class="arr">→</div>
@@ -858,8 +859,8 @@
       <p style="font-size:13px;">データ系ツールは<strong>Databricks managed MCP＋Unity AI Gateway</strong>（設定でMCP化・Unity Catalog権限が透過）、AWS上のAPI・Lambda系は<strong>AgentCore Gateway</strong>（Identityで同一権限・Observabilityで監査）。実行系統は2つでも、レジストリと監査の管理は一元に保つ（検討項目E-4）<sup><a href="#refs">[21]</a></sup>。</p>
     </div>
     <div class="card" style="padding:14px 18px;">
-      <h4 style="margin-top:0;">自律ループの実行場所は2択（→ D-3）</h4>
-      <p style="font-size:13px;"><strong>GitHub Actions</strong>（コードに近い・導入容易・CI資産流用）か、<strong>AgentCore Runtime</strong>（セッション分離microVM・最長8時間・複数エージェント並行）か。Phase 3までに実測して決定。</p>
+      <h4 style="margin-top:0;">自律ループの実行基盤は4候補（→ D-3）</h4>
+      <p style="font-size:13px;"><strong>GitHub Actions／Copilot定期実行</strong>（コードに近い・導入容易・CI資産流用）、<strong>Claude Code Routines</strong>（ベンダー側クラウド。cron・API・GitHubイベント起動）、<strong>Managed Agents</strong>（ベンダー側ホスト型。予算上限・スケジュール実行）、<strong>AgentCore harness</strong>（AWS域内・隔離環境・複数エージェント並行）<sup><a href="#refs">[27]</a></sup>。閉域・予算上限・イベント起動・既存CI資産の4軸でPhase 3までに実測して決定。</p>
     </div>
     <div class="card" style="padding:14px 18px;">
       <h4 style="margin-top:0;">AI SREはAWSネイティブが第一候補（→ C-4）</h4>
@@ -1163,8 +1164,8 @@
   <table>
     <thead><tr><th style="width:26%;">データソース</th><th>取れるもの・使い方</th></tr></thead>
     <tbody>
-      <tr><td class="em">Copilot Metrics API<br><span class="pill gray">2026年2月GA</span></td><td>利用量・premium request消費をチーム別に取得。<code style="font-size:12px;">ai_adoption_phase</code>（直近28日の利用から自動分類、2026年5月追加）が<strong>人材ラダーL1/L2/L3の進捗測定にそのまま使える</strong><sup><a href="#refs">[22]</a></sup></td></tr>
-      <tr><td class="em">Claude Code<br>OpenTelemetry</td><td>トークン・コスト・ツール実行を公式OTelエクスポートで自動収集（managed settingsで全端末に配布）。スキル利用回数もここから<sup><a href="#refs">[22]</a></sup></td></tr>
+      <tr><td class="em">Copilot Metrics API<br><span class="pill gray">2026年2月GA</span></td><td>利用量・AI Credits消費をチーム別に取得。<code style="font-size:12px;">ai_adoption_phase</code>（直近28日の利用から自動分類、2026年5月追加）が<strong>人材ラダーL1/L2/L3の進捗測定にそのまま使える</strong><sup><a href="#refs">[22]</a></sup></td></tr>
+      <tr><td class="em">Claude Code<br>管理ダッシュボード＋OpenTelemetry</td><td>管理ダッシュボード（2026年7月拡充）がPR数・受け入れ行数・スキル採用率・コミット当たりコストを組織単位で提供。トークン・コスト・ツール実行の明細は公式OTelエクスポートで自動収集（managed settingsで全端末に配布）<sup><a href="#refs">[22]</a></sup></td></tr>
       <tr><td class="em">GitHub／CI<br>（DORA系）</td><td>変更リードタイム・変更失敗率・MTTR。<strong>AI関与PRと非関与PRの比較</strong>（co-author署名等で自動判定）が「AIは効いているか」への最も直接的な回答になる<sup><a href="#refs">[23]</a></sup></td></tr>
       <tr><td class="em">四半期サーベイ<br>（体感）</td><td>節約時間の自己申告・信頼度。実例: 120人中80人展開をDX Core 4で2ヶ月計測→2.4h/週/人・満足度+9pt<sup><a href="#refs">[23]</a></sup></td></tr>
       <tr><td class="em">Bedrock／Databricks</td><td>自律ループ・AI SRE・ナレッジ基盤のコスト（タグ付け→⑤で成果あたりコストの分母に）</td></tr>
@@ -1260,9 +1261,9 @@
   <table>
     <thead><tr><th style="width:6%;">#</th><th style="width:30%;">論点</th><th>検討の観点</th></tr></thead>
     <tbody>
-      <tr><td class="em">D-1</td><td>ツール使い分け軸の確定</td><td>Copilot coding agent（Issue→PR）の適用範囲をどこまで広げるか。premium request（複雑タスクで10〜30件/回<sup><a href="#refs">[20]</a></sup>）の予算枠と⑤での監視方法</td></tr>
+      <tr><td class="em">D-1</td><td>ツール使い分け軸の確定</td><td>Copilot coding agent（Issue→PR）の適用範囲をどこまで広げるか。AI Credits（席料金の含有分を超えた従量分<sup><a href="#refs">[20]</a></sup>）の予算枠と⑤での監視方法</td></tr>
       <tr><td class="em">D-2</td><td>Claudeの調達経路</td><td><span class="em">Anthropic直契約</span>（Team/Enterprise: 管理機能・最新機能が早い） vs <span class="em">Amazon Bedrock経由</span>（データがAWS域内・請求一元化・AgentCoreと親和<sup><a href="#refs">[21]</a></sup>）。ハイブリッド（端末は直契約、自律ループはBedrock）も選択肢</td></tr>
-      <tr><td class="em">D-3</td><td>エージェント実行環境の統制</td><td>ローカル端末／GitHub Actions／AgentCore Runtimeのどこまで許可するか。自律ループ（狭義）はクラウド実行が前提のため、Phase 3までに要決定</td></tr>
+      <tr><td class="em">D-3</td><td>エージェント実行環境の統制</td><td>ローカル端末／GitHub Actions・Copilot定期実行／ベンダー側クラウド（Claude Code Routines・Managed Agents・Codex Automations）／AgentCore harnessのどこまで許可するか。比較軸は閉域要件・予算上限の有無・GitHubイベント起動・既存CI資産の流用。自律ループ（狭義）はクラウド実行が前提のため、Phase 3までに要決定<sup><a href="#refs">[27]</a></sup></td></tr>
       <tr><td class="em">D-4</td><td>効果測定の実装方式</td><td>Databricks上で自作（既存資産・柔軟） vs 開発者生産性製品の導入（早い・実績）。Phase 0のベースライン測定は簡易自作で先行</td></tr>
       <tr><td class="em">D-5</td><td>監査・説明責任の水準</td><td>エージェント操作ログ（④のObservability）の保存期間・粒度。AI事業者ガイドライン1.2版・EU AI Act（2026/8執行）への対応度の宣言レベル</td></tr>
       <tr><td class="em">D-6</td><td>非開発職への展開範囲</td><td>DX部門内のPM・QA・企画職をL2教育（エージェント実践）の対象にいつから含めるか。Copilot/Claudeのシート配布基準</td></tr>
@@ -1322,13 +1323,14 @@
       <li>[17] <a href="https://rootly.com/ai-sre-guide">Rootly AI SREガイド（MTTR 30〜70%削減）</a> ／ <a href="https://aws.amazon.com/blogs/devops/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/">AWS DevOps Agent</a></li>
       <li>[18] <a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps for AI（FinOps Foundation）</a> ／ <a href="https://www.datadoghq.com/blog/monitor-openai-cost-datadog-cloud-cost-management-llm-observability/">Datadog LLMコスト監視</a></li>
       <li>[19] <a href="https://www.ai-souken.com/article/what-is-loop-engineering">ループエンジニアリング解説（AI総合研究所）</a> ／ <a href="https://jp.findy-team.io/blog/ai-casestudy/harness-engineering/">ハーネスエンジニアリング（Findy）</a> ／ <a href="https://atmarkit.itmedia.co.jp/ait/articles/2607/03/news016.html">内側ループと外側ループ入門（@IT）</a></li>
-      <li>[20] <a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent">GitHub Docs: Copilot cloud (coding) agent</a> ／ <a href="https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/">GitHub Blog: coding agent発表</a> — 2026年3月GA。premium request＋Actions分を消費（複雑タスクで10〜30件/回）</li>
+      <li>[20] <a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent">GitHub Docs: Copilot cloud (coding) agent</a> ／ <a href="https://github.blog/changelog/2025-09-25-copilot-coding-agent-is-now-generally-available/">GitHub Changelog: coding agent GA（2025-09-25）</a> — AI Credits（2026-06-01にpremium request制から移行。席料金に含有分あり）＋Actions分を消費</li>
       <li>[21] <a href="https://aws.amazon.com/bedrock/agentcore/">Amazon Bedrock AgentCore</a> ／ <a href="https://aws.amazon.com/blogs/machine-learning/its-safe-to-close-your-laptop-now-hosting-coding-agents-on-amazon-bedrock-agentcore/">AWS Blog: AgentCoreでのコーディングエージェント実行（分離microVM・最長8時間）</a> ／ <a href="https://aws.amazon.com/bedrock/anthropic/">Claude on Amazon Bedrock</a></li>
       <li>[22] <a href="https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics">GitHub Copilot usage metrics（2026年2月GA）</a> ／ <a href="https://github.blog/changelog/2026-05-29-copilot-usage-metrics-api-adds-cohorts-for-ai-adoption/">ai_adoption_phaseコホート追加</a> ／ <a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code Monitoring（OpenTelemetry公式）</a> ／ <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans">Claude Analytics API</a></li>
       <li>[23] <a href="https://www.infoworld.com/article/4020931/ai-coding-tools-can-slow-down-seasoned-developers-by-19.html">METR研究: 体感+20%／実測−19%（InfoWorld）</a> ／ <a href="https://zylos.ai/research/2026-02-07-developer-productivity-metrics/">歪む指標とAI Usage Diff Mapping（Zylos）</a> ／ <a href="https://www.buildmvpfast.com/blog/dx-core-4-developer-productivity-measurement-ai-impact-2026">DX Core 4計測の実例（80/120人・2.4h/週）</a></li>
       <li>[24] 国内成果事例: <a href="https://service.is-c.jpn.panasonic.com/column/generative_ai">パナソニック コネクト（年18.6万時間削減）</a> ／ <a href="https://www.nikkei.com/article/DGXZQOUC254OB0V21C25A2000000/">NTTデータ AIネイティブ開発（日経）</a> — 失敗・警鐘データ含む詳細は<a href="06_case-studies.html">事例集</a>参照</li>
       <li>[25] 個人実践者の勉強会記事5本（ハーネス/ループ実践知）の検証結果 — <a href="07_source-review.html">参考資料の検証レポート（内部用）</a>。裏付けの取れた要点は②・ループ詳説に反映済み</li>
       <li>[26] v0.5追加分: <a href="https://www.databricks.com/product/artificial-intelligence/unity-ai-gateway">Databricks Unity AI Gateway</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">同 公式Docs</a> ／ <a href="https://www.truefoundry.com/blog/a-definitive-guide-to-ai-gateways-in-2026-competitive-landscape-comparison">AI Gateways 2026 競合比較</a> ／ <a href="https://github.blog/changelog/2026-02-26-claude-and-codex-now-available-for-copilot-business-pro-users/">GitHub Changelog: Claude/CodexがCopilot Business/Proで利用可能に</a> ／ <a href="https://dora.dev/capabilities/platform-engineering/">DORA: Platform Engineering（Paved Road）</a></li>
+      <li>[27] 2026年10月更新分: <a href="https://code.claude.com/docs/en/routines.md">Claude Code Routines</a> ／ <a href="https://hatchworks.com/blog/claude/claude-agent-sdk-and-managed-agents/">Managed Agents</a> ／ <a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html">AgentCore release notes（harness GA 2026-06-18）</a> ／ <a href="https://github.blog/changelog/2026-10-01-github-copilot-in-vs-code-september-2026-releases/">Copilot 定期実行タスク・Agent merge</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/coding-agent-claude">Databricks Unity Gateway CLI</a> ／ <a href="https://the-decoder.com/anthropic-publishes-agent-skills-as-an-open-standard-for-ai-platforms/">Agent Skills 公開標準</a> ／ <a href="https://fireup.pro/news/github-copilot-ai-credits-billing-agent-mode-cost-2026">Copilot AI Credits</a> — 用語・モデル・最新機能の一覧は<a href="11_glossary-and-landscape.html">用語ガイド</a>参照</li>
     </ol>
   </div>
 </section>
@@ -1337,8 +1339,8 @@
 
 <footer>
   生成AIによる開発プロセス変革 企画書ドラフト v0.5 ／ 2026-07-20 ／ 関係者ディスカッション用<br>
-  詳細シリーズ: ①〜⑦（04_*.html）／⑧ API/Fast-Track（08）／ループ詳説（05）／事例集（06）／検証レポート（07）<br>
-  出典データは2026年7月時点の公開情報に基づく
+  詳細シリーズ: ①〜⑦（04_*.html）／⑧ API/Fast-Track（08）／ループ詳説（05）／事例集（06）／検証レポート（07）／用語・モデル・最新機能ガイド（11）<br>
+  出典データは2026年7月時点の公開情報に基づく（製品・課金・実行基盤の記述は2026年10月7日に更新）
 </footer>
 
 </body>

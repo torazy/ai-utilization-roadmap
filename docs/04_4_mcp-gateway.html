@@ -18,6 +18,7 @@
   <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
   <a href="05_loop-engineering.html">ループ詳説</a>
   <a href="06_case-studies.html">事例集</a>
+  <a href="11_glossary-and-landscape.html">用語ガイド</a>
 </div></div>
 
 <div class="hero"><div class="inner">
@@ -54,7 +55,7 @@
     <thead><tr><th style="width:22%;">段階</th><th style="width:34%;">実装</th><th>内容</th></tr></thead>
     <tbody>
       <tr><td class="em">Phase 1<br><span class="pill gray">レジストリのみ</span></td><td>承認済みMCPサーバー一覧（JSON）＋ managed settingsで配布</td><td>接続可能なサーバーをリストで統制。ゲートウェイ実体はまだ作らない — 軽く始める</td></tr>
-      <tr><td class="em">Phase 2<br><span class="pill teal">データ系ツール</span></td><td><strong>Databricks managed MCP ＋ Unity AI Gateway</strong><sup><a href="#refs">[4]</a></sup></td><td>テーブル・UC関数・SQL・Genie・Vector Searchは<strong>設定だけでMCPツール化</strong>でき、Unity Catalog権限がそのまま透過する。外部MCPサーバーへのアクセス統制とトラフィック可視化もUnity AI Gatewayが提供</td></tr>
+      <tr><td class="em">Phase 2<br><span class="pill teal">データ系ツール</span></td><td><strong>Databricks managed MCP ＋ Unity AI Gateway</strong><sup><a href="#refs">[4]</a></sup></td><td>テーブル・UC関数・SQL・Genie・Vector Searchは<strong>設定だけでMCPツール化</strong>でき、Unity Catalog権限がそのまま透過する。外部MCPサーバーへのアクセス統制とトラフィック可視化もUnity AI Gatewayが提供。managed MCPは2026年8月からUnity Gatewayの統制下に統合され（ベータ）、Google Drive・Jira・Slack・GitHubのmanaged MCPが既定で使える<sup><a href="#refs">[4]</a></sup></td></tr>
       <tr><td class="em">Phase 2<br><span class="pill blue">API・Lambda系ツール</span></td><td><strong>Amazon Bedrock AgentCore Gateway</strong><sup><a href="#refs">[3]</a></sup></td><td>AWS上の社内REST API・LambdaをMCPツールに自動変換（semantic routing）。Identityで権限透過、Observabilityで監査。<strong>接続先追加＝Lambda1本</strong>になる</td></tr>
       <tr><td class="em">代替候補</td><td>Kong・Composio等のMCPゲートウェイ製品／OSS<sup><a href="#refs">[1]</a></sup></td><td>上記2系統で不足が出た場合の比較対象（マルチクラウド要件等）</td></tr>
     </tbody>
@@ -122,7 +123,7 @@
     <li>[1] <a href="https://konghq.com/blog/learning-center/what-is-a-mcp-gateway">MCPゲートウェイとは（Kong）</a> ／ <a href="https://composio.dev/content/what-is-mcp-gateway-and-why-your-enterprise-need-it">Composio解説</a> ／ <a href="https://www.forbes.com/sites/janakirammsv/2026/07/05/agent-gateways-are-becoming-the-control-plane-for-enterprise-ai/">Forbes: Agent Gateways</a></li>
     <li>[2] <a href="https://aaif.io/blog/mcp-is-now-enterprise-infrastructure-everything-that-happened-at-mcp-dev-summit-north-america-2026/">MCP Dev Summit NA 2026（Uber・Block事例）</a></li>
     <li>[3] <a href="https://aws.amazon.com/bedrock/agentcore/">Amazon Bedrock AgentCore（Gateway／Identity／Observability）</a></li>
-    <li>[4] <a href="https://www.databricks.com/blog/accelerate-ai-development-databricks-discover-govern-and-build-mcp-and-agent-bricks">Databricks managed MCPサーバー（UC関数・SQL・Genie・Vector Search）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">Unity AI Gateway（外部MCPアクセスの統制）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/usage-tracking-beta">利用トラッキング（外部MCPトラフィックの可視化）</a></li>
+    <li>[4] <a href="https://www.databricks.com/blog/accelerate-ai-development-databricks-discover-govern-and-build-mcp-and-agent-bricks">Databricks managed MCPサーバー（UC関数・SQL・Genie・Vector Search）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/">Unity AI Gateway（外部MCPアクセスの統制）</a> ／ <a href="https://docs.databricks.com/aws/en/ai-gateway/usage-tracking-beta">利用トラッキング（外部MCPトラフィックの可視化）</a> ／ <a href="https://docs.databricks.com/gcp/ja/release-notes/unity-gateway/">Unity Gateway release notes（managed MCP統合 2026-08-06）</a> ／ <a href="https://docs.databricks.com/generative-ai/mcp/managed-mcp/">Managed MCP</a></li>
   </ol></div>
 </section>
 

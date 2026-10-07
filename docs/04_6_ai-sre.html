@@ -18,6 +18,7 @@
   <a href="08_fast-track-api.html">⑧ API/Fast-Track</a>
   <a href="05_loop-engineering.html">ループ詳説</a>
   <a href="06_case-studies.html">事例集</a>
+  <a href="11_glossary-and-landscape.html">用語ガイド</a>
 </div></div>
 
 <div class="hero"><div class="inner">
@@ -62,7 +63,7 @@
   <table>
     <thead><tr><th style="width:24%;"></th><th>案A: AWS DevOps Agent（第一候補）</th><th>案B: 内製（Claude Code＋MCP）</th></tr></thead>
     <tbody>
-      <tr><td class="em">強み</td><td>提供システムがAWS上のためテレメトリ直結。2026年3月GA、マネージド<sup><a href="#refs">[2]</a></sup></td><td>②④の資産を流用。ランブック・報告書テンプレを自社流に作り込める。ヘッドレス実行＋MCPで構成</td></tr>
+      <tr><td class="em">強み</td><td>提供システムがAWS上のためテレメトリ直結。2026年3月GA、マネージド。6月からスケジュール実行のSREボットとMCP／A2Aツール接続に対応し、夜間一次調査の定期実行が製品機能で成立する<sup><a href="#refs">[2]</a></sup></td><td>②④の資産を流用。ランブック・報告書テンプレを自社流に作り込める。ヘッドレス実行＋MCPで構成</td></tr>
       <tr><td class="em">弱み</td><td>カスタマイズの自由度、非AWS要素（Databricks等）の扱い</td><td>構築・保守の工数。停止条件等の作り込み責任</td></tr>
       <tr><td class="em">評価方法</td><td colspan="2">同一の過去障害10件を両者に再現調査させ、仮説精度・調査時間・コストを比較（③に記録が溜まってから実施）</td></tr>
     </tbody>
@@ -100,7 +101,7 @@
 <section>
   <h2>5. 事例と落とし穴</h2>
   <div class="callout case"><span class="ttl">事例</span>
-    AWS DevOps Agent／Azure SRE Agent 2026年3月GA（テレメトリ・コード・デプロイ履歴の横断分析）<sup><a href="#refs">[2]</a></sup>。
+    AWS DevOps Agent／Azure SRE Agent 2026年3月GA（テレメトリ・コード・デプロイ履歴の横断分析）。AWS DevOps Agentは2026年6月にスケジュールSREボットとMCP／A2A接続を追加<sup><a href="#refs">[2]</a></sup>。
     Rootly等の専業はアラート発火と同時に調査を開始し数分で根本原因候補を提示、MTTR 30〜70%削減の実績<sup><a href="#refs">[1]</a></sup>。
     AIOpsは2026年に「異常検知」から「自律的エージェント運用」へ移行<sup><a href="#refs">[3]</a></sup>。
   </div>
@@ -116,7 +117,7 @@
   <h2>参考</h2>
   <div class="card refs"><ol>
     <li>[1] <a href="https://rootly.com/ai-sre-guide">Rootly: AI SRE Guide 2026</a> ／ <a href="https://incident.io/blog/5-best-ai-powered-incident-management-platforms-2026">incident.io: AI incident管理プラットフォーム比較</a></li>
-    <li>[2] <a href="https://aws.amazon.com/blogs/devops/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/">AWS DevOps Agent（AWSブログ）</a></li>
+    <li>[2] <a href="https://aws.amazon.com/blogs/devops/leverage-agentic-ai-for-autonomous-incident-response-with-aws-devops-agent/">AWS DevOps Agent（AWSブログ）</a> ／ <a href="https://aws.amazon.com/blogs/mt/announcing-general-availability-of-aws-devops-agent/">GA発表（2026-03-31）</a> ／ <a href="https://aws.amazon.com/about-aws/whats-new/2026/06/aws-devops-agent-custom-agents.html">スケジュールSREボット・MCP/A2A対応（2026-06）</a></li>
     <li>[3] <a href="https://www.augmentcode.com/guides/what-is-aiops">What Is AIOps in 2026（Augment Code）</a> ／ <a href="https://openobserve.ai/blog/top-10-aiops-platforms/">AIOpsプラットフォーム2026</a></li>
   </ol></div>
 </section>
